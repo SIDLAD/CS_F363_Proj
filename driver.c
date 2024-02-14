@@ -1,0 +1,1 @@
+//depending on command line arguments, main will call the corresponding function
