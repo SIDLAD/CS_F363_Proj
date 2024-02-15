@@ -1,7 +1,6 @@
-#include <stdio.h>
 #include "parserDef.h"
 
-FirstAndFollow computeFirstAndFollowSets (Grammar G);
-Table createParseTable(FirstAndFollow F, Table T);
-void parseInputSourceCode(char *testcaseFile, Table T);
-void printParseTree(ParseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+FirstAndFollow computeFirstAndFollowSets (grammar G);
+table createParseTable(FirstAndFollow F, table T);
+void parseInputSourceCode(char *testcaseFile, table T);
+void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol

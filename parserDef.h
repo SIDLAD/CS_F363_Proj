@@ -1,6 +1,6 @@
-typedef struct grammar* Grammar;
-typedef struct table* Table;
-typedef struct parseTree* ParseTree;
+typedef struct grammar* grammar;
+typedef struct table* table;
+typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
 
 //we need to employ ENUM for encoding here
