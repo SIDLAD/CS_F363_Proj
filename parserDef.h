@@ -5,8 +5,6 @@ typedef struct table* table;
 typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
 
-typedef enum vocabulary Vocabulary;
-
 //we need to employ ENUM for encoding here
 //encode Terminals and Non Terminals separately??
 //or together?
@@ -25,8 +23,4 @@ struct firstAndFollow{
 
 struct grammar{
     
-};
-
-enum vocabulary{
-    //TODO
 };
