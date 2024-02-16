@@ -8,7 +8,7 @@ struct linkedList
     void* data;
 };
 
-LinkedList createNewLinkedList()
+LinkedList createLinkedListNode()
 {
     LinkedList list = (LinkedList)malloc(sizeof(struct linkedList));
     list->next = NULL;
