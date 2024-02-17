@@ -1,13 +1,18 @@
 #include "dataStructures/linkedList.c"
+#include "lexer.h"
+#include <stdbool.h>
 
 typedef struct grammar* grammar;
 typedef struct table* table;
 typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
+typedef struct terminalBucketSet* TerminalBucketSet;
 
-//we need to employ ENUM for encoding here
-//encode Terminals and Non Terminals separately??
-//or together?
+parseTree _parseTree = NULL;                //to be initialised via function call
+grammar _grammar = NULL;                    //to be initialised via function call
+table _table = NULL;                        //to be initialised via function call
+FirstAndFollow _firstAndFollow = NULL;      //to be initialised via function call
+TerminalBucketSet _terminalBucketSet = NULL;//to be initialised via function call
 
 struct table{
     //fill in the details of table
@@ -18,9 +23,15 @@ struct parseTree{
 };
 
 struct firstAndFollow{
-    //fill in the details
+    TerminalBucketSet follow[N_TERMINALS_COUNT];
+    TerminalBucketSet* first[N_TERMINALS_COUNT];
+    int ruleCount[N_TERMINALS_COUNT];
 };
 
 struct grammar{
     
+};
+
+struct terminalBucketSet{
+    bool val[TERMINALS_COUNT];
 };

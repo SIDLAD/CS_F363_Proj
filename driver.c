@@ -18,8 +18,10 @@ Create a menu as per the following instructions
 #include <string.h>
 #include <time.h>
 
-#include "lexer.h"
 #include "parser.h"
+
+char testcaseFile[50];
+char outputFile[50];
 
 void printMenu()
 {
@@ -33,20 +35,11 @@ void printMenu()
 
 void case_cleanComments()
 {
-    char testcaseFile[50], cleanFile[50];
-    printf("Enter the name of the file to remove comments from: ");
-    scanf("%s", testcaseFile);
-    printf("Enter the name of the file to write the comment free code to: ");
-    scanf("%s", cleanFile);
-    removeComments(testcaseFile, cleanFile);
+    removeComments(testcaseFile, outputFile);
 }
 
 void case_printTokenList()
 {
-    char testcaseFile[50];
-    printf("Enter the name of the file to lex: ");
-    scanf("%s", testcaseFile);
-    // TODO: SIDLAD
     tokenInfo tokenInfo_;
     while(tokenInfo_ = getNextToken(buffer))
     {
@@ -56,41 +49,41 @@ void case_printTokenList()
 
 void case_generateParseTree()
 {
-    char testcaseFile[50], outFile[50];
-    printf("Enter the name of the file to parse: ");
-    scanf("%s", testcaseFile);
-    printf("Enter the name of the file to write the parse tree to: ");
-    scanf("%s", outFile);
-    FirstAndFollow *firstAndFollow = (FirstAndFollow *)malloc(sizeof(FirstAndFollow));
-    table *T = (table *)malloc(sizeof(table));
-    createParseTable(firstAndFollow, T);
-    parseInputSourceCode(testcaseFile, T);
-    //TODO: SIDLAD - deal with creating the parseTree. REPLACE THE BELOW CREATED pt.
-    parseTree pt;
-    printParseTree(pt, outFile);
+    //lexer and parser will be invoked
+    createParseTable(_firstAndFollow, _table);
+    parseInputSourceCode(testcaseFile, _table);
+    //lexer and parser have been invoked
+    
+    printParseTree(_parseTree, outputFile);
+    freeParseTree(_parseTree);
 }
 
 void case_calculateTime()
 {
-    char testcaseFile[50];
     clock_t start_time, end_time;
     double total_CPU_time, total_CPU_time_in_seconds;
     start_time = clock();
-    FirstAndFollow *firstAndFollow = (FirstAndFollow *)malloc(sizeof(FirstAndFollow));
-    table *T = (table *)malloc(sizeof(table));
-    createParseTable(firstAndFollow, T);
-    parseInputSourceCode(testcaseFile, T);
+
+    //lexer and parser will be invoked
+    createParseTable(_firstAndFollow, _table);
+    parseInputSourceCode(testcaseFile, _table);
+    //lexer and parser have been invoked
+
     end_time = clock();
     total_CPU_time = (double) (end_time - start_time);
     total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
     printf("Total time taken by the project code of lexer and parser to verify the syntactic correctness: %f\n", total_CPU_time_in_seconds);
+    
+    freeParseTree(_parseTree);
 }
 
 #ifndef MAIN_FILE
 #define MAIN_FILE
 
-int main()
+int main(int argc, char* argv[])
 {
+    strcpy(testcaseFile,argv[1]);
+    strcpy(outputFile,argv[2]);
     while(1)
     {
         printMenu();

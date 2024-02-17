@@ -1,33 +1,10 @@
 #include "parserDef.h"
-#include <stdbool.h>
 
-#define total_token 53
-#define Terminals 37
-#define N_Terminals (total_token-Terminals)
-
-typedef struct firstandfollow* FirstAndFollow;
-
-typedef struct bucket{
-    bool val[Terminals];
-}Bucket;
-
-struct firstandfollow{
-    Bucket follow[N_Terminals];
-    Bucket* first[N_Terminals];
-};
-
-FirstAndFollow initializeFirstAndFollow(){
-    FirstAndFollow list = (FirstAndFollow)malloc(sizeof(struct firstandfollow));
-    return list;
-}
-
-Bucket* createDyanamicBucket(int len){
-    // creates a dyanmic bucket(boolean array) of size len and returns it.
-    Bucket* tmp = (Bucket*)calloc(len, sizeof(Bucket));
-    return tmp;
-}
-
-FirstAndFollow computeFirstAndFollowSets (grammar G);
-table createParseTable(FirstAndFollow F, table T);
+grammar populateGrammar(grammar g, char* grammarFileName); //function to parse the grammar file and populate the grammar ds
+FirstAndFollow computeFirstAndFollowSets (grammar G);   //grammar should be prepopulated, so need to create a function for doing that. If grammar is passed as NULL, then call that function locally instead.
+table createParseTable(FirstAndFollow F, table T);      //first and follow won't be NULL, but if it is then call computeFirstAndFollowSets function internally. table should be passed as a dummy variable with NULL
 void parseInputSourceCode(char *testcaseFile, table T);
 void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+
+//TODO: should we add the supporting functions locally used?
+void freeParseTree(parseTree PT);
