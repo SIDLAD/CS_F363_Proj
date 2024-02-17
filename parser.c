@@ -33,5 +33,5 @@ TerminalBucketSet* increaseSetArraySize(TerminalBucketSet* setArray,int* current
 
 void freeParseTree(parseTree PT)
 {
-    //TODO: Required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
+    //TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
 }
