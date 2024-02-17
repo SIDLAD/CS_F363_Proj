@@ -2,6 +2,9 @@
 #include "lexer.h"
 #include <stdbool.h>
 
+#define MAX_LINE_SIZE_GRAMMAR 128 
+#define grammarFile "grammar.txt"
+
 typedef struct grammar* grammar;
 typedef struct table* table;
 typedef struct parseTree* parseTree;
@@ -29,7 +32,8 @@ struct firstAndFollow{
 };
 
 struct grammar{
-    
+    LinkedList* NT[N_TERMINALS_COUNT];
+    int ruleCount[N_TERMINALS_COUNT];
 };
 
 struct terminalBucketSet{

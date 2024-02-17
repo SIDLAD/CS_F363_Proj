@@ -20,8 +20,8 @@ Create a menu as per the following instructions
 
 #include "parser.h"
 
-char testcaseFile[50];
-char outputFile[50];
+char testcaseFile[MAX_FILENAME_LENGTH];
+char outputFile[MAX_FILENAME_LENGTH];
 
 void printMenu()
 {

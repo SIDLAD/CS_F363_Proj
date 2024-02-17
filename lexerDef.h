@@ -1,8 +1,9 @@
-#define BUFFER_SIZE 50
+#define BUFFER_SIZE 256
 #define VOCABULARY_COUNT 107
 #define TERMINALS_COUNT 57
 #define N_TERMINALS_COUNT (VOCABULARY_COUNT-TERMINALS_COUNT)
 #define MAX_LEXEME_LENGTH 20
+#define MAX_FILENAME_LENGTH 20
 
 typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
