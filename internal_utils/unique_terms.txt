@@ -90,7 +90,6 @@ returnStmt
 TK_WHILE
 TK_MINUS
 TK_DOT
-idsList
 arithmeticExpression
 TK_CALL
 TK_SQR

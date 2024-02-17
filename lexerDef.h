@@ -1,5 +1,5 @@
 #define BUFFER_SIZE 256
-#define VOCABULARY_COUNT 107
+#define VOCABULARY_COUNT 106
 #define TERMINALS_COUNT 57
 #define N_TERMINALS_COUNT (VOCABULARY_COUNT-TERMINALS_COUNT)
 #define MAX_LEXEME_LENGTH 20
@@ -108,7 +108,6 @@ enum vocabulary{
     funCallStmt,
     parameter_list,
     primitiveDatatype,
-    idsList,
     booleanExpression,
     arithmeticExpression2,
     singleOrRecId,

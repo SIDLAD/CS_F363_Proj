@@ -18,13 +18,9 @@ table createParseTable(FirstAndFollow F, table T);
 //------------------//
 
 //function definitions
-FirstAndFollow computeFirstAndFollowSets (grammar G)
+FirstAndFollow computeFirstAndFollowSets (grammar G) // G cannot be NULL
 {
-    if(G == NULL)
-    {
-        G = populateGrammar(G,NULL);
-    }
-
+    
     //TODO: _firstAndFollow needs to be computed. First And Follow Files need to be generated as output
 }
 
@@ -80,16 +76,12 @@ LinkedList* increaseProductionRHSSetSize(LinkedList* rhsSet,int* currentSize) //
     return rhsSet;
 }
 
-grammar populateGrammar(grammar g, char* grammarFileName) //if grammarFileName == NULL then grammarFileName := grammar.txt
+grammar populateGrammar(grammar g, char* grammarFileName) //g cannot be NULL. If grammarFileName == NULL then grammarFileName := grammar.txt
 {
     if(grammarFileName == NULL)
     {
         grammarFileName = (char*) malloc(MAX_FILENAME_LENGTH * (sizeof(char)));
         strcpy(grammarFileName,grammarFile);
-    }
-    if(g == NULL)
-    {
-        g = initializeGrammar(g);
     }
 
     char line[MAX_LINE_SIZE_GRAMMAR];
@@ -105,25 +97,25 @@ grammar populateGrammar(grammar g, char* grammarFileName) //if grammarFileName =
         symbol = encodeStr(symbolString);
         NT_ID = getNTID(symbol);
         
-        strtok(NULL, " ");                  // skipping ===>
+        strtok(NULL, " \n");                  // skipping ===>
 
-        symbolString = strtok(NULL, " ");   // reading first symbolString of RHS
+        symbolString = strtok(NULL, " \n");   // reading first symbolString of RHS
         symbol = encodeStr(symbolString);
         
         g->NT[NT_ID] =  increaseProductionRHSSetSize(g->NT[NT_ID],&(g->ruleCount[NT_ID]));
         LinkedList currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
         insertGrammarSymbol(currentNode,symbol);
         
-        while(symbolString = strtok(NULL, " ")) // RHS of rules onwards
+        while(symbolString = strtok(NULL, " \n")) // RHS of rules onwards
         {
-            symbol = encodeStr(symbolString);
-            if(strcmp(line,"|"))
+            if(strcmp(symbolString,"|") == 0)
             { // create a new head and populate for the new rule after |
-                increaseProductionRHSSetSize(g->NT[NT_ID],&(g->ruleCount[NT_ID])); 
+                g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID],&(g->ruleCount[NT_ID])); 
                 LinkedList currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
             }
             else
             {
+                symbol = encodeStr(symbolString);
                 // continue on the same head
                 currentNode->next = createLinkedListNode();
                 currentNode = currentNode->next;
@@ -131,6 +123,7 @@ grammar populateGrammar(grammar g, char* grammarFileName) //if grammarFileName =
             }
         }
     }
+    return g;
 }
 
 void insertGrammarSymbol(LinkedList node, Vocabulary v)
@@ -142,13 +135,15 @@ void insertGrammarSymbol(LinkedList node, Vocabulary v)
 
 int getNTID(Vocabulary NT)
 {
-    return (int)NT - TERMINALS_COUNT - 1;
+    return (int)NT - TERMINALS_COUNT;
 }
 
 table createParseTable(FirstAndFollow F, table T)
 {
     if(F == NULL)
     {
+        _grammar = initializeGrammar(_grammar);
+        _grammar = populateGrammar(_grammar,NULL);
         computeFirstAndFollowSets(_grammar);
         F = _firstAndFollow;
     }
@@ -245,7 +240,6 @@ Vocabulary encodeStr (const char *str)
         {funCallStmt, "<funCallStmt>"},
         {parameter_list, "<parameter_list>"},
         {primitiveDatatype, "<primitiveDatatype>"},
-        {idsList, "<idsList>"},
         {booleanExpression, "<booleanExpression>"},
         {arithmeticExpression2, "<arithmeticExpression2>"},
         {singleOrRecId, "<singleOrRecId>"},
@@ -274,4 +268,5 @@ Vocabulary encodeStr (const char *str)
     for (int i = 0;  i < sizeof (conversion) / sizeof (conversion[0]);  i++)
         if (!strcmp (str, conversion[i].str))
             return conversion[i].val;
+    return -1;
 }

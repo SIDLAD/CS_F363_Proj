@@ -45,7 +45,7 @@
 <logicalOp> ===> TK_AND | TK_OR
 <relationalOp> ===> TK_LT | TK_LE | TK_EQ | TK_GT | TK_GE | TK_NE
 <returnStmt> ===> TK_RETURN <optionalReturn> TK_SEM
-<optionalReturn> ===> TK_SQL <idsList> TK_SQR | TK_EPS
+<optionalReturn> ===> TK_SQL <idList> TK_SQR | TK_EPS
 <idList> ===> TK_ID <more_ids>
 <more_ids> ===> TK_COMMA <idList> | TK_EPS
 <definetypestmt> ===> TK_DEFINETYPE <A> TK_RUID TK_AS TK_RUID

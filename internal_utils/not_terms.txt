@@ -23,7 +23,6 @@ operator2
 funCallStmt
 parameter_list
 primitiveDatatype
-idsList
 booleanExpression
 arithmeticExpression2
 singleOrRecId
