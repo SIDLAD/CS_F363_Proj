@@ -18,7 +18,7 @@ Create a menu as per the following instructions
 #include <string.h>
 #include <time.h>
 
-#include "parser.h"
+#include "parser.c"
 
 char testcaseFile[MAX_FILENAME_LENGTH];
 char outputFile[MAX_FILENAME_LENGTH];
@@ -35,27 +35,27 @@ void printMenu()
 
 void case_cleanComments()
 {
-    removeComments(testcaseFile, outputFile);
+    // removeComments(testcaseFile, outputFile);
 }
 
 void case_printTokenList()
 {
-    tokenInfo tokenInfo_;
-    while(tokenInfo_ = getNextToken(buffer))
-    {
-        printf("%s %s %d\n", tokenInfo_->tokenName, tokenInfo_->lexeme, tokenInfo_->lineNumber);
-    }
+    // tokenInfo tokenInfo_;
+    // while(tokenInfo_ = getNextToken(buffer))
+    // {
+    //     printf("%s %s %d\n", tokenInfo_->tokenName, tokenInfo_->lexeme, tokenInfo_->lineNumber);
+    // }
 }
 
 void case_generateParseTree()
 {
     //lexer and parser will be invoked
     createParseTable(_firstAndFollow, _table);
-    parseInputSourceCode(testcaseFile, _table);
-    //lexer and parser have been invoked
+    // parseInputSourceCode(testcaseFile, _table);
+    // //lexer and parser have been invoked
     
-    printParseTree(_parseTree, outputFile);
-    freeParseTree(_parseTree);
+    // printParseTree(_parseTree, outputFile);
+    // freeParseTree(_parseTree);
 }
 
 void case_calculateTime()
@@ -66,15 +66,15 @@ void case_calculateTime()
 
     //lexer and parser will be invoked
     createParseTable(_firstAndFollow, _table);
-    parseInputSourceCode(testcaseFile, _table);
-    //lexer and parser have been invoked
+    // parseInputSourceCode(testcaseFile, _table);
+    // //lexer and parser have been invoked
 
-    end_time = clock();
-    total_CPU_time = (double) (end_time - start_time);
-    total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
-    printf("Total time taken by the project code of lexer and parser to verify the syntactic correctness: %f\n", total_CPU_time_in_seconds);
+    // end_time = clock();
+    // total_CPU_time = (double) (end_time - start_time);
+    // total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
+    // printf("Total time taken by the project code of lexer and parser to verify the syntactic correctness: %f\n", total_CPU_time_in_seconds);
     
-    freeParseTree(_parseTree);
+    // freeParseTree(_parseTree);
 }
 
 #ifndef MAIN_FILE
@@ -82,8 +82,8 @@ void case_calculateTime()
 
 int main(int argc, char* argv[])
 {
-    strcpy(testcaseFile,argv[1]);
-    strcpy(outputFile,argv[2]);
+    // strcpy(testcaseFile,argv[1]);
+    // strcpy(outputFile,argv[2]);
     while(1)
     {
         printMenu();
