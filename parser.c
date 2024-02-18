@@ -3,11 +3,13 @@
 #include <string.h>
 
 // function prototypes//
+void populateFirstAndFollowText(FirstAndFollow F);
 FirstAndFollow computeFirstAndFollowSets(grammar G);
 TerminalBucketSet createSet();
 FirstAndFollow initializeFirstAndFollow(FirstAndFollow _firstAndFollow, grammar G);
 void freeParseTree(parseTree PT);
 Vocabulary encodeStr(const char *str);
+void enumToStr(Vocabulary v, char *dest);
 grammar initializeGrammar(grammar g);
 LinkedList *increaseProductionRHSSetSize(LinkedList *rhsSet, int *currentSize); // &ruleCount[i] will be passed as currentSize
 grammar populateGrammar(grammar g, char *grammarFileName);
@@ -20,10 +22,65 @@ void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
 bool isNTNode(LinkedList node);
 int getTerminalIDFromNode(LinkedList node);
 int getNTIDFromNode(LinkedList node);
-void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool* flag, FirstAndFollow F);
+void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 //------------------//
 
 // function definitions
+void populateFirstAndFollowText(FirstAndFollow F)
+{
+    char curNT[MAX_LEXEME_LENGTH];
+    char tmpStr[MAX_LEXEME_LENGTH];
+    TerminalBucketSet tmp = NULL;
+
+    FILE *fp = fopen("first.txt", "w");
+
+    // first.txt
+    for (int i = 0; i < N_TERMINALS_COUNT; i++)
+    {
+        // i corresponds to non-terminal for which we are writing first and follow
+        //  F->follow[i][]; //this is follow for given non-terminal
+        enumToStr(i + TERMINALS_COUNT, curNT);
+        fprintf(fp, "%s : ", curNT);
+
+        tmp = firstOfNT(i, F);
+        for (int j = 0; j < TERMINALS_COUNT; j++)
+            if (tmp->val[j])
+            {
+                enumToStr(j, tmpStr);
+                fprintf(fp, " %s, ", tmpStr);
+            }
+
+        free(tmp);
+        fprintf(fp, "\n\n");
+    }
+    fclose(fp);
+
+    fp = fopen("follow.txt", "w");
+    for (int i = 0; i < N_TERMINALS_COUNT; i++)
+    {
+        enumToStr(i + TERMINALS_COUNT,curNT);
+        fprintf(fp, "%s : ",curNT);
+
+        tmp = F->follow[i];
+        for(int j = 0; j < TERMINALS_COUNT; j ++)
+            if(tmp->val[j])
+            {
+                if(j == ENDOFFILE)
+                {
+                    fprintf(fp," ENDOFFILE, ");  //do not free temp, needed since we are pointing to something we are using
+                    
+                }
+                else
+                {
+                    enumToStr(j,tmpStr);
+                    fprintf(fp," %s, ",tmpStr);
+                }
+            }
+        fprintf(fp, "\n\n");
+    }
+    fclose(fp);
+}
+
 FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
 {
     // TODO: _firstAndFollow needs to be computed. First And Follow Files need to be generated as output
@@ -48,31 +105,32 @@ FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
     while (flag)
     {
         flag = false;
-        for(int i=0;i<N_TERMINALS_COUNT;i++)
+        for (int i = 0; i < N_TERMINALS_COUNT; i++)
         {
             for (int j = 0; j < _firstAndFollow->ruleCount[i]; j++)
             {
-                calculateFollowFromNTRule(_firstAndFollow->follow[i],G->NT[i][j],&flag,_firstAndFollow);
+                calculateFollowFromNTRule(_firstAndFollow->follow[i], G->NT[i][j], &flag, _firstAndFollow);
             }
         }
     }
+    populateFirstAndFollowText(_firstAndFollow);
 }
 
-void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool* flag, FirstAndFollow F)
+void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F)
 {
-    if(isNTNode(RHSNode))
+    if (isNTNode(RHSNode))
     {
-        if(RHSNode->next == NULL)
+        if (RHSNode->next == NULL)
         {
-            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],_followOfNT,flag);
+            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], _followOfNT, flag);
             return;
         }
-        calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
+        calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
 
-        if(! isNTNode(RHSNode->next))
+        if (!isNTNode(RHSNode->next))
         {
-            //Note that the next Terminal in the rule can not be EPS, as any rule that contains EPS is essentially only EPS
-            if(! (F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)]))
+            // Note that the next Terminal in the rule can not be EPS, as any rule that contains EPS is essentially only EPS
+            if (!(F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)]))
             {
                 F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)] = true;
                 *flag = true;
@@ -80,27 +138,30 @@ void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode
             return;
         }
 
-        TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode->next),F);
+        TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode->next), F);
 
-        if(! tmp->val[(int)EPS])
+        if (!tmp->val[(int)EPS])
         {
-            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
+            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], tmp, flag);
+
+            free(tmp);
             return;
         }
 
         tmp->val[(int)EPS] = false;
-        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
-        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],F->follow[getNTIDFromNode(RHSNode->next)],flag);
-        
+        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], tmp, flag);
+        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], F->follow[getNTIDFromNode(RHSNode->next)], flag);
+
+        free(tmp);
         return;
     }
 
-    if(RHSNode->next == NULL)
+    if (RHSNode->next == NULL)
     {
         return;
     }
 
-    calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
+    calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
 }
 
 void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F) // firstAndFollow F is being passed here because firstOfNT requires it.
@@ -117,14 +178,17 @@ void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bo
 
     TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode), F);
 
-    if (! tmp->val[(int)EPS])
+    if (!tmp->val[(int)EPS])
     {
         appendSetUnion(_firstOfRule, tmp, flag);
+
+        free(tmp);
         return;
     }
 
     tmp->val[(int)EPS] = false;
     appendSetUnion(_firstOfRule, tmp, flag);
+    free(tmp);
 
     if (RHSNode->next == NULL)
     {
@@ -133,13 +197,14 @@ void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bo
             _firstOfRule->val[(int)EPS] = true;
             *flag = true;
         }
+
         return;
     }
 
     calculateFirstOfRule(_firstOfRule, RHSNode->next, flag, F);
 }
 
-TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F)
+TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F) // make sure to free the pointer after using it wherever it is called
 {
     TerminalBucketSet first = createSet();
 
@@ -435,4 +500,126 @@ Vocabulary encodeStr(const char *str)
         if (!strcmp(str, conversion[i].str))
             return conversion[i].val;
     return -1;
+}
+
+void enumToStr(Vocabulary v, char *dest)
+{
+    const static struct
+    {
+        Vocabulary val;
+        const char *str;
+    } conversion[] = {
+        {TK_ENDUNION, "TK_ENDUNION"},
+        {EPS, "EPS"},
+        {TK_COMMA, "TK_COMMA"},
+        {TK_READ, "TK_READ"},
+        {TK_REAL, "TK_REAL"},
+        {TK_DOT, "TK_DOT"},
+        {TK_GE, "TK_GE"},
+        {TK_NE, "TK_NE"},
+        {TK_PLUS, "TK_PLUS"},
+        {TK_DEFINETYPE, "TK_DEFINETYPE"},
+        {TK_ASSIGNOP, "TK_ASSIGNOP"},
+        {TK_AS, "TK_AS"},
+        {TK_CL, "TK_CL"},
+        {TK_DIV, "TK_DIV"},
+        {TK_GT, "TK_GT"},
+        {TK_PARAMETERS, "TK_PARAMETERS"},
+        {TK_UNION, "TK_UNION"},
+        {TK_RUID, "TK_RUID"},
+        {TK_SQR, "TK_SQR"},
+        {TK_FIELDID, "TK_FIELDID"},
+        {TK_MUL, "TK_MUL"},
+        {TK_OR, "TK_OR"},
+        {TK_END, "TK_END"},
+        {TK_LIST, "TK_LIST"},
+        {TK_WRITE, "TK_WRITE"},
+        {TK_TYPE, "TK_TYPE"},
+        {TK_SEM, "TK_SEM"},
+        {TK_WITH, "TK_WITH"},
+        {TK_AND, "TK_AND"},
+        {TK_IF, "TK_IF"},
+        {TK_LT, "TK_LT"},
+        {TK_MINUS, "TK_MINUS"},
+        {TK_EQ, "TK_EQ"},
+        {TK_ELSE, "TK_ELSE"},
+        {TK_PARAMETER, "TK_PARAMETER"},
+        {TK_NUM, "TK_NUM"},
+        {TK_ENDIF, "TK_ENDIF"},
+        {TK_WHILE, "TK_WHILE"},
+        {TK_FUNID, "TK_FUNID"},
+        {TK_OP, "TK_OP"},
+        {TK_COLON, "TK_COLON"},
+        {TK_ID, "TK_ID"},
+        {TK_ENDRECORD, "TK_ENDRECORD"},
+        {TK_LE, "TK_LE"},
+        {TK_NOT, "TK_NOT"},
+        {TK_RECORD, "TK_RECORD"},
+        {TK_THEN, "TK_THEN"},
+        {TK_RNUM, "TK_RNUM"},
+        {TK_SQL, "TK_SQL"},
+        {TK_OUTPUT, "TK_OUTPUT"},
+        {TK_INT, "TK_INT"},
+        {TK_CALL, "TK_CALL"},
+        {TK_INPUT, "TK_INPUT"},
+        {TK_RETURN, "TK_RETURN"},
+        {TK_ENDWHILE, "TK_ENDWHILE"},
+        {TK_GLOBAL, "TK_GLOBAL"},
+        {TK_MAIN, "TK_MAIN"},
+        {iterativeStmt, "<iterativeStmt>"},
+        {global_or_not, "<global_or_not>"},
+        {relationalOp, "<relationalOp>"},
+        {A, "<A>"},
+        {stmts, "<stmts>"},
+        {input_par, "<input_par>"},
+        {recId, "<recId>"},
+        {declarations, "<declarations>"},
+        {arithmeticExpression2Contd, "<arithmeticExpression2Contd>"},
+        {otherFunctions, "<otherFunctions>"},
+        {definetypestmt, "<definetypestmt>"},
+        {var, "<var>"},
+        {ioStmt, "<ioStmt>"},
+        {more_ids, "<more_ids>"},
+        {assignmentStmt, "<assignmentStmt>"},
+        {function, "<function>"},
+        {returnStmt, "<returnStmt>"},
+        {typeDefinitions, "<typeDefinitions>"},
+        {otherStmts, "<otherStmts>"},
+        {declaration, "<declaration>"},
+        {arithmeticExpressionContd, "<arithmeticExpressionContd>"},
+        {operator2, "<operator2>"},
+        {funCallStmt, "<funCallStmt>"},
+        {parameter_list, "<parameter_list>"},
+        {primitiveDatatype, "<primitiveDatatype>"},
+        {booleanExpression, "<booleanExpression>"},
+        {arithmeticExpression2, "<arithmeticExpression2>"},
+        {singleOrRecId, "<singleOrRecId>"},
+        {output_par, "<output_par>"},
+        {arithmeticExpression, "<arithmeticExpression>"},
+        {mainFunction, "<mainFunction>"},
+        {outputParameters, "<outputParameters>"},
+        {arithmeticExpression3, "<arithmeticExpression3>"},
+        {optionalReturn, "<optionalReturn>"},
+        {operator1, "<operator1>"},
+        {conditionalStmt, "<conditionalStmt>"},
+        {stmt, "<stmt>"},
+        {dataType, "<dataType>"},
+        {program, "<program>"},
+        {remaining_list, "<remaining_list>"},
+        {conditionalStmtContd, "<conditionalStmtContd>"},
+        {logicalOp, "<logicalOp>"},
+        {fieldDefinitions, "<fieldDefinitions>"},
+        {fieldDefinition, "<fieldDefinition>"},
+        {typeDefinition, "<typeDefinition>"},
+        {inputParameters, "<inputParameters>"},
+        {constructedDatatype, "<constructedDatatype>"},
+        {moreFields, "<moreFields>"},
+        {idList, "<idList>"},
+    };
+    for (int i = 0; i < sizeof(conversion) / sizeof(conversion[0]); i++)
+        if (conversion[i].val == v)
+        {
+            strcpy(dest, conversion[i].str);
+            return;
+        }
 }

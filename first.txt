@@ -1,0 +1,98 @@
+<iterativeStmt> :  TK_WHILE, 
+
+<global_or_not> :  EPS,  TK_COLON, 
+
+<relationalOp> :  TK_GE,  TK_NE,  TK_GT,  TK_LT,  TK_EQ,  TK_LE, 
+
+<A> :  TK_UNION,  TK_RECORD, 
+
+<stmts> :  TK_READ,  TK_DEFINETYPE,  TK_UNION,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_WHILE,  TK_ID,  TK_RECORD,  TK_SQL,  TK_CALL,  TK_RETURN, 
+
+<input_par> :  TK_INPUT, 
+
+<recId> :  EPS,  TK_DOT, 
+
+<declarations> :  EPS,  TK_TYPE, 
+
+<arithmeticExpression2Contd> :  EPS,  TK_DIV,  TK_MUL, 
+
+<otherFunctions> :  EPS,  TK_FUNID, 
+
+<definetypestmt> :  TK_DEFINETYPE, 
+
+<var> :  TK_NUM,  TK_ID,  TK_RNUM, 
+
+<ioStmt> :  TK_READ,  TK_WRITE, 
+
+<more_ids> :  EPS,  TK_COMMA, 
+
+<assignmentStmt> :  TK_ID, 
+
+<function> :  TK_FUNID, 
+
+<returnStmt> :  TK_RETURN, 
+
+<typeDefinitions> :  EPS,  TK_DEFINETYPE,  TK_UNION,  TK_RECORD, 
+
+<otherStmts> :  EPS,  TK_READ,  TK_WRITE,  TK_IF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL, 
+
+<declaration> :  TK_TYPE, 
+
+<arithmeticExpressionContd> :  EPS,  TK_PLUS,  TK_MINUS, 
+
+<operator2> :  TK_DIV,  TK_MUL, 
+
+<funCallStmt> :  TK_SQL,  TK_CALL, 
+
+<parameter_list> :  TK_REAL,  TK_UNION,  TK_RUID,  TK_RECORD,  TK_INT, 
+
+<primitiveDatatype> :  TK_REAL,  TK_INT, 
+
+<booleanExpression> :  TK_NUM,  TK_OP,  TK_ID,  TK_NOT,  TK_RNUM, 
+
+<arithmeticExpression2> :  TK_NUM,  TK_OP,  TK_ID,  TK_RNUM, 
+
+<singleOrRecId> :  TK_ID, 
+
+<output_par> :  EPS,  TK_OUTPUT, 
+
+<arithmeticExpression> :  TK_NUM,  TK_OP,  TK_ID,  TK_RNUM, 
+
+<mainFunction> :  TK_MAIN, 
+
+<outputParameters> :  EPS,  TK_SQL, 
+
+<arithmeticExpression3> :  TK_NUM,  TK_OP,  TK_ID,  TK_RNUM, 
+
+<optionalReturn> :  EPS,  TK_SQL, 
+
+<operator1> :  TK_PLUS,  TK_MINUS, 
+
+<conditionalStmt> :  TK_IF, 
+
+<stmt> :  TK_READ,  TK_WRITE,  TK_IF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL, 
+
+<dataType> :  TK_REAL,  TK_UNION,  TK_RUID,  TK_RECORD,  TK_INT, 
+
+<program> :  TK_FUNID,  TK_MAIN, 
+
+<remaining_list> :  EPS,  TK_COMMA, 
+
+<conditionalStmtContd> :  TK_ELSE,  TK_ENDIF, 
+
+<logicalOp> :  TK_OR,  TK_AND, 
+
+<fieldDefinitions> :  TK_TYPE, 
+
+<fieldDefinition> :  TK_TYPE, 
+
+<typeDefinition> :  TK_UNION,  TK_RECORD, 
+
+<inputParameters> :  TK_SQL, 
+
+<constructedDatatype> :  TK_UNION,  TK_RUID,  TK_RECORD, 
+
+<moreFields> :  EPS,  TK_TYPE, 
+
+<idList> :  TK_ID, 
+
