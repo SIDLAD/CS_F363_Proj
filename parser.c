@@ -14,15 +14,14 @@ grammar populateGrammar(grammar g, char *grammarFileName);
 int getNTID(Vocabulary NT);
 void insertGrammarSymbol(LinkedList node, Vocabulary v);
 table createParseTable(FirstAndFollow F, table T);
-void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
+void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F);
 void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
 bool isNTNode(LinkedList node);
 int getTerminalIDFromNode(LinkedList node);
 int getNTIDFromNode(LinkedList node);
+void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool* flag, FirstAndFollow F);
 //------------------//
-
-#define ENDOFFILE ((int)EPS) // this is only for convenience of follow-set computation, as follow-set can never contain epsilon
 
 // function definitions
 FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
@@ -39,13 +38,72 @@ FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
         {
             for (int j = 0; j < _firstAndFollow->ruleCount[i]; j++)
             {
-                firstOfRule(_firstAndFollow->first[i][j], G->NT[i][j], &flag, _firstAndFollow);
+                calculateFirstOfRule(_firstAndFollow->first[i][j], G->NT[i][j], &flag, _firstAndFollow);
+            }
+        }
+    }
+
+    flag = true;
+
+    while (flag)
+    {
+        flag = false;
+        for(int i=0;i<N_TERMINALS_COUNT;i++)
+        {
+            for (int j = 0; j < _firstAndFollow->ruleCount[i]; j++)
+            {
+                calculateFollowFromNTRule(_firstAndFollow->follow[i],G->NT[i][j],&flag,_firstAndFollow);
             }
         }
     }
 }
 
-void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F) // firstAndFollow F is being passed here because firstOfNT requires it.
+void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool* flag, FirstAndFollow F)
+{
+    if(isNTNode(RHSNode))
+    {
+        if(RHSNode->next == NULL)
+        {
+            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],_followOfNT,flag);
+            return;
+        }
+        calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
+
+        if(! isNTNode(RHSNode->next))
+        {
+            //Note that the next Terminal in the rule can not be EPS, as any rule that contains EPS is essentially only EPS
+            if(! (F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)]))
+            {
+                F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)] = true;
+                *flag = true;
+            }
+            return;
+        }
+
+        TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode->next),F);
+
+        if(! tmp->val[(int)EPS])
+        {
+            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
+            return;
+        }
+
+        tmp->val[(int)EPS] = false;
+        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
+        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],F->follow[getNTIDFromNode(RHSNode->next)],flag);
+        
+        return;
+    }
+
+    if(RHSNode->next == NULL)
+    {
+        return;
+    }
+
+    calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
+}
+
+void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F) // firstAndFollow F is being passed here because firstOfNT requires it.
 {
     if (!isNTNode(RHSNode)) // if it is a terminal node. Note that if it the rule can derive EPS, then first set of rule should contain EPS
     {
@@ -59,7 +117,7 @@ void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag,
 
     TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode), F);
 
-    if (!tmp->val[(int)EPS])
+    if (! tmp->val[(int)EPS])
     {
         appendSetUnion(_firstOfRule, tmp, flag);
         return;
@@ -78,7 +136,7 @@ void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag,
         return;
     }
 
-    firstOfRule(_firstOfRule, RHSNode->next, flag, F);
+    calculateFirstOfRule(_firstOfRule, RHSNode->next, flag, F);
 }
 
 TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F)
@@ -146,6 +204,8 @@ FirstAndFollow initializeFirstAndFollow(FirstAndFollow F, grammar G)
             F->first[i][j] = createSet();
         }
     }
+
+    F->follow[getNTID(STARTSYMBOL)]->val[ENDOFFILE] = true;
     return F;
 }
 

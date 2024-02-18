@@ -4,6 +4,8 @@
 
 #define MAX_LINE_SIZE_GRAMMAR 128
 #define grammarFile "grammar.txt"
+#define ENDOFFILE ((int)EPS)        // this is only for convenience of follow-set computation, as follow-set can never contain epsilon
+#define STARTSYMBOL program
 
 typedef struct grammar* grammar;
 typedef struct table* table;
