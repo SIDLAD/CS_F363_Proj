@@ -2,65 +2,165 @@
 #include <stdio.h>
 #include <string.h>
 
-//function prototypes//
-FirstAndFollow computeFirstAndFollowSets (grammar G);
+// function prototypes//
+FirstAndFollow computeFirstAndFollowSets(grammar G);
 TerminalBucketSet createSet();
-FirstAndFollow initializeFirstAndFollow(FirstAndFollow _firstAndFollow);
-TerminalBucketSet* increaseSetArraySize(TerminalBucketSet* setArray,int* currentSize); // &ruleCount[i] should be passed as currentSize-+
+FirstAndFollow initializeFirstAndFollow(FirstAndFollow _firstAndFollow, grammar G);
 void freeParseTree(parseTree PT);
-Vocabulary encodeStr (const char *str);
+Vocabulary encodeStr(const char *str);
 grammar initializeGrammar(grammar g);
-LinkedList* increaseProductionRHSSetSize(LinkedList* rhsSet,int* currentSize); // &ruleCount[i] will be passed as currentSize
-grammar populateGrammar(grammar g, char* grammarFileName);
+LinkedList *increaseProductionRHSSetSize(LinkedList *rhsSet, int *currentSize); // &ruleCount[i] will be passed as currentSize
+grammar populateGrammar(grammar g, char *grammarFileName);
 int getNTID(Vocabulary NT);
 void insertGrammarSymbol(LinkedList node, Vocabulary v);
-table createParseTable(FirstAndFollow F, table T);  
+table createParseTable(FirstAndFollow F, table T);
+void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
+TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F);
+void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
+bool isNTNode(LinkedList node);
+int getTerminalIDFromNode(LinkedList node);
+int getNTIDFromNode(LinkedList node);
 //------------------//
 
-//function definitions
-FirstAndFollow computeFirstAndFollowSets (grammar G) // G cannot be NULL
+#define ENDOFFILE ((int)EPS) // this is only for convenience of follow-set computation, as follow-set can never contain epsilon
+
+// function definitions
+FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
 {
-    
-    //TODO: _firstAndFollow needs to be computed. First And Follow Files need to be generated as output
+    // TODO: _firstAndFollow needs to be computed. First And Follow Files need to be generated as output
+
+    _firstAndFollow = initializeFirstAndFollow(_firstAndFollow, G);
+    bool flag = true;
+
+    while (flag)
+    {
+        flag = false;
+        for (int i = 0; i < N_TERMINALS_COUNT; i++)
+        {
+            for (int j = 0; j < _firstAndFollow->ruleCount[i]; j++)
+            {
+                firstOfRule(_firstAndFollow->first[i][j], G->NT[i][j], &flag, _firstAndFollow);
+            }
+        }
+    }
+}
+
+void firstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F) // firstAndFollow F is being passed here because firstOfNT requires it.
+{
+    if (!isNTNode(RHSNode)) // if it is a terminal node. Note that if it the rule can derive EPS, then first set of rule should contain EPS
+    {
+        if (!_firstOfRule->val[getTerminalIDFromNode(RHSNode)])
+        {
+            _firstOfRule->val[getTerminalIDFromNode(RHSNode)] = true;
+            *flag = true;
+        }
+        return;
+    }
+
+    TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode), F);
+
+    if (!tmp->val[(int)EPS])
+    {
+        appendSetUnion(_firstOfRule, tmp, flag);
+        return;
+    }
+
+    tmp->val[(int)EPS] = false;
+    appendSetUnion(_firstOfRule, tmp, flag);
+
+    if (RHSNode->next == NULL)
+    {
+        if (!_firstOfRule->val[(int)EPS])
+        {
+            _firstOfRule->val[(int)EPS] = true;
+            *flag = true;
+        }
+        return;
+    }
+
+    firstOfRule(_firstOfRule, RHSNode->next, flag, F);
+}
+
+TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F)
+{
+    TerminalBucketSet first = createSet();
+
+    for (int i = 0; i < TERMINALS_COUNT; i++)
+    {
+        if (first->val[i])
+            continue;
+
+        for (int j = 0; j < F->ruleCount[NT_ID]; j++)
+        {
+            first->val[i] |= F->first[NT_ID][j]->val[i];
+
+            if (first->val[i])
+                continue;
+        }
+    }
+
+    return first;
+}
+
+void appendSetUnion(TerminalBucketSet dest, TerminalBucketSet src, bool *flag)
+{
+    for (int i = 0; i < TERMINALS_COUNT; i++)
+        if (src->val[i] && !dest->val[i])
+        {
+            dest->val[i] = true;
+            *flag = true;
+        }
+}
+
+bool isNTNode(LinkedList node) // returns true if the linkedlist node's data item is a non-terminal
+{
+    return getNTID(*((Vocabulary *)(node->data))) >= 0;
+}
+
+int getTerminalIDFromNode(LinkedList node)
+{
+    return (int)(*((Vocabulary *)(node->data)));
+}
+
+int getNTIDFromNode(LinkedList node)
+{
+    return getNTID(*((Vocabulary *)(node->data)));
 }
 
 TerminalBucketSet createSet()
 {
-    TerminalBucketSet set = (TerminalBucketSet)calloc(1,sizeof(struct terminalBucketSet));  //calloc used instead of malloc so that all bits are initialised to zero
+    TerminalBucketSet set = (TerminalBucketSet)calloc(1, sizeof(struct terminalBucketSet)); // calloc used instead of malloc so that all bits are initialised to zero
     return set;
 }
 
-FirstAndFollow initializeFirstAndFollow(FirstAndFollow _firstAndFollow)
+FirstAndFollow initializeFirstAndFollow(FirstAndFollow F, grammar G)
 {
-    _firstAndFollow = (FirstAndFollow)malloc(sizeof(struct firstAndFollow));
-    for(int i = 0; i < N_TERMINALS_COUNT ; i++)
+    F = (FirstAndFollow)malloc(sizeof(struct firstAndFollow));
+    for (int i = 0; i < N_TERMINALS_COUNT; i++)
     {
-        _firstAndFollow->follow[i] = createSet();
-        _firstAndFollow->first[i] = NULL;
-        _firstAndFollow->ruleCount[i] = 0;
+        F->ruleCount[i] = G->ruleCount[i];
+        F->follow[i] = createSet();
+        F->first[i] = (TerminalBucketSet *)calloc(F->ruleCount[i], sizeof(TerminalBucketSet));
+        for (int j = 0; j < F->ruleCount[i]; j++)
+        {
+            F->first[i][j] = createSet();
+        }
     }
-    return _firstAndFollow;
-}
-
-TerminalBucketSet* increaseSetArraySize(TerminalBucketSet* setArray,int* currentSize) // &ruleCount[i] should be passed as currentSize-+
-{
-    setArray = realloc(setArray, ((*currentSize)++ + 1) * sizeof(struct terminalBucketSet));
-    memset(setArray + *currentSize - 1,0, sizeof(struct terminalBucketSet));        //initialising all bits of struct to zero ie array is initialised to all false
-    return setArray;
+    return F;
 }
 
 void freeParseTree(parseTree PT)
 {
-    //TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
+    // TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
 }
 
 grammar initializeGrammar(grammar g)
 {
-    if(g != NULL)
+    if (g != NULL)
         return g;
 
     g = (grammar)malloc(sizeof(struct grammar));
-    for(int i = 0; i < N_TERMINALS_COUNT ; i++)
+    for (int i = 0; i < N_TERMINALS_COUNT; i++)
     {
         g->NT[i] = NULL;
         g->ruleCount[i] = 0;
@@ -69,49 +169,54 @@ grammar initializeGrammar(grammar g)
     return g;
 }
 
-LinkedList* increaseProductionRHSSetSize(LinkedList* rhsSet,int* currentSize) // &ruleCount[i] will be passed as currentSize
+LinkedList *increaseProductionRHSSetSize(LinkedList *rhsSet, int *currentSize) // &ruleCount[i] will be passed as currentSize
 {
-    rhsSet = (LinkedList *) realloc(NULL,((*currentSize)++ + 1)* sizeof(LinkedList));
+    rhsSet = (LinkedList *)realloc(rhsSet, ((*currentSize)++ + 1) * sizeof(LinkedList));
     rhsSet[*currentSize - 1] = createLinkedListNode();
     return rhsSet;
 }
 
-grammar populateGrammar(grammar g, char* grammarFileName) //g cannot be NULL. If grammarFileName == NULL then grammarFileName := grammar.txt
+grammar populateGrammar(grammar g, char *grammarFileName) // g cannot be NULL. If grammarFileName == NULL then grammarFileName := grammar.txt
 {
-    if(grammarFileName == NULL)
+    if (grammarFileName == NULL)
     {
-        grammarFileName = (char*) malloc(MAX_FILENAME_LENGTH * (sizeof(char)));
-        strcpy(grammarFileName,grammarFile);
+        grammarFileName = (char *)malloc(MAX_FILENAME_LENGTH * (sizeof(char)));
+        strcpy(grammarFileName, grammarFile);
     }
 
     char line[MAX_LINE_SIZE_GRAMMAR];
-    FILE* fp = fopen(grammarFileName, "r");
-    char* symbolString;
-    Vocabulary symbol; 
+    FILE *fp = fopen(grammarFileName, "r");
+    char *symbolString;
+    Vocabulary symbol;
     int NT_ID;
 
-    while(fgets(line,sizeof(line),fp)!=NULL)
+    while (fgets(line, sizeof(line), fp) != NULL)
     {
-        symbolString = strtok(line, " ");   // this is our LHS
+        symbolString = strtok(line, " "); // this is our LHS
 
         symbol = encodeStr(symbolString);
         NT_ID = getNTID(symbol);
-        
-        strtok(NULL, " \n");                  // skipping ===>
 
-        symbolString = strtok(NULL, " \n");   // reading first symbolString of RHS
+        strtok(NULL, " \n"); // skipping ===>
+
+        symbolString = strtok(NULL, " \n"); // reading first symbolString of RHS
         symbol = encodeStr(symbolString);
-        
-        g->NT[NT_ID] =  increaseProductionRHSSetSize(g->NT[NT_ID],&(g->ruleCount[NT_ID]));
+
+        g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID], &(g->ruleCount[NT_ID]));
         LinkedList currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
-        insertGrammarSymbol(currentNode,symbol);
-        
-        while(symbolString = strtok(NULL, " \n")) // RHS of rules onwards
+        insertGrammarSymbol(currentNode, symbol);
+
+        while (symbolString = strtok(NULL, " \n")) // RHS of rules onwards
         {
-            if(strcmp(symbolString,"|") == 0)
+            if (strcmp(symbolString, "|") == 0)
             { // create a new head and populate for the new rule after |
-                g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID],&(g->ruleCount[NT_ID])); 
-                LinkedList currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
+
+                symbolString = strtok(NULL, " \n");
+                symbol = encodeStr(symbolString);
+
+                g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID], &(g->ruleCount[NT_ID]));
+                currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
+                insertGrammarSymbol(currentNode, symbol);
             }
             else
             {
@@ -119,7 +224,7 @@ grammar populateGrammar(grammar g, char* grammarFileName) //g cannot be NULL. If
                 // continue on the same head
                 currentNode->next = createLinkedListNode();
                 currentNode = currentNode->next;
-                insertGrammarSymbol(currentNode,symbol);
+                insertGrammarSymbol(currentNode, symbol);
             }
         }
     }
@@ -128,38 +233,39 @@ grammar populateGrammar(grammar g, char* grammarFileName) //g cannot be NULL. If
 
 void insertGrammarSymbol(LinkedList node, Vocabulary v)
 {
-    Vocabulary* tmp = (Vocabulary*) malloc(sizeof(Vocabulary));
+    Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
     *tmp = v;
     node->data = tmp;
 }
 
-int getNTID(Vocabulary NT)
+int getNTID(Vocabulary NT) // returns a negative value if not a non-terminal
 {
     return (int)NT - TERMINALS_COUNT;
 }
 
-table createParseTable(FirstAndFollow F, table T)
+table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or _firstAndFollow.
 {
-    if(F == NULL)
+    if (F == NULL)
     {
         _grammar = initializeGrammar(_grammar);
-        _grammar = populateGrammar(_grammar,NULL);
+        _grammar = populateGrammar(_grammar, NULL);
         computeFirstAndFollowSets(_grammar);
         F = _firstAndFollow;
     }
 
-    //TODO 
+    // TODO
     return T;
 }
 
-Vocabulary encodeStr (const char *str)
+Vocabulary encodeStr(const char *str)
 {
-    const static struct {
-    Vocabulary val;
-    const char *str;
-    } conversion [] = {
+    const static struct
+    {
+        Vocabulary val;
+        const char *str;
+    } conversion[] = {
         {TK_ENDUNION, "TK_ENDUNION"},
-        {TK_EPS, "TK_EPS"},
+        {EPS, "EPS"},
         {TK_COMMA, "TK_COMMA"},
         {TK_READ, "TK_READ"},
         {TK_REAL, "TK_REAL"},
@@ -265,8 +371,8 @@ Vocabulary encodeStr (const char *str)
         {moreFields, "<moreFields>"},
         {idList, "<idList>"},
     };
-    for (int i = 0;  i < sizeof (conversion) / sizeof (conversion[0]);  i++)
-        if (!strcmp (str, conversion[i].str))
+    for (int i = 0; i < sizeof(conversion) / sizeof(conversion[0]); i++)
+        if (!strcmp(str, conversion[i].str))
             return conversion[i].val;
     return -1;
 }

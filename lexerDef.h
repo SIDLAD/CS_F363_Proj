@@ -27,7 +27,7 @@ struct twinBuffer
 
 enum vocabulary{
     TK_ENDUNION,
-    TK_EPS,
+    EPS,
     TK_COMMA,
     TK_READ,
     TK_REAL,
