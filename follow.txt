@@ -12,13 +12,13 @@
 
 <recId> :  TK_GE,  TK_NE,  TK_PLUS,  TK_ASSIGNOP,  TK_CL,  TK_DIV,  TK_GT,  TK_MUL,  TK_SEM,  TK_LT,  TK_MINUS,  TK_EQ,  TK_LE, 
 
-<declarations> :  TK_READ,  TK_WRITE,  TK_IF,  TK_ELSE,  TK_ENDIF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN,  TK_ENDWHILE, 
+<declarations> :  TK_READ,  TK_WRITE,  TK_IF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN, 
 
 <arithmeticExpression2Contd> :  TK_PLUS,  TK_CL,  TK_SEM,  TK_MINUS, 
 
 <otherFunctions> :  TK_MAIN, 
 
-<definetypestmt> :  TK_READ,  TK_DEFINETYPE,  TK_UNION,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_ELSE,  TK_ENDIF,  TK_WHILE,  TK_ID,  TK_RECORD,  TK_SQL,  TK_CALL,  TK_RETURN,  TK_ENDWHILE, 
+<definetypestmt> :  TK_READ,  TK_DEFINETYPE,  TK_UNION,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_WHILE,  TK_ID,  TK_RECORD,  TK_SQL,  TK_CALL,  TK_RETURN, 
 
 <var> :  TK_GE,  TK_NE,  TK_PLUS,  TK_CL,  TK_DIV,  TK_GT,  TK_MUL,  TK_SEM,  TK_LT,  TK_MINUS,  TK_EQ,  TK_LE, 
 
@@ -32,11 +32,11 @@
 
 <returnStmt> :  TK_END, 
 
-<typeDefinitions> :  TK_READ,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_ELSE,  TK_ENDIF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN,  TK_ENDWHILE, 
+<typeDefinitions> :  TK_READ,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN, 
 
 <otherStmts> :  TK_ELSE,  TK_ENDIF,  TK_RETURN,  TK_ENDWHILE, 
 
-<declaration> :  TK_READ,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_ELSE,  TK_ENDIF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN,  TK_ENDWHILE, 
+<declaration> :  TK_READ,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_WHILE,  TK_ID,  TK_SQL,  TK_CALL,  TK_RETURN, 
 
 <arithmeticExpressionContd> :  TK_CL,  TK_SEM, 
 
@@ -86,7 +86,7 @@
 
 <fieldDefinition> :  TK_ENDUNION,  TK_TYPE,  TK_ENDRECORD, 
 
-<typeDefinition> :  TK_READ,  TK_DEFINETYPE,  TK_UNION,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_ELSE,  TK_ENDIF,  TK_WHILE,  TK_ID,  TK_RECORD,  TK_SQL,  TK_CALL,  TK_RETURN,  TK_ENDWHILE, 
+<typeDefinition> :  TK_READ,  TK_DEFINETYPE,  TK_UNION,  TK_WRITE,  TK_TYPE,  TK_IF,  TK_WHILE,  TK_ID,  TK_RECORD,  TK_SQL,  TK_CALL,  TK_RETURN, 
 
 <inputParameters> :  TK_SEM, 
 

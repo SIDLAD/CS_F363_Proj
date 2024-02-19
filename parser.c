@@ -22,7 +22,7 @@ void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
 bool isNTNode(LinkedList node);
 int getTerminalIDFromNode(LinkedList node);
 int getNTIDFromNode(LinkedList node);
-void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F);
+TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 //------------------//
 
 // function definitions
@@ -109,59 +109,57 @@ FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
         {
             for (int j = 0; j < _firstAndFollow->ruleCount[i]; j++)
             {
-                calculateFollowFromNTRule(_firstAndFollow->follow[i], G->NT[i][j], &flag, _firstAndFollow);
+                TerminalBucketSet tmp = calculateFollowFromNTRule(_firstAndFollow->follow[i], G->NT[i][j], &flag, _firstAndFollow);
+                free(tmp);
             }
         }
     }
     populateFirstAndFollowText(_firstAndFollow);
 }
 
-void calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F)
+TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F)    //free up the returned pointer after recursive calls are done, where the first call was made.
 {
+    TerminalBucketSet tmp = NULL;
     if (isNTNode(RHSNode))
     {
         if (RHSNode->next == NULL)
         {
             appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], _followOfNT, flag);
-            return;
-        }
-        calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
-
-        if (!isNTNode(RHSNode->next))
-        {
-            // Note that the next Terminal in the rule can not be EPS, as any rule that contains EPS is essentially only EPS
-            if (!(F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)]))
+            tmp = firstOfNT(getNTIDFromNode(RHSNode),F);
+            if(tmp->val[(int)EPS])
             {
-                F->follow[getNTIDFromNode(RHSNode)]->val[getTerminalIDFromNode(RHSNode->next)] = true;
-                *flag = true;
+                tmp->val[(int)EPS] = false;
+                appendSetUnion(tmp, _followOfNT, NULL);
             }
-            return;
+            return tmp;
         }
-
-        TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode->next), F);
-
-        if (!tmp->val[(int)EPS])
+        tmp = calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
+        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
+        
+        TerminalBucketSet tmp2 = firstOfNT(getNTIDFromNode(RHSNode),F);
+        if(tmp2->val[(int)EPS])
         {
-            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], tmp, flag);
-
-            free(tmp);
-            return;
+            tmp2->val[(int)EPS] = false;
+            appendSetUnion(tmp2,tmp,NULL);
         }
-
-        tmp->val[(int)EPS] = false;
-        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], tmp, flag);
-        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], F->follow[getNTIDFromNode(RHSNode->next)], flag);
 
         free(tmp);
-        return;
+        return tmp2;
     }
 
-    if (RHSNode->next == NULL)
+    if(RHSNode->next != NULL)   //if the current node is EPS, then this if block cannot execute, as next will definitely be NULL
     {
-        return;
+        tmp = calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
     }
 
-    calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
+    if(getTerminalIDFromNode(RHSNode) == (int)EPS)
+    {
+        return tmp; // == NULL
+    }
+
+    tmp = createSet();
+    tmp->val[getTerminalIDFromNode(RHSNode)] = true;
+    return tmp;
 }
 
 void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F) // firstAndFollow F is being passed here because firstOfNT requires it.
@@ -231,7 +229,8 @@ void appendSetUnion(TerminalBucketSet dest, TerminalBucketSet src, bool *flag)
         if (src->val[i] && !dest->val[i])
         {
             dest->val[i] = true;
-            *flag = true;
+            if(flag != NULL)
+                *flag = true;
         }
 }
 
