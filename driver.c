@@ -18,10 +18,7 @@ Create a menu as per the following instructions
 #include <string.h>
 #include <time.h>
 
-#include "parser.c"
-
-char testcaseFile[MAX_FILENAME_LENGTH];
-char outputFile[MAX_FILENAME_LENGTH];
+#include "parser.h"
 
 void printMenu()
 {
@@ -40,11 +37,15 @@ void case_cleanComments()
 
 void case_printTokenList()
 {
-    // tokenInfo tokenInfo_;
-    // while(tokenInfo_ = getNextToken(buffer))
-    // {
-    //     printf("%s %s %d\n", tokenInfo_->tokenName, tokenInfo_->lexeme, tokenInfo_->lineNumber);
-    // }
+    initialiseSymbolTable();
+    initialiseBuffer(buffer);
+    tokenInfo tokenInfo_;
+    while(tokenInfo_ = getNextToken(buffer))
+    {
+        printf("%s %s %d\n", tokenInfo_->tokenName, tokenInfo_->lexeme, tokenInfo_->lineNumber);
+    }
+    freeBuffer(buffer);
+    freeSymbolTable();
 }
 
 void case_generateParseTree()

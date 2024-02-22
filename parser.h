@@ -6,5 +6,4 @@ table createParseTable(FirstAndFollow F, table T);      //if firstAndFollow is n
 void parseInputSourceCode(char *testcaseFile, table T);
 void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
 
-//TODO: should we add the supporting functions locally used?
 void freeParseTree(parseTree PT);

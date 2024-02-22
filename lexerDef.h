@@ -1,3 +1,5 @@
+#include "dataStructures/trieADT.c"
+
 #define BUFFER_SIZE 256
 #define VOCABULARY_COUNT 106
 #define TERMINALS_COUNT 57
@@ -11,6 +13,10 @@ typedef enum vocabulary Vocabulary;
 
 int currentlineNumber = 0;
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
+Trie symbolTable = NULL;
+
+char testcaseFile[MAX_FILENAME_LENGTH];
+char parseTreeOutFile[MAX_FILENAME_LENGTH];
 
 struct tokenInfo
 {
@@ -21,8 +27,11 @@ struct tokenInfo
 
 struct twinBuffer
 {
+    FILE* fp;
     char first[BUFFER_SIZE];
     char second[BUFFER_SIZE];
+    int lexemeBegin;
+    int forward;
 };
 
 enum vocabulary{
