@@ -377,7 +377,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         F = _firstAndFollow;
     }
 
-;    initialiseSymbolTable();
+    initialiseSymbolTable();
     initialiseBuffer(buffer);
     // TODO
 
