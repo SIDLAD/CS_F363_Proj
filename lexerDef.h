@@ -5,7 +5,7 @@
 #define TERMINALS_COUNT 57
 #define N_TERMINALS_COUNT (VOCABULARY_COUNT-TERMINALS_COUNT)
 #define MAX_LEXEME_LENGTH 20
-#define MAX_FILENAME_LENGTH 20
+#define MAX_FILENAME_LENGTH 50
 
 typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
@@ -15,15 +15,8 @@ int currentlineNumber = 0;
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
 Trie symbolTable = NULL;
 
-char testcaseFile[MAX_FILENAME_LENGTH];
-char parseTreeOutFile[MAX_FILENAME_LENGTH];
-
-struct tokenInfo
-{
-    char tokenName[100];
-    char lexeme[20];
-    int lineNumber;
-};
+char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
+char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
 
 struct twinBuffer
 {
@@ -141,4 +134,11 @@ enum vocabulary{
     constructedDatatype,
     moreFields,
     idList
+};
+
+struct tokenInfo
+{
+    Vocabulary tokenName;
+    char lexeme[20];
+    int lineNumber;
 };

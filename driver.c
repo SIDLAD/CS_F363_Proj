@@ -18,7 +18,7 @@ Create a menu as per the following instructions
 #include <string.h>
 #include <time.h>
 
-#include "parser.h"
+#include "parser.c"
 
 void printMenu()
 {
@@ -38,13 +38,15 @@ void case_cleanComments()
 void case_printTokenList()
 {
     initialiseSymbolTable();
-    initialiseBuffer(buffer);
-    tokenInfo tokenInfo_;
-    while(tokenInfo_ = getNextToken(buffer))
-    {
-        printf("%s %s %d\n", tokenInfo_->tokenName, tokenInfo_->lexeme, tokenInfo_->lineNumber);
-    }
-    freeBuffer(buffer);
+    initialiseTwinBuffer();
+    // tokenInfo _tokenInfo;
+    // char token[100];
+    // while(_tokenInfo = getNextToken(buffer))
+    // {
+    //     enumToStr(_tokenInfo->tokenName,token);
+    //     printf("%s %s %d\n", token, _tokenInfo->lexeme, _tokenInfo->lineNumber);
+    // }
+    freeTwinBuffer();
     freeSymbolTable();
 }
 
