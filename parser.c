@@ -28,8 +28,8 @@ TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, Linke
 // function definitions
 void populateFirstAndFollowText(FirstAndFollow F)
 {
-    char curNT[MAX_LEXEME_LENGTH];
-    char tmpStr[MAX_LEXEME_LENGTH];
+    char curNT[VOCAB_STRLEN_CAP];
+    char tmpStr[VOCAB_STRLEN_CAP];
     TerminalBucketSet tmp = NULL;
 
     FILE *fp = fopen("first.txt", "w");
@@ -39,7 +39,7 @@ void populateFirstAndFollowText(FirstAndFollow F)
     {
         // i corresponds to non-terminal for which we are writing first and follow
         //  F->follow[i][]; //this is follow for given non-terminal
-        enumToStr(i + TERMINALS_COUNT, curNT);
+        enumToStr(i + TERMINALS_COUNT + 1, curNT);
         fprintf(fp, "%s : ", curNT);
 
         tmp = firstOfNT(i, F);
@@ -58,7 +58,7 @@ void populateFirstAndFollowText(FirstAndFollow F)
     fp = fopen("follow.txt", "w");
     for (int i = 0; i < N_TERMINALS_COUNT; i++)
     {
-        enumToStr(i + TERMINALS_COUNT,curNT);
+        enumToStr(i + TERMINALS_COUNT + 1,curNT);
         fprintf(fp, "%s : ",curNT);
 
         tmp = F->follow[i];
@@ -364,7 +364,7 @@ void insertGrammarSymbol(LinkedList node, Vocabulary v)
 
 int getNTID(Vocabulary NT) // returns a negative value if not a non-terminal
 {
-    return (int)NT - TERMINALS_COUNT;
+    return (int)NT - TERMINALS_COUNT - 1;
 }
 
 table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or _firstAndFollow.

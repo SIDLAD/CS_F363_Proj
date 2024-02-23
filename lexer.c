@@ -13,6 +13,9 @@ void retract(twinBuffer _buffer);
 void doubleRetract(twinBuffer _buffer);
 char *retractAndReturnLexeme(char *Dest, twinBuffer _buffer);
 tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber);
+char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer);
+void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme);
+void lookupSymbolTable(char* lexeme);
 //------------------//
 
 // function definitions
@@ -90,6 +93,16 @@ void freeSymbolTable()
     symbolTable = NULL;
 }
 
+void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme)
+{
+    insertIntoTrie((void*)tkinf,lexeme,symbolTable);
+}
+
+void lookupSymbolTable(char* lexeme)
+{
+    getDataFromTrie(lexeme,symbolTable);
+}
+
 FILE *getStream(FILE *fp)
 {
     if (fp == NULL)
@@ -149,4 +162,10 @@ void resetBufferPtrs(twinBuffer _buffer)
 {
     incrementBufferForward(_buffer);
     _buffer->lexemeBegin = _buffer->forward;
+}
+
+char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
+{
+    incrementBufferForward(_buffer);
+    return retractAndReturnLexeme(Dest,_buffer);
 }

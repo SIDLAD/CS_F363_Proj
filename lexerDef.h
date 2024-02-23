@@ -1,10 +1,12 @@
 #include "dataStructures/trieADT.c"
 
 #define BUFFER_SIZE 256
-#define VOCABULARY_COUNT 106
-#define TERMINALS_COUNT 57
-#define N_TERMINALS_COUNT (VOCABULARY_COUNT-TERMINALS_COUNT)
-#define MAX_LEXEME_LENGTH 20
+#define VOCABULARY_COUNT ((int)TOTAL_VOCAB_SIZE)
+#define TERMINALS_COUNT ((int)TOTAL_TERMINALS_COUNT)
+#define N_TERMINALS_COUNT ((int)TOTAL_VOCAB_SIZE-TERMINALS_COUNT - 1)
+#define VOCAB_STRLEN_CAP 35
+#define MAX_VARIABLE_IDENTIFIER_LENGTH 20
+#define MAX_FUNCTION_IDENTIFIER_LENGTH 30
 #define MAX_FILENAME_LENGTH 50
 
 typedef struct tokenInfo* tokenInfo;
@@ -85,6 +87,7 @@ enum vocabulary{
     TK_ENDWHILE,
     TK_GLOBAL,
     TK_MAIN,
+    TOTAL_TERMINALS_COUNT,
     iterativeStmt,
     global_or_not,
     relationalOp,
@@ -133,7 +136,8 @@ enum vocabulary{
     inputParameters,
     constructedDatatype,
     moreFields,
-    idList
+    idList,
+    TOTAL_VOCAB_SIZE
 };
 
 struct tokenInfo

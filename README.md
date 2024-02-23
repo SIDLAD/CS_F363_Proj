@@ -6,4 +6,7 @@ Compiler Construction
 - Run: ```gcc driver.c && ./a.out``` to see the working and output
 
 - TODO:
-- - Lexer , Parser
+- - Lexer
+- - add new grammar into grammar.txt, accordingly change enum vocabulary, and update conversion[]
+- - makefile
+- - Parser
