@@ -172,13 +172,14 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
 }
 
 int failure(){
-    // do the appropriate error return
+    // currently acting as a place holder until we create error.h and error.c files
     return 0;
 }
 
-tokenInfo gettoken(){
+tokenInfo getNextToken(twinBuffer B)
+{
     char c;
-    char tmp_lexeme[20]; 
+    char tmp_lexeme[MAX_LEXEME_LENGTH]; 
     tokenInfo tmp;
     while(1){
         switch(state){
@@ -213,7 +214,7 @@ tokenInfo gettoken(){
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"<=");
-            return createTokenInfo(TK_LE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_LE,tmp_lexeme,currentlineNumber);
 
             case 3:
             incrementBufferForward(buffer);
@@ -233,13 +234,13 @@ tokenInfo gettoken(){
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"<---");
-            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,line_number);
+            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,currentlineNumber);
             
             case 6:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,"<");
-            return createTokenInfo(TK_LT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_LT,tmp_lexeme,currentlineNumber);
 
             case 7:
             incrementBufferForward(buffer);
@@ -252,46 +253,46 @@ tokenInfo gettoken(){
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,">=");
-            return createTokenInfo(TK_GE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_GE,tmp_lexeme,currentlineNumber);
 
             case 9:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,">");
-            return createTokenInfo(TK_GT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_GT,tmp_lexeme,currentlineNumber);
 
             case 10:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"+");
-            return createTokenInfo(TK_PLUS,tmp_lexeme,line_number);
+            return createTokenInfo(TK_PLUS,tmp_lexeme,currentlineNumber);
 
             case 11:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"-");
-            return createTokenInfo(TK_MINUS,tmp_lexeme,line_number);
+            return createTokenInfo(TK_MINUS,tmp_lexeme,currentlineNumber);
 
             case 12:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_MUL,tmp_lexeme,line_number);
+            return createTokenInfo(TK_MUL,tmp_lexeme,currentlineNumber);
 
             case 13:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_DIV,tmp_lexeme,line_number);
+            return createTokenInfo(TK_DIV,tmp_lexeme,currentlineNumber);
 
             case 14:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"~");
-            return createTokenInfo(TK_NOT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_NOT,tmp_lexeme,currentlineNumber);
 
             case 15:
-            line_number++;
+            currentlineNumber++;
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='\n') state=15;
@@ -316,67 +317,67 @@ tokenInfo gettoken(){
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=19;
-            else state=failure;
+            else state=failure();
             break;
 
             case 19:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=20;
-            else state=failure;
+            else state=failure();
             break;
 
             case 20:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"&&&");
-            return createTokenInfo(TK_AND,tmp_lexeme,line_number);
+            return createTokenInfo(TK_AND,tmp_lexeme,currentlineNumber);
 
             case 21:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=22;
-            else state=failure;
+            else state=failure();
             break;
 
             case 22:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=23;
-            else state=failure;
+            else state=failure();
             break;
 
             case 23:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"@@@");
-            return createTokenInfo(TK_OR,tmp_lexeme,line_number);
+            return createTokenInfo(TK_OR,tmp_lexeme,currentlineNumber);
 
             case 24:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=25;
-            else state=failure;
+            else state=failure();
             break;
 
             case 25:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"==");
-            return createTokenInfo(TK_EQ,tmp_lexeme,line_number);
+            return createTokenInfo(TK_EQ,tmp_lexeme,currentlineNumber);
 
             case 26:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=27;
-            else state=failure;
+            else state=failure();
             break;
 
             case 27:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"!=");
-            return createTokenInfo(TK_NE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_NE,tmp_lexeme,currentlineNumber);
             
         }
     }
