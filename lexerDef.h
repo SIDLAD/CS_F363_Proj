@@ -13,6 +13,8 @@ typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
 typedef enum vocabulary Vocabulary;
 
+int state = 0; // state number for the DFA
+int line_number = 0; // current line number being read
 int currentlineNumber = 0;
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
 Trie symbolTable = NULL;
