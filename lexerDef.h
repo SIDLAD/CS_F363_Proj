@@ -8,11 +8,13 @@
 #define MAX_VARIABLE_IDENTIFIER_LENGTH 20
 #define MAX_FUNCTION_IDENTIFIER_LENGTH 30
 #define MAX_FILENAME_LENGTH 50
+#define MAX_LEXEME_LENGTH MAX_FUNCTION_IDENTIFIER_LENGTH        //as MAX_FUNCTION_IDENTIFIER_LENGTH is greater than MAX_VARIABLE_IDENTIFIER_LENGTH
 
 typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
 typedef enum vocabulary Vocabulary;
 
+int state = 0; // state number for the DFA
 int currentlineNumber = 0;
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
 Trie symbolTable = NULL;
@@ -143,6 +145,6 @@ enum vocabulary{
 struct tokenInfo
 {
     Vocabulary tokenName;
-    char lexeme[20];
+    char lexeme[MAX_LEXEME_LENGTH];
     int lineNumber;
 };

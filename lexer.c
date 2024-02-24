@@ -152,6 +152,7 @@ char *retractAndReturnLexeme(char *Dest, twinBuffer _buffer) // Dest character a
     do
     {
         *tmp = characterReadFromBuffer(_buffer->lexemeBegin, _buffer);
+        _buffer->lexemeBegin++;
         tmp++;
     } while (_buffer->lexemeBegin != _buffer->forward);
 
@@ -169,6 +170,218 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
     incrementBufferForward(_buffer);
     return retractAndReturnLexeme(Dest,_buffer);
 }
+
+int failure(){
+    // currently acting as a place holder until we create error.h and error.c files
+    return 0;
+}
+
+tokenInfo getNextToken(twinBuffer B)
+{
+    char c;
+    char tmp_lexeme[MAX_LEXEME_LENGTH]; 
+    tokenInfo tmp;
+    while(1){
+        switch(state){
+            case 0:
+            c=characterReadFromBuffer(buffer->forward,buffer); 
+            if(c=='\n') state=15;
+            else if(c==' ') state=16;
+            else if(c=='<') state=1;
+            else if(c=='>') state=7;
+            else if(c=='+') state=10;
+            else if(c=='-') state=11;
+            else if(c=='*') state=12;
+            else if(c=='/') state=13;
+            else if(c=='~') state=14;
+            else if(c=='&') state=18;
+            else if(c=='@') state=21;
+            else if(c=='=') state=24;
+            else if(c=='!') state=26;
+            // else if 
+            else state = failure();
+            break;
+
+            case 1:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer); 
+            if(c=='=') state=2; 
+            else if(c=='-') state=3;
+            else state=6;
+            break;
+
+            case 2:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"<=");
+            return createTokenInfo(TK_LE,tmp_lexeme,currentlineNumber);
+
+            case 3:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='-') state=4;
+            else state = failure(); // TODO: Must implement double retract
+            break;
+
+            case 4:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='-') state=5;
+            else state = failure();
+            break;
+
+            case 5:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"<---");
+            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,currentlineNumber);
+            
+            case 6:
+            retract(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"<");
+            return createTokenInfo(TK_LT,tmp_lexeme,currentlineNumber);
+
+            case 7:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='=') state=8;
+            else state=9;
+            break;
+
+            case 8:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,">=");
+            return createTokenInfo(TK_GE,tmp_lexeme,currentlineNumber);
+
+            case 9:
+            retract(buffer);
+            state=0;
+            strcpy(tmp_lexeme,">");
+            return createTokenInfo(TK_GT,tmp_lexeme,currentlineNumber);
+
+            case 10:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"+");
+            return createTokenInfo(TK_PLUS,tmp_lexeme,currentlineNumber);
+
+            case 11:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"-");
+            return createTokenInfo(TK_MINUS,tmp_lexeme,currentlineNumber);
+
+            case 12:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"*");
+            return createTokenInfo(TK_MUL,tmp_lexeme,currentlineNumber);
+
+            case 13:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"*");
+            return createTokenInfo(TK_DIV,tmp_lexeme,currentlineNumber);
+
+            case 14:
+            resetBufferPtrs(buffer); 
+            state=0;
+            strcpy(tmp_lexeme,"~");
+            return createTokenInfo(TK_NOT,tmp_lexeme,currentlineNumber);
+
+            case 15:
+            currentlineNumber++;
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='\n') state=15;
+            else if(c==' ') state=16;
+            else state=17;
+            break;
+
+            case 16:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='\n') state=15;
+            else if(c==' ') state=16;
+            else state=17;
+            break;
+
+            case 17:
+            retract(buffer);
+            state=0;
+            break;
+
+            case 18:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='&') state=19;
+            else state=failure();
+            break;
+
+            case 19:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='&') state=20;
+            else state=failure();
+            break;
+
+            case 20:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"&&&");
+            return createTokenInfo(TK_AND,tmp_lexeme,currentlineNumber);
+
+            case 21:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='@') state=22;
+            else state=failure();
+            break;
+
+            case 22:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='@') state=23;
+            else state=failure();
+            break;
+
+            case 23:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"@@@");
+            return createTokenInfo(TK_OR,tmp_lexeme,currentlineNumber);
+
+            case 24:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='=') state=25;
+            else state=failure();
+            break;
+
+            case 25:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"==");
+            return createTokenInfo(TK_EQ,tmp_lexeme,currentlineNumber);
+
+            case 26:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='=') state=27;
+            else state=failure();
+            break;
+
+            case 27:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"!=");
+            return createTokenInfo(TK_NE,tmp_lexeme,currentlineNumber);
+            
+        }
+    }
+} 
 
 char** remove_comments(FILE* file) {
     char** lines = NULL;
