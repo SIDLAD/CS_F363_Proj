@@ -215,9 +215,9 @@ void writeCommentFreeFile(char** lines, char* filename) {
     fclose(file);
 }
 
-void cleanComments(char *testcaseFile){
+void removeComments(char *testcaseFile, char *cleanFile){
     char** lines = readNremove_comments(testcaseFile);
-    writeCommentFreeFile(lines, testcaseFile);
+    writeCommentFreeFile(lines, cleanFile);
 }
 #ifndef MAIN_FILE
 #define MAIN_FILE 
