@@ -232,7 +232,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"<=");
-            return createTokenInfo(TK_LE,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_LE,tmp_lexeme,line_number);
 
             case 3:
             incrementBufferForward(buffer);
@@ -252,13 +252,13 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"<---");
-            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,line_number);
             
             case 6:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,"<");
-            return createTokenInfo(TK_LT,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_LT,tmp_lexeme,line_number);
 
             case 7:
             incrementBufferForward(buffer);
@@ -271,46 +271,46 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,">=");
-            return createTokenInfo(TK_GE,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_GE,tmp_lexeme,line_number);
 
             case 9:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,">");
-            return createTokenInfo(TK_GT,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_GT,tmp_lexeme,line_number);
 
             case 10:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"+");
-            return createTokenInfo(TK_PLUS,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_PLUS,tmp_lexeme,line_number);
 
             case 11:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"-");
-            return createTokenInfo(TK_MINUS,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_MINUS,tmp_lexeme,line_number);
 
             case 12:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_MUL,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_MUL,tmp_lexeme,line_number);
 
             case 13:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_DIV,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_DIV,tmp_lexeme,line_number);
 
             case 14:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"~");
-            return createTokenInfo(TK_NOT,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_NOT,tmp_lexeme,line_number);
 
             case 15:
-            currentlineNumber++;
+            line_number++;
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='\n') state=15;
@@ -336,7 +336,6 @@ tokenInfo getNextToken(twinBuffer B)
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=19;
             else state=failure();
-            else state=failure();
             break;
 
             case 19:
@@ -350,7 +349,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"&&&");
-            return createTokenInfo(TK_AND,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_AND,tmp_lexeme,line_number);
 
             case 21:
             incrementBufferForward(buffer);
@@ -364,20 +363,18 @@ tokenInfo getNextToken(twinBuffer B)
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=23;
             else state=failure();
-            else state=failure();
             break;
 
             case 23:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"@@@");
-            return createTokenInfo(TK_OR,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_OR,tmp_lexeme,line_number);
 
             case 24:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=25;
-            else state=failure();
             else state=failure();
             break;
 
@@ -385,13 +382,12 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"==");
-            return createTokenInfo(TK_EQ,tmp_lexeme,currentlineNumber);
+            return createTokenInfo(TK_EQ,tmp_lexeme,line_number);
 
             case 26:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=27;
-            else state=failure();
             else state=failure();
             break;
 
