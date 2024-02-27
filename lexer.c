@@ -153,6 +153,8 @@ char *retractAndReturnLexeme(char *Dest, twinBuffer _buffer) // Dest character a
     {
         *tmp = characterReadFromBuffer(_buffer->lexemeBegin, _buffer);
         _buffer->lexemeBegin++;
+        _buffer->lexemeBegin %= 2 * BUFFER_SIZE;
+        
         tmp++;
     } while (_buffer->lexemeBegin != _buffer->forward);
 
@@ -197,6 +199,22 @@ tokenInfo gettoken(){
             else if(c=='@') state=21;
             else if(c=='=') state=24;
             else if(c=='!') state=26;
+            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=28;
+            else if(c=='(') state=37;
+            else if(c==')') state=38;
+            else if(c=='[') state=39;
+            else if(c==']') state=40;
+            else if(c=='.') state=41;
+            else if(c==':') state=42;
+            else if(c==',') state=43;
+            else if(c=='_') state=44;
+            else if(c==';') state=48;
+            else if(c=='%') state=49;
+            else if(c=='#') state=51;
+            else if(c==97||(c>=101&&c<=122)) state=54;
+            else if(c>=98&&c<=100) state=56;
+            
+
             // else if 
             else state = failure();
             break;
@@ -316,14 +334,14 @@ tokenInfo gettoken(){
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=19;
-            else state=failure;
+            else state=failure();
             break;
 
             case 19:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=20;
-            else state=failure;
+            else state=failure();
             break;
 
             case 20:
@@ -336,14 +354,14 @@ tokenInfo gettoken(){
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=22;
-            else state=failure;
+            else state=failure();
             break;
 
             case 22:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=23;
-            else state=failure;
+            else state=failure();
             break;
 
             case 23:
@@ -356,7 +374,7 @@ tokenInfo gettoken(){
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=25;
-            else state=failure;
+            else state=failure();
             break;
 
             case 25:
@@ -369,7 +387,7 @@ tokenInfo gettoken(){
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=27;
-            else state=failure;
+            else state=failure();
             break;
 
             case 27:
@@ -377,7 +395,214 @@ tokenInfo gettoken(){
             state=0;
             strcpy(tmp_lexeme,"!=");
             return createTokenInfo(TK_NE,tmp_lexeme,line_number);
+
+            case 28:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=28;
+            else if(c=='.') state=29;
+            else state=36;
+            break;
+
+            case 29:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=30;
+            else state=failure();
+            break;
+
+            case 30:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=31;
+            else state=failure();
+            break;
+
+            case 31:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='E') state=32;
+            else state=35;
+            break;
+
+            case 32:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='+'||c=='-') state=33;
+            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=34;
+            else state=failure();
+            break;
+
+            case 33:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=34;
+            else state=failure();
+            break;
+
+            case 34:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') {incrementBufferForward(buffer);state=35;}
+            else state=failure();
+            break;
             
+            case 35:
+            retractAndReturnLexeme(buffer, tmp_lexeme);
+            state=0;
+            return createTokenInfo(TK_RNUM,tmp_lexeme,line_number);
+
+            case 36:
+            retractAndReturnLexeme(buffer, tmp_lexeme);
+            state=0;
+            return createTokenInfo(TK_NUM,tmp_lexeme,line_number);
+
+            case 37:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"(");
+            return createTokenInfo(TK_OP,tmp_lexeme,line_number);
+
+            case 38:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,")");
+            return createTokenInfo(TK_OP,tmp_lexeme,line_number);
+
+            case 39:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"[");
+            return createTokenInfo(TK_SQL,tmp_lexeme,line_number);
+
+            case 40:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,"]");
+            return createTokenInfo(TK_SQR,tmp_lexeme,line_number);
+
+            case 41:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,".");
+            return createTokenInfo(TK_DOT,tmp_lexeme,line_number);
+
+            case 42:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,":");
+            return createTokenInfo(TK_COLON,tmp_lexeme,line_number);
+
+            case 43:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,",");
+            return createTokenInfo(TK_COMMA,tmp_lexeme,line_number);
+
+            case 44:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if((c>=65&&c<=90)||(c>=97&&c<=122)) state=45;
+            else state=failure();
+            break;
+
+            case 45:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if((c>=65&&c<=90)||(c>=97&&c<=122)) state=45;
+            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=46;
+            else state=47;
+            break;
+
+            case 46:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=46;
+            else state=47;
+            break;
+
+            case 47:
+            retractAndReturnLexeme(buffer, tmp_lexeme);
+            state=0;
+            return createTokenInfo(TK_FUNID,tmp_lexeme,line_number);
+
+            case 48:
+            resetBufferPtrs(buffer);
+            state=0;
+            strcpy(tmp_lexeme,";");
+            return createTokenInfo(TK_SEM,tmp_lexeme,line_number);
+            
+            case 49:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='\n') state=50;
+            else state=49;
+            break;
+
+            case 50:
+            resetBufferPtrs(buffer);
+            state=0;
+            break;
+
+            case 51:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c>=97&&c<=122) state=52;
+            else state=failure();
+            break;
+
+            case 52:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c>=97&&c<=122) state=52;
+            else state=53;
+            break;
+
+            case 53:
+            retractAndReturnLexeme(buffer, tmp_lexeme);
+            state=0;
+            return createTokenInfo(TK_RUID,tmp_lexeme,line_number);
+
+            case 54:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c>=97&&c<=122) state=54;
+            else state=55;
+            break;
+
+            case 55:
+            retractAndReturnLexeme(tmp_lexeme,buffer);
+            state=0;
+            return createTokenInfo(TK_FIELDID, tmp_lexeme, buffer);
+
+            case 56:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c>=97&&c<=122) state=54;
+            else if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state =57;
+            else state=failure();
+            break;
+
+            case 57:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c>=98&&c<=100) state=57;
+            else if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state =58;
+            else state=59;
+            break;
+
+            case 58:
+            incrementBufferForward(buffer);
+            c=characterReadFromBuffer(buffer->forward,buffer);
+            if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state=58;
+            else state=59;
+            break;
+
+            case 59:
+            retractAndReturnLexeme(buffer, tmp_lexeme);
+            state=0;
+            return createTokenInfo(TK_ID,tmp_lexeme,line_number);
+
         }
     }
 } 

@@ -9,3 +9,4 @@ void initialiseTwinBuffer();     //initialise the buffer before starting the nex
 void freeTwinBuffer();       //free the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
 void initialiseSymbolTable();                   
 void freeSymbolTable();                         //similar to initialiseBuffer and freeBuffer use-cases
+tokenInfo gettoken();
