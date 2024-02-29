@@ -25,6 +25,7 @@ void initialiseTwinBuffer() // initialise the buffer before starting the next it
     buffer = (twinBuffer)malloc(sizeof(struct twinBuffer));
     buffer->forward = buffer->lexemeBegin = 0;
     buffer->fp = getStream(NULL);
+    buffer->fileEndsAtBufferIndex = __INT_MAX__;
     return;
 }
 
@@ -111,18 +112,27 @@ FILE *getStream(FILE *fp)
     }
     if (!feof(fp))
     {
+        int tmp;
         if (buffer->forward == 0)
-            fread(buffer->first, BUFFER_SIZE, 1, fp);
+            if((tmp = fread(buffer->first, BUFFER_SIZE, 1, fp))<BUFFER_SIZE){
+                buffer->fileEndsAtBufferIndex = tmp - 1;
+            }
         else if (buffer->forward == BUFFER_SIZE)
-            fread(buffer->second, BUFFER_SIZE, 1, fp);
+            if((tmp = fread(buffer->second, BUFFER_SIZE, 1, fp))<BUFFER_SIZE){
+                buffer->fileEndsAtBufferIndex = tmp - 1 + BUFFER_SIZE;
+            }
     }
     return fp;
 }
 
 char characterReadFromBuffer(int ptr, twinBuffer _buffer)
 {
+    if(ptr >= _buffer->fileEndsAtBufferIndex)
+        return '\0';
     if (ptr < 256)
+    {
         return _buffer->first[ptr];
+    }
 
     return _buffer->second[ptr - 256];
 }
@@ -189,7 +199,8 @@ tokenInfo getNextToken(twinBuffer B)
         switch(state){
             case 0:
             c=characterReadFromBuffer(buffer->forward,buffer); 
-            if(c=='\n') state=15;
+            if(c == '\0') return NULL;
+            else if(c=='\n') state=15;
             else if(c==' ') state=16;
             else if(c=='<') state=1;
             else if(c=='>') state=7;
@@ -216,7 +227,6 @@ tokenInfo getNextToken(twinBuffer B)
             else if(c=='#') state=51;
             else if(c=='a'||(c>='e'&&c<='z')) state=54;
             else if(c>='b'&&c<='d') state=56;
-            else if(c==EOF){return NULL;}
             
 
             // else if 
@@ -547,10 +557,9 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 50:
-            currentLineNumber++;
             resetBufferPtrs(buffer);
             state=0;
-            break;
+            return createTokenInfo(TK_COMMENT,"%",currentLineNumber++);
 
             case 51:
             incrementBufferForward(buffer);

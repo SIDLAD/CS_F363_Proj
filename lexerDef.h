@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include "dataStructures/trieADT.c"
 
 #define BUFFER_SIZE 256
@@ -29,11 +30,13 @@ struct twinBuffer
     char second[BUFFER_SIZE];
     int lexemeBegin;
     int forward;
+    int fileEndsAtBufferIndex;
 };
 
 enum vocabulary{
     TK_ENDUNION,
     EPS,
+    TK_COMMENT,
     TK_COMMA,
     TK_READ,
     TK_REAL,
