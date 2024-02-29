@@ -1,3 +1,7 @@
+#ifndef LEXERDEF_MACRO
+#define LEXERDEF_MACRO
+
+#include <stdio.h>
 #include <stdbool.h>
 #include "dataStructures/trieADT.c"
 
@@ -153,3 +157,5 @@ struct tokenInfo
     char lexeme[MAX_LEXEME_LENGTH];
     int lineNumber;
 };
+
+#endif

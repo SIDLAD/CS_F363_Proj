@@ -2,13 +2,13 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -g
+CFLAGS =
 
 # Build target executable
-TARGET = program
+TARGET = stage1exe
 
 # Object files
-OBJS = lexer.o parser.o
+OBJS = lexer.o parser.o driver.o
 
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
@@ -19,5 +19,8 @@ lexer.o: lexerDef.h lexer.h lexer.c
 parser.o: parserDef.h parser.h parser.c
 	$(CC) $(CFLAGS) -c parser.c
 
+driver.o: driver.c
+	$(CC) $(CFLAGS) -c driver.c
+
 clean:
-	rm $(OBJS)
+	rm -f $(OBJS)

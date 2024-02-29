@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "lexer.h"
+#include "lexerDef.h"
 
 // function prototypes//
 void initialiseTwinBuffer(); // initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()

@@ -1,3 +1,6 @@
+#ifndef PARSERDEF_MACRO
+#define PARSERDEF_MACRO
+
 #include "dataStructures/linkedList.c"
 #include "lexer.h"
 #include <stdbool.h>
@@ -41,3 +44,5 @@ struct grammar{
 struct terminalBucketSet{
     bool val[TERMINALS_COUNT];
 };
+
+#endif
