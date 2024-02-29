@@ -216,6 +216,7 @@ tokenInfo getNextToken(twinBuffer B)
             else if(c=='#') state=51;
             else if(c=='a'||(c>='e'&&c<='z')) state=54;
             else if(c>='b'&&c<='d') state=56;
+            else if(c==EOF){return NULL;}
             
 
             // else if 
@@ -527,7 +528,10 @@ tokenInfo getNextToken(twinBuffer B)
             case 47:
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_FUNID,tmp_lexeme,currentLineNumber);
+            if(tmp = lookupSymbolTable(tmp_lexeme))
+                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+            else
+                return createTokenInfo(TK_FUNID, tmp_lexeme, currentLineNumber);
 
             case 48:
             resetBufferPtrs(buffer);
@@ -543,6 +547,7 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 50:
+            currentLineNumber++;
             resetBufferPtrs(buffer);
             state=0;
             break;
@@ -607,7 +612,10 @@ tokenInfo getNextToken(twinBuffer B)
             case 59:
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_ID,tmp_lexeme,currentLineNumber);
+            if(tmp = lookupSymbolTable(tmp_lexeme))
+                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+            else
+                return createTokenInfo(TK_ID, tmp_lexeme, currentLineNumber);
 
         }
     }
