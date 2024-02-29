@@ -577,9 +577,9 @@ tokenInfo getNextToken(twinBuffer B)
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
             if(tmp = lookupSymbolTable(tmp_lexeme))
-                return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
-            else
                 return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+            else
+                return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
 
             case 56:
             incrementBufferForward(buffer);
