@@ -1,0 +1,14 @@
+% Test case 1: For testing your lexer
+%Do not run your parser on this test case
+
+%The following program computes the function value for the user defined input
+_main  input_input parameter list[int c3, ]output[real c6];_computeFunctionValue
+d4cbcd5677<--- ((c3 +             2*c4-(c5-5))/ 4;c4bbb <<=<==<---(d4cbcd5677-2.35+34.98E+23)*/&&|||&&&;
+if+then_AbC23#new123.5.34.54E-23;else/write(c4bbb);
+endif<type>=int:d5cb34567:global_abc!=~d4cbcccccccccccccbbbbbbbbdddd5222222222222633333333333377~;
+5000.7+2543.23E45-432+343333.55E-124;
+$real: c3;
+[c3] <--- call _computeFunctionValue with parameters [listb5, d5cb34567, b3b444];
+write(c3);
+return;union//record+endrecorb2c3endrecord
+end

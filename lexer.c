@@ -232,13 +232,13 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"<=");
-            return createTokenInfo(TK_LE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_LE,tmp_lexeme,currentLineNumber);
 
             case 3:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='-') state=4;
-            else state = failure(); // TODO: Must implement double retract
+            else {doubleRetract(buffer);state = 0;} // TODO: Must implement double retract
             break;
 
             case 4:
@@ -252,13 +252,13 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"<---");
-            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,line_number);
+            return createTokenInfo(TK_ASSIGNOP,tmp_lexeme,currentLineNumber);
             
             case 6:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,"<");
-            return createTokenInfo(TK_LT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_LT,tmp_lexeme,currentLineNumber);
 
             case 7:
             incrementBufferForward(buffer);
@@ -271,46 +271,46 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,">=");
-            return createTokenInfo(TK_GE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_GE,tmp_lexeme,currentLineNumber);
 
             case 9:
             retract(buffer);
             state=0;
             strcpy(tmp_lexeme,">");
-            return createTokenInfo(TK_GT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_GT,tmp_lexeme,currentLineNumber);
 
             case 10:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"+");
-            return createTokenInfo(TK_PLUS,tmp_lexeme,line_number);
+            return createTokenInfo(TK_PLUS,tmp_lexeme,currentLineNumber);
 
             case 11:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"-");
-            return createTokenInfo(TK_MINUS,tmp_lexeme,line_number);
+            return createTokenInfo(TK_MINUS,tmp_lexeme,currentLineNumber);
 
             case 12:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_MUL,tmp_lexeme,line_number);
+            return createTokenInfo(TK_MUL,tmp_lexeme,currentLineNumber);
 
             case 13:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"*");
-            return createTokenInfo(TK_DIV,tmp_lexeme,line_number);
+            return createTokenInfo(TK_DIV,tmp_lexeme,currentLineNumber);
 
             case 14:
             resetBufferPtrs(buffer); 
             state=0;
             strcpy(tmp_lexeme,"~");
-            return createTokenInfo(TK_NOT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_NOT,tmp_lexeme,currentLineNumber);
 
             case 15:
-            line_number++;
+            currentLineNumber++;
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='\n') state=15;
@@ -349,7 +349,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"&&&");
-            return createTokenInfo(TK_AND,tmp_lexeme,line_number);
+            return createTokenInfo(TK_AND,tmp_lexeme,currentLineNumber);
 
             case 21:
             incrementBufferForward(buffer);
@@ -369,7 +369,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"@@@");
-            return createTokenInfo(TK_OR,tmp_lexeme,line_number);
+            return createTokenInfo(TK_OR,tmp_lexeme,currentLineNumber);
 
             case 24:
             incrementBufferForward(buffer);
@@ -382,7 +382,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"==");
-            return createTokenInfo(TK_EQ,tmp_lexeme,line_number);
+            return createTokenInfo(TK_EQ,tmp_lexeme,currentLineNumber);
 
             case 26:
             incrementBufferForward(buffer);
@@ -395,7 +395,7 @@ tokenInfo getNextToken(twinBuffer B)
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"!=");
-            return createTokenInfo(TK_NE,tmp_lexeme,line_number);
+            return createTokenInfo(TK_NE,tmp_lexeme,currentLineNumber);
 
             case 28:
             incrementBufferForward(buffer);
@@ -449,56 +449,56 @@ tokenInfo getNextToken(twinBuffer B)
             break;
             
             case 35:
-            retractAndReturnLexeme(buffer, tmp_lexeme);
+            retractAndReturnLexeme(tmp_lexeme, buffer);
             state=0;
-            return createTokenInfo(TK_RNUM,tmp_lexeme,line_number);
+            return createTokenInfo(TK_RNUM,tmp_lexeme,currentLineNumber);
 
             case 36:
-            retractAndReturnLexeme(buffer, tmp_lexeme);
+            retractAndReturnLexeme(tmp_lexeme, buffer);
             state=0;
-            return createTokenInfo(TK_NUM,tmp_lexeme,line_number);
+            return createTokenInfo(TK_NUM,tmp_lexeme,currentLineNumber);
 
             case 37:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"(");
-            return createTokenInfo(TK_OP,tmp_lexeme,line_number);
+            return createTokenInfo(TK_OP,tmp_lexeme,currentLineNumber);
 
             case 38:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,")");
-            return createTokenInfo(TK_OP,tmp_lexeme,line_number);
+            return createTokenInfo(TK_OP,tmp_lexeme,currentLineNumber);
 
             case 39:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"[");
-            return createTokenInfo(TK_SQL,tmp_lexeme,line_number);
+            return createTokenInfo(TK_SQL,tmp_lexeme,currentLineNumber);
 
             case 40:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,"]");
-            return createTokenInfo(TK_SQR,tmp_lexeme,line_number);
+            return createTokenInfo(TK_SQR,tmp_lexeme,currentLineNumber);
 
             case 41:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,".");
-            return createTokenInfo(TK_DOT,tmp_lexeme,line_number);
+            return createTokenInfo(TK_DOT,tmp_lexeme,currentLineNumber);
 
             case 42:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,":");
-            return createTokenInfo(TK_COLON,tmp_lexeme,line_number);
+            return createTokenInfo(TK_COLON,tmp_lexeme,currentLineNumber);
 
             case 43:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,",");
-            return createTokenInfo(TK_COMMA,tmp_lexeme,line_number);
+            return createTokenInfo(TK_COMMA,tmp_lexeme,currentLineNumber);
 
             case 44:
             incrementBufferForward(buffer);
@@ -523,15 +523,15 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 47:
-            retractAndReturnLexeme(buffer, tmp_lexeme);
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_FUNID,tmp_lexeme,line_number);
+            return createTokenInfo(TK_FUNID,tmp_lexeme,currentLineNumber);
 
             case 48:
             resetBufferPtrs(buffer);
             state=0;
             strcpy(tmp_lexeme,";");
-            return createTokenInfo(TK_SEM,tmp_lexeme,line_number);
+            return createTokenInfo(TK_SEM,tmp_lexeme,currentLineNumber);
             
             case 49:
             incrementBufferForward(buffer);
@@ -560,9 +560,9 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 53:
-            retractAndReturnLexeme(buffer, tmp_lexeme);
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_RUID,tmp_lexeme,line_number);
+            return createTokenInfo(TK_RUID,tmp_lexeme,currentLineNumber);
 
             case 54:
             incrementBufferForward(buffer);
@@ -574,7 +574,7 @@ tokenInfo getNextToken(twinBuffer B)
             case 55:
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_FIELDID, tmp_lexeme, buffer);
+            return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
 
             case 56:
             incrementBufferForward(buffer);
@@ -600,9 +600,9 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 59:
-            retractAndReturnLexeme(buffer, tmp_lexeme);
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_ID,tmp_lexeme,line_number);
+            return createTokenInfo(TK_ID,tmp_lexeme,currentLineNumber);
 
         }
     }

@@ -1,0 +1,61 @@
+%Test Case 5: The following source code is expected to be syntactically correct as per the modified grammar.
+%If any line has syntax error, please inform me as that error needs to be fixed in this test case.
+
+_unionfunction  input parameter list [record #two d5cc34, #point b5c6]  
+output parameter list[real d3];
+
+	record #two
+		type #point: beginpoint;
+		type #point: endpoint;
+	endrecord
+
+
+	type record #two : b5b567;
+	type record #one : b3;
+	type #point: d5;
+	b5b567 <--- c6*2;
+	b3 <--- c6-c3;
+	while ( b5b567 <= d5cc34)
+		read(c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+% type checking will be required in stage 2. Despite some type errors, undeclared variables etc the code is syntactically correct
+%in this function.
+_main 
+	record #one
+		type real:x;
+		type real:y;
+	endrecord	
+	definetype record #one as #point
+	definetype record #two as #line
+	union #four
+		type #line : ln; 
+		type #point: pt; 
+		type #traingle:tr;
+	endunion;
+        definetype record #three as #triangle  
+	record #three 
+		type #line: base;
+		type #line: height;
+	endrecord
+	definetype union #four as #shape
+	record #variantrecord
+		type int: tag;
+		type #shape: s;
+	endrecord
+
+	type record #variantrecord : d4;
+	type int : b5;
+	type int : d5cb34567;
+	type record #variantrecord: b5c6;
+	b5c6 <--- b5c6.tag + d4.s.ln.beginpoint.x - b5c6.s.tr.base.beginpoint.y; 
+	b5 <--- b5 +1;
+	d4 <--- b5c6 / d5cb34567;
+	write(d4);
+	write(d4.s.ln.beginpoint.x );
+	write(b5c6.tag );
+	return;
+end

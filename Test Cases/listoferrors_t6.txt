@@ -1,0 +1,20 @@
+Line 7  Error: The token TK_SQL for lexeme [  does not match with the expected token TK_LIST
+Line 8 	Error: Variable Identifier is longer than the prescribed length of 20 characters.
+Line 8 	Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_ID
+Line 10 Error: Unknown pattern <5000.7>
+Line 10 Error: Invalid token TK_SEM encountered with value ; stack top arithmeticExpression
+Line 11 Error: The token TK_SEM for lexeme ;  does not match with the expected token TK_CL
+Line 13 Error: Unknown pattern <&&>
+Line 13 Error: Invalid token TK_OP encountered with value ( stack top logicalOp
+Line 17 Error: Invalid token TK_CL encountered with value ) stack top var
+Line 17 Error: The token TK_CL for lexeme )  does not match with the expected token TK_SEM
+Line 18 Error: Invalid token TK_ENDIF encountered with value endif stack top otherStmts
+Line 25 Error: Invalid token TK_ID encountered with value b5 stack top otherStmts
+Line 28 Error: Unknown Symbol <$>
+Line 29 Error: Unknown pattern <<-->
+Line 30 Error: Invalid token TK_CL encountered with value ) stack top new
+Line 30 Error: The token TK_CL for lexeme )  does not match with the expected token TK_ASSIGNOP
+Line 30 Error: Invalid token TK_CL encountered with value ) stack top arithmeticExpression
+Line 30 Error: The token TK_CL for lexeme )  does not match with the expected token TK_SEM
+Line 31 Error: Invalid token TK_READ encountered with value read stack top otherStmts
+Line 31 Error: Invalid token TK_CL encountered with value ) stack top singleOrRecId

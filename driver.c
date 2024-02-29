@@ -39,13 +39,13 @@ void case_printTokenList()
 {
     initialiseSymbolTable();
     initialiseTwinBuffer();
-    // tokenInfo _tokenInfo;
-    // char token[100];
-    // while(_tokenInfo = getNextToken(buffer))
-    // {
-    //     enumToStr(_tokenInfo->tokenName,token);
-    //     printf("%s %s %d\n", token, _tokenInfo->lexeme, _tokenInfo->lineNumber);
-    // }
+    tokenInfo _tokenInfo;
+    char token[100];
+    while(_tokenInfo = getNextToken(buffer))
+    {
+        enumToStr(_tokenInfo->tokenName,token);
+        printf("%s %s %d\n", token, _tokenInfo->lexeme, _tokenInfo->lineNumber);
+    }
     freeTwinBuffer();
     freeSymbolTable();
 }
@@ -85,6 +85,7 @@ void case_calculateTime()
 
 int main(int argc, char* argv[])
 {
+    strcpy(testcaseFile,"Test Cases/t2.txt");
     // strcpy(testcaseFile,argv[1]);
     // strcpy(outputFile,argv[2]);
     while(1)
