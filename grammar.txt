@@ -15,7 +15,7 @@
 <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD
 <typeDefinition> ===> TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
 <fieldDefinition> ===> TK_TYPE <fieldType> TK_COLON TK_FIELDID TK_SEM
-<fieldtype> ===> <primitiveDatatype> | TK_RUID
+<fieldtype> ===> <primitiveDatatype> | <constructedDatatype>
 <moreFields> ===> <fieldDefinition> <moreFields> | EPS
 <declarations> ===> <declaration> <declarations> | EPS
 <declaration> ===> TK_TYPE <dataType> TK_COLON TK_ID <global_or_not> TK_SEM
