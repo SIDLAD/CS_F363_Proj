@@ -1,3 +1,6 @@
+#ifndef LINKEDLIST_MACRO
+#define LINKEDLIST_MACRO
+
 #include<stdlib.h>
 
 typedef struct linkedList* LinkedList;
@@ -15,3 +18,5 @@ LinkedList createLinkedListNode()
     list->data = NULL;
     return list;
 }
+
+#endif

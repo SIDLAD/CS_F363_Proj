@@ -4,6 +4,9 @@
                            = O(length_of_string) in the average (sparsely populated) test case
                     and SC = O(number of nodes in the Trie * sizeof(data item)))
 */
+#ifndef TRIEADT_MACRO
+#define TRIEADT_MACRO
+
 #include <stdlib.h>
 
 #define ALPHABET_COUNT 85
@@ -112,3 +115,5 @@ Trie freeTrieNodeRecursive(Trie root)
     free(root->data);
     free(root);
 }
+
+#endif
