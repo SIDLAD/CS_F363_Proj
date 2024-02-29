@@ -131,7 +131,7 @@ FILE *getStream(FILE *fp)
 
 char characterReadFromBuffer(int ptr, twinBuffer _buffer)
 {
-    if(ptr >= _buffer->fileEndsAtBufferIndex)
+    if(_buffer->forward >= _buffer->fileEndsAtBufferIndex)
         return '\0';
     if (ptr < 256)
     {
@@ -624,7 +624,6 @@ tokenInfo getNextToken(twinBuffer B)
 
             case 59:
             retractAndReturnLexeme(tmp_lexeme,buffer);
-            printf("%s\n",tmp_lexeme);
             state=0;
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
