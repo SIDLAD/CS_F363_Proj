@@ -10,11 +10,12 @@
 <constructedDatatype> ===> TK_RECORD TK_RUID | TK_UNION TK_RUID | TK_RUID
 <remaining_list> ===> TK_COMMA <parameter_list> | EPS
 <stmts> ===> <typeDefinitions> <declarations> <otherStmts> <returnStmt>
-<typeDefinitions> ===> <typeDefinition> <typeDefinitions> | <definetypestmt> <typeDefinitions> | EPS
+<typeDefinitions> ===> <actualOrRedefined> <typeDefinitions> | EPS
+<actualOrRedefined> ===> <typeDefinition> | <definetypestmt>
 <typeDefinition> ===> TK_RECORD TK_RUID <fieldDefinitions> TK_ENDRECORD
 <typeDefinition> ===> TK_UNION TK_RUID <fieldDefinitions> TK_ENDUNION
-<fieldDefinitions> ===> <fieldDefinition> <fieldDefinition> <moreFields>
-<fieldDefinition> ===> TK_TYPE <dataType> TK_COLON TK_FIELDID TK_SEM
+<fieldDefinition> ===> TK_TYPE <fieldType> TK_COLON TK_FIELDID TK_SEM
+<fieldtype> ===> <primitiveDatatype> | TK_RUID
 <moreFields> ===> <fieldDefinition> <moreFields> | EPS
 <declarations> ===> <declaration> <declarations> | EPS
 <declaration> ===> TK_TYPE <dataType> TK_COLON TK_ID <global_or_not> TK_SEM
@@ -22,22 +23,27 @@
 <otherStmts> ===> <stmt> <otherStmts> | EPS
 <stmt> ===> <assignmentStmt> | <iterativeStmt> | <conditionalStmt> | <ioStmt> | <funCallStmt>
 <assignmentStmt> ===> <singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
-<singleOrRecId> ===> TK_ID <recId>
+<singleOrRecId> ===> TK_ID | <constructedVariable>
+<constructedVariable> ===> TK_ID <oneExpansion> <moreExpansions>
+<oneExpansion> ===> TK_DOT TK_FIELDID
+<moreExpansions> ===> <oneExpansion> <moreExpansions> | EPS
+<singleOrRecId> ===> TK_ID <option_single_constructed>
+<option_single_constructed> ===> EPS | <oneExpansion> <moreExpansions>
 <recId> ===> TK_DOT TK_FIELDID <recId> | EPS
 <funCallStmt> ===> <outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
 <outputParameters> ===> TK_SQL <idList> TK_SQR TK_ASSIGNOP | EPS
 <inputParameters> ===> TK_SQL <idList> TK_SQR
 <iterativeStmt> ===> TK_WHILE TK_OP <booleanExpression> TK_CL <stmt> <otherStmts> TK_ENDWHILE
-<conditionalStmt> ===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <conditionalStmtContd>
-<conditionalStmtContd> ===> TK_ELSE <stmt> <otherStmts> TK_ENDIF | TK_ENDIF
+<conditionalStmt> ===> TK_IF TK_OP <booleanExpression> TK_CL TK_THEN <stmt> <otherStmts> <elsePart>
+<elsePart> ===> TK_ELSE <stmt> <otherStmts> TK_ENDIF | TK_ENDIF
 <ioStmt> ===> TK_READ TK_OP <var> TK_CL TK_SEM | TK_WRITE TK_OP <var> TK_CL TK_SEM
-<arithmeticExpression> ===> <arithmeticExpression2> <arithmeticExpressionContd>
-<arithmeticExpressionContd> ===> <operator1> <arithmeticExpression2> <arithmeticExpressionContd> | EPS
-<operator1> ===> TK_PLUS | TK_MINUS
-<arithmeticExpression2> ===> <arithmeticExpression3> <arithmeticExpression2Contd>
-<arithmeticExpression2Contd> ===> <operator2> <arithmeticExpression3> <arithmeticExpression2Contd> | EPS
-<operator2> ===> TK_MUL | TK_DIV
-<arithmeticExpression3> ===> TK_OP <arithmeticExpression> TK_CL | <var>
+<arithmeticExpression> ===> <term> <expPrime>
+<expPrime> ===> <lowPrecedenceOperators> <term> <expPrime> | EPS
+<term> ===> <factor> <termPrime>
+<termPrime> ===> <highPrecedenceOperators> <factor> <termPrime> | EPS
+<factor> ===> TK_OP <arithmeticExpression> TK_CL | <var> 
+<highPrecedenceOperator> ===> TK_MUL | TK_DIV
+<lowPrecedenceOperators> ===> TK_PLUS | TK_MINUS
 <booleanExpression> ===> TK_OP <booleanExpression> TK_CL <logicalOp> TK_OP <booleanExpression> TK_CL
 <booleanExpression> ===> <var> <relationalOp> <var>
 <booleanExpression> ===> TK_NOT TK_OP <booleanExpression> TK_CL
