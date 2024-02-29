@@ -8,6 +8,7 @@ int state = 0; // state number for the DFA
 int currentLineNumber = 1; // current line number being read
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
 Trie symbolTable = NULL;
+int filePointerInt =1;
 
 char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
 char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
@@ -330,7 +331,7 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
     return retractAndReturnLexeme(Dest,_buffer);
 }
 
-tokenInfo getNextToken(twinBuffer B)
+tokenInfo getNextToken(twinBuffer B, FILE* fp_tmp[])
 {
     char c;
     char tmp_lexeme[MAX_LEXEME_LENGTH]; 

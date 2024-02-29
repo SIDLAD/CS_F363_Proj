@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "parser.c"
+#include "parser.h"
 
 void printMenu()
 {
@@ -25,9 +25,10 @@ void case_printTokenList()
     initialiseSymbolTable();
     initialiseTwinBuffer();
     tokenInfo _tokenInfo;
+    FILE* fp_tmp[2];
     fp_tmp[0]=fopen(printTokenListFile,"w");
     char token[100];
-    while(_tokenInfo = getNextToken(buffer))
+    while(_tokenInfo = getNextToken(buffer, fp_tmp))
     { 
         enumToStr(_tokenInfo->tokenName,token);
         printf("Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
