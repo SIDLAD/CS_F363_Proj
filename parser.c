@@ -1,6 +1,13 @@
 #include "parserDef.h"
 #include <stdio.h>
 #include <string.h>
+#include "dataStructures/linkedList.c"
+
+parseTree _parseTree = NULL;                //to be initialised via function call
+grammar _grammar = NULL;                    //to be initialised via function call
+table _table = NULL;                        //to be initialised via function call
+FirstAndFollow _firstAndFollow = NULL;      //to be initialised via function call
+TerminalBucketSet _terminalBucketSet = NULL;//to be initialised via function call
 
 // function prototypes//
 void populateFirstAndFollowText(FirstAndFollow F);

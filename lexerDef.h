@@ -1,9 +1,8 @@
-#ifndef LEXERDEF_MACRO
-#define LEXERDEF_MACRO
+#ifndef LEXERDEF_H
+#define LEXERDEF_H
 
 #include <stdio.h>
 #include <stdbool.h>
-#include "dataStructures/trieADT.c"
 
 #define BUFFER_SIZE 256
 #define VOCABULARY_COUNT ((int)TOTAL_VOCAB_SIZE)
@@ -19,15 +18,59 @@ typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
 typedef enum vocabulary Vocabulary;
 
-int state = 0; // state number for the DFA
-int currentLineNumber = 1; // current line number being read
-twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
-Trie symbolTable = NULL;
+// int state = 0; // state number for the DFA
+// int currentLineNumber = 1; // current line number being read
+// twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
+// Trie symbolTable = NULL;
 
-char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
-char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
-char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
-char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
+// char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
+// char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
+// char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
+// char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
+#include <stdlib.h>
+
+#define ALPHABET_COUNT 85
+
+typedef struct trie *Trie;
+typedef struct trieEdge *TrieEdge;
+
+typedef struct linkedList* LinkedList;
+
+struct linkedList
+{
+    LinkedList next;
+    void* data;
+};
+
+#include <stdlib.h>
+
+#define ALPHABET_COUNT 85
+
+typedef struct trie *Trie;
+typedef struct trieEdge *TrieEdge;
+
+struct trieEdge
+{
+    Trie ptr;
+    char ch;
+};
+
+struct trie
+{
+    TrieEdge *children;
+    int childCount;
+    void *data;
+};
+
+extern int state;// = 0; // state number for the DFA
+extern int currentLineNumber;// = 1; // current line number being read
+extern twinBuffer buffer;// = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
+extern Trie symbolTable;// = NULL;
+
+extern char testcaseFile[MAX_FILENAME_LENGTH];// = "testcase.txt";
+extern char parseTreeOutFile[MAX_FILENAME_LENGTH];// = "createParseOutFile.txt";
+extern char commentFreeFile[MAX_FILENAME_LENGTH];// = "commentFreeFile.txt";
+extern char printTokenListFile[MAX_FILENAME_LENGTH];// = "printTokenListFile.txt";
 
 struct twinBuffer
 {

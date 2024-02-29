@@ -1,3 +1,5 @@
+#ifndef PARSER_H
+#define PARSER_H
 #include "parserDef.h"
 
 extern grammar populateGrammar(grammar g, char* grammarFileName); //function to parse the grammar file and populate the grammar ds
@@ -8,3 +10,4 @@ extern void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentN
 
 extern void freeParseTree(parseTree PT);
 extern void enumToStr(Vocabulary v, char *dest);
+#endif

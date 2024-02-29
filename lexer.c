@@ -1,6 +1,18 @@
+
 #include <stdio.h>
 #include <string.h>
+#include<stdlib.h>
 #include "lexerDef.h"
+
+int state = 0; // state number for the DFA
+int currentLineNumber = 1; // current line number being read
+twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
+Trie symbolTable = NULL;
+
+char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
+char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
+char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
+char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
 
 // function prototypes//
 void initialiseTwinBuffer(); // initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
@@ -17,6 +29,104 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer);
 void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme);
 void* lookupSymbolTable(char* lexeme);
 //------------------//
+
+
+LinkedList createLinkedListNode()
+{
+    LinkedList list = (LinkedList)malloc(sizeof(struct linkedList));
+    list->next = NULL;
+    list->data = NULL;
+    return list;
+}
+
+Trie createTrieNode()
+{
+    Trie node = (Trie)malloc(sizeof(struct trie));
+    node->children = NULL;
+    node->data = NULL;
+    node->childCount = 0;
+    return node;
+}
+
+void insertDataIntoTrieNode(void *_data, Trie node)
+{
+    node->data = _data;
+}
+
+Trie goToNextTrieNode(char _ch, Trie node)          //this function will return NULL if the node doesn't exist
+{
+    for(int i = 0; i < node->childCount; i++)
+    {
+        if(node->children[i]->ch == _ch)
+        {
+            return node->children[i]->ptr;
+        }
+    }
+    return NULL;
+}
+
+Trie goToNextTrieNodeForced(char _ch, Trie node)    // this function will create a new node if it doesn't exist already
+{
+    for (int i = 0; i < node->childCount; i++)
+    {
+        if (node->children[i]->ch == _ch)
+        {
+            return node->children[i]->ptr;
+        }
+    }
+    node->children = (TrieEdge*)realloc(node->children,sizeof(TrieEdge) * ++(node->childCount));
+    node->children[node->childCount - 1] = (TrieEdge)malloc(sizeof(struct trieEdge));
+    node->children[node->childCount - 1]->ch = _ch;
+    node->children[node->childCount - 1]->ptr = createTrieNode();
+    return node->children[node->childCount - 1]->ptr;
+}
+
+void* getDataFromTrie(char* str, Trie root)     //if NULL is returned, then there is no such entry in the trie
+{
+    if(root == NULL)
+    {
+        return NULL;
+    }
+
+    if(*str == (char)0)
+    {
+        return root->data;      //if NULL is returned, then there is no such entry in the trie  
+    }
+    
+    return getDataFromTrie(str + 1,goToNextTrieNode(*str,root));
+}
+
+void* insertIntoTrie(void* data,char* str,Trie root)    
+{
+    /*
+      will override existing data if the node already exists. Note that the returned value 
+      will be that of the void pointer to the previously existing data item corresponding to the same string,
+      so the calling function would have to free it manually after typecasting the void pointer returned.
+      (in case existing data needs to be preserved and stored)
+    */
+
+    if(*str == (char)0)
+    {
+        void* tmp = root->data;
+        root->data = data;
+        return tmp;
+    }
+
+    Trie child = goToNextTrieNodeForced(*str,root);
+    return insertIntoTrie(data,str + 1,child);
+}
+
+Trie freeTrieNodeRecursive(Trie root)
+{
+    for (int i = 0; i < root->childCount; i++)
+    {
+        freeTrieNodeRecursive(root->children[i]->ptr);
+        free(root->children[i]);
+    }
+
+    free(root->data);
+    free(root);
+}
 
 // function definitions
 

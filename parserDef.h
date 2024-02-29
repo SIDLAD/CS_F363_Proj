@@ -1,7 +1,6 @@
-#ifndef PARSERDEF_MACRO
-#define PARSERDEF_MACRO
+#ifndef PARSERDEF_H
+#define PARSERDEF_H
 
-#include "dataStructures/linkedList.c"
 #include "lexer.h"
 #include <stdbool.h>
 
@@ -16,11 +15,11 @@ typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
 
-parseTree _parseTree = NULL;                //to be initialised via function call
-grammar _grammar = NULL;                    //to be initialised via function call
-table _table = NULL;                        //to be initialised via function call
-FirstAndFollow _firstAndFollow = NULL;      //to be initialised via function call
-TerminalBucketSet _terminalBucketSet = NULL;//to be initialised via function call
+extern parseTree _parseTree;                //to be initialised via function call
+extern grammar _grammar;                    //to be initialised via function call
+extern table _table;                        //to be initialised via function call
+extern FirstAndFollow _firstAndFollow;      //to be initialised via function call
+extern TerminalBucketSet _terminalBucketSet;//to be initialised via function call
 
 struct table{
     //fill in the details of table

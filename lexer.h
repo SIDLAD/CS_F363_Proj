@@ -1,3 +1,6 @@
+#ifndef LEXER_H
+#define LEXER_H
+
 #include "lexerDef.h"
 
 extern FILE *getStream(FILE *fp);      //re-populates the next of twin buffers with the next BUFFERSIZE amount of bytes
@@ -9,3 +12,5 @@ extern void freeTwinBuffer();       //free the buffer before starting the next i
 extern void initialiseSymbolTable();                   
 extern void freeSymbolTable();                         //similar to initialiseBuffer and freeBuffer use-cases
 extern tokenInfo gettoken();
+
+#endif
