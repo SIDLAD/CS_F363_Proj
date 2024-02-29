@@ -5,3 +5,5 @@ temp*
 parseTreeOutFile.txt
 driver.o
 test.txt
+printTokenListFile.txt
+commentFreeFile.txt

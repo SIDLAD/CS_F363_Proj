@@ -32,7 +32,7 @@ void printMenu()
 
 void case_cleanComments()
 {
-    // removeComments(testcaseFile, outputFile);
+    removeComments(testcaseFile, commentFreeFile);
 }
 
 void case_printTokenList()
@@ -41,11 +41,14 @@ void case_printTokenList()
     initialiseTwinBuffer();
     tokenInfo _tokenInfo;
     char token[100];
+    FILE* fp_tmp=fopen(printTokenListFile,"w");
     while(_tokenInfo = getNextToken(buffer))
     { 
         enumToStr(_tokenInfo->tokenName,token);
-        printf("%s %s %d\n", token, _tokenInfo->lexeme, _tokenInfo->lineNumber);
+        printf("Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
+        fprintf(fp_tmp,"Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
     }
+    fclose(fp_tmp);
     freeTwinBuffer();
     freeSymbolTable();
 }

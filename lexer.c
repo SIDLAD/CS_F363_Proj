@@ -675,6 +675,7 @@ void writeCommentFreeFile(char** lines, char* filename) {
     }
     for (int i = 0; lines[i] != NULL; i++) {
         fprintf(file, "%s", lines[i]);
+        printf("%s", lines[i]);
     }
     fclose(file);
 }
