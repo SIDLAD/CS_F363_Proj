@@ -543,9 +543,9 @@ tokenInfo getNextToken(twinBuffer B)
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
             if(tmp = lookupSymbolTable(tmp_lexeme))
-                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+                return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else
-                return createTokenInfo(TK_FUNID, tmp->lexeme, currentLineNumber);
+                return createTokenInfo(TK_FUNID, tmp_lexeme, currentLineNumber);
 
             case 48:
             resetBufferPtrs(buffer);
@@ -595,9 +595,9 @@ tokenInfo getNextToken(twinBuffer B)
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
             if(tmp = lookupSymbolTable(tmp_lexeme))
-                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+                return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else
-                return createTokenInfo(TK_FIELDID, tmp->lexeme, currentLineNumber);
+                return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
 
             case 56:
             incrementBufferForward(buffer);
@@ -624,11 +624,12 @@ tokenInfo getNextToken(twinBuffer B)
 
             case 59:
             retractAndReturnLexeme(tmp_lexeme,buffer);
+            printf("%s\n",tmp_lexeme);
             state=0;
             if(tmp = lookupSymbolTable(tmp_lexeme))
-                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
+                return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else
-                return createTokenInfo(TK_ID, tmp->lexeme, currentLineNumber);
+                return createTokenInfo(TK_ID, tmp_lexeme, currentLineNumber);
 
         }
     }
