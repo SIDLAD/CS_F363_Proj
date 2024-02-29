@@ -205,7 +205,7 @@ tokenInfo getNextToken(twinBuffer B)
             c=characterReadFromBuffer(buffer->forward,buffer); 
             if(c == '\0') return NULL;
             else if(c=='\n') state=15;
-            else if(c==' ') state=16;
+            else if(c==' '||c=='\t') state=16;
             else if(c=='<') state=1;
             else if(c=='>') state=7;
             else if(c=='+') state=10;
