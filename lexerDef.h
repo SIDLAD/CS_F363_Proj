@@ -16,7 +16,7 @@ typedef struct twinBuffer* twinBuffer;
 typedef enum vocabulary Vocabulary;
 
 int state = 0; // state number for the DFA
-int currentLineNumber = 0; // current line number being read
+int currentLineNumber = 1; // current line number being read
 twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
 Trie symbolTable = NULL;
 
@@ -34,9 +34,9 @@ struct twinBuffer
 };
 
 enum vocabulary{
+    TK_COMMENT,
     TK_ENDUNION,
     EPS,
-    TK_COMMENT,
     TK_COMMA,
     TK_READ,
     TK_REAL,

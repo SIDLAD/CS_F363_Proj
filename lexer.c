@@ -114,13 +114,17 @@ FILE *getStream(FILE *fp)
     {
         int tmp;
         if (buffer->forward == 0)
-            if((tmp = fread(buffer->first, BUFFER_SIZE, 1, fp))<BUFFER_SIZE){
+        {
+            if((tmp = fread(buffer->first, sizeof(char), BUFFER_SIZE, fp))<BUFFER_SIZE){
                 buffer->fileEndsAtBufferIndex = tmp - 1;
             }
+        }
         else if (buffer->forward == BUFFER_SIZE)
-            if((tmp = fread(buffer->second, BUFFER_SIZE, 1, fp))<BUFFER_SIZE){
+        {
+            if((tmp = fread(buffer->second, sizeof(char), BUFFER_SIZE, fp))<BUFFER_SIZE){
                 buffer->fileEndsAtBufferIndex = tmp - 1 + BUFFER_SIZE;
             }
+        }
     }
     return fp;
 }
@@ -629,3 +633,53 @@ tokenInfo getNextToken(twinBuffer B)
         }
     }
 } 
+
+char** remove_comments(FILE* file) {
+    char** lines = NULL;
+    char* line = NULL;
+    size_t len = 0;
+    int read;
+    int i = 0;
+    while ((read = getline(&line, &len, file)) != -1) {
+        char* comment = strchr(line, '%');
+        if (comment != NULL) {
+            *comment = '\n';
+            *(comment + 1)= '\0';
+        }
+        lines = realloc(lines, (i + 1) * sizeof(char*));
+        lines[i] = line;
+        line = NULL;
+        i++;
+    }
+    lines = realloc(lines, (i + 1) * sizeof(char*));
+    lines[i] = NULL;
+    return lines;
+}
+
+char **readNremove_comments(char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error: file not found\n");
+        exit(1);
+    }
+    char** lines = remove_comments(file);
+    fclose(file);
+    return lines;
+}
+
+void writeCommentFreeFile(char** lines, char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: file could not be created\n");
+        exit(1);
+    }
+    for (int i = 0; lines[i] != NULL; i++) {
+        fprintf(file, "%s", lines[i]);
+    }
+    fclose(file);
+}
+
+void removeComments(char *testcaseFile, char *cleanFile){
+    char** lines = readNremove_comments(testcaseFile);
+    writeCommentFreeFile(lines, cleanFile);
+}

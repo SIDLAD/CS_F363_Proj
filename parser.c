@@ -391,6 +391,7 @@ const static struct
     Vocabulary val;
     const char *str;
 } conversion[] = {
+    {TK_COMMENT, "TK_COMMENT"},
     {TK_ENDUNION, "TK_ENDUNION"},
     {EPS, "EPS"},
     {TK_COMMA, "TK_COMMA"},
