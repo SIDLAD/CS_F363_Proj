@@ -15,7 +15,7 @@ char *retractAndReturnLexeme(char *Dest, twinBuffer _buffer);
 tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber);
 char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer);
 void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme);
-void lookupSymbolTable(char* lexeme);
+void* lookupSymbolTable(char* lexeme);
 //------------------//
 
 // function definitions
@@ -98,9 +98,9 @@ void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme)
     insertIntoTrie((void*)tkinf,lexeme,symbolTable);
 }
 
-void lookupSymbolTable(char* lexeme)
+void* lookupSymbolTable(char* lexeme)
 {
-    getDataFromTrie(lexeme,symbolTable);
+    return getDataFromTrie(lexeme,symbolTable);
 }
 
 FILE *getStream(FILE *fp)
@@ -158,6 +158,7 @@ char *retractAndReturnLexeme(char *Dest, twinBuffer _buffer) // Dest character a
         tmp++;
     } while (_buffer->lexemeBegin != _buffer->forward);
 
+    *tmp = '\0';
     return Dest;
 }
 
@@ -175,6 +176,7 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
 
 int failure(){
     // currently acting as a place holder until we create error.h and error.c files
+    
     return 0;
 }
 
@@ -200,7 +202,7 @@ tokenInfo getNextToken(twinBuffer B)
             else if(c=='@') state=21;
             else if(c=='=') state=24;
             else if(c=='!') state=26;
-            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=28;
+            else if(c>='0' && c<='9') state=28;
             else if(c=='(') state=37;
             else if(c==')') state=38;
             else if(c=='[') state=39;
@@ -212,8 +214,8 @@ tokenInfo getNextToken(twinBuffer B)
             else if(c==';') state=48;
             else if(c=='%') state=49;
             else if(c=='#') state=51;
-            else if(c==97||(c>=101&&c<=122)) state=54;
-            else if(c>=98&&c<=100) state=56;
+            else if(c=='a'||(c>='e'&&c<='z')) state=54;
+            else if(c>='b'&&c<='d') state=56;
             
 
             // else if 
@@ -314,7 +316,7 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='\n') state=15;
-            else if(c==' ') state=16;
+            else if(c==' '||c=='\t') state=16;
             else state=17;
             break;
 
@@ -322,7 +324,7 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='\n') state=15;
-            else if(c==' ') state=16;
+            else if(c==' '||c=='\t') state=16;
             else state=17;
             break;
 
@@ -400,7 +402,7 @@ tokenInfo getNextToken(twinBuffer B)
             case 28:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=28;
+            if(c>='0' && c<='9') state=28;
             else if(c=='.') state=29;
             else state=36;
             break;
@@ -408,14 +410,14 @@ tokenInfo getNextToken(twinBuffer B)
             case 29:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=30;
+            if(c>='0' && c<='9') state=30;
             else state=failure();
             break;
 
             case 30:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=31;
+            if(c>='0' && c<='9') state=31;
             else state=failure();
             break;
 
@@ -430,21 +432,21 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='+'||c=='-') state=33;
-            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=34;
+            else if(c>='0' && c<='9') state=34;
             else state=failure();
             break;
 
             case 33:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=34;
+            if(c>='0' && c<='9') state=34;
             else state=failure();
             break;
 
             case 34:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') {incrementBufferForward(buffer);state=35;}
+            if(c>='0' && c<='9') {incrementBufferForward(buffer);state=35;}
             else state=failure();
             break;
             
@@ -503,22 +505,22 @@ tokenInfo getNextToken(twinBuffer B)
             case 44:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if((c>=65&&c<=90)||(c>=97&&c<=122)) state=45;
+            if((c>='A'&&c<='Z')||(c>='a'&&c<='z')) state=45;
             else state=failure();
             break;
 
             case 45:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if((c>=65&&c<=90)||(c>=97&&c<=122)) state=45;
-            else if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=46;
+            if((c>='A'&&c<='Z')||(c>='a'&&c<='z')) state=45;
+            else if(c>='0' && c<='9') state=46;
             else state=47;
             break;
 
             case 46:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='0'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9') state=46;
+            if(c>='0' && c<='9') state=46;
             else state=47;
             break;
 
@@ -548,14 +550,14 @@ tokenInfo getNextToken(twinBuffer B)
             case 51:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c>=97&&c<=122) state=52;
+            if(c>='a'&&c<='z') state=52;
             else state=failure();
             break;
 
             case 52:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c>=97&&c<=122) state=52;
+            if(c>='a'&&c<='z') state=52;
             else state=53;
             break;
 
@@ -567,20 +569,23 @@ tokenInfo getNextToken(twinBuffer B)
             case 54:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c>=97&&c<=122) state=54;
+            if(c>='a'&&c<='z') state=54;
             else state=55;
             break;
 
             case 55:
             retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
-            return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
+            if(tmp = lookupSymbolTable(tmp_lexeme))
+                return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
+            else
+                return createTokenInfo(tmp->tokenName,tmp->lexeme,currentLineNumber);
 
             case 56:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c>=97&&c<=122) state=54;
-            else if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state =57;
+            if(c>='a'&&c<='z') state=54;
+            else if(c>='2' && c<='7') state =57;
             else state=failure();
             break;
 
@@ -588,14 +593,14 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>=98&&c<=100) state=57;
-            else if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state =58;
+            else if(c>='2' && c<='7') state =58;
             else state=59;
             break;
 
             case 58:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
-            if(c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7') state=58;
+            if(c>='2' && c<='7') state=58;
             else state=59;
             break;
 

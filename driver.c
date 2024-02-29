@@ -42,7 +42,7 @@ void case_printTokenList()
     tokenInfo _tokenInfo;
     char token[100];
     while(_tokenInfo = getNextToken(buffer))
-    {
+    { 
         enumToStr(_tokenInfo->tokenName,token);
         printf("%s %s %d\n", token, _tokenInfo->lexeme, _tokenInfo->lineNumber);
     }
