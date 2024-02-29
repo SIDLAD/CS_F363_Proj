@@ -18,7 +18,7 @@ Create a menu as per the following instructions
 #include <string.h>
 #include <time.h>
 
-#include "parser.h"
+#include "parser.c"
 
 void printMenu()
 {
