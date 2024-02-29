@@ -1,7 +1,6 @@
 #include "parserDef.h"
 #include <stdio.h>
 #include <string.h>
-#include "dataStructures/linkedList.c"
 
 parseTree _parseTree = NULL;                //to be initialised via function call
 grammar _grammar = NULL;                    //to be initialised via function call
