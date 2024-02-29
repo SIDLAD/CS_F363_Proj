@@ -33,7 +33,9 @@ def get_unique_terms():
     
 if __name__ == "__main__":
     terms, not_terms, tokens = get_unique_terms()
-    print(len(terms))
+    print(terms)
+    print(not_terms)
+    print(tokens)
     with open(os.path.join(os.path.dirname(__file__), "./unique_terms.txt"), "w") as f:
         for term in terms:
             f.write(term + "\n")

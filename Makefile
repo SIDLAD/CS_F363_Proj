@@ -24,3 +24,4 @@ parser.o: parserDef.h parser.h parser.c
 
 clean:
 	rm -f *.o
+	rm stage1exe

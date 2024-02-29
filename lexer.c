@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include<stdlib.h>
+#include <stdlib.h>
 #include "lexerDef.h"
 
 int state = 0; // state number for the DFA
