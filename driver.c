@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "parser.h"
+#include "parser.c"
 
 void printMenu()
 {
@@ -25,15 +25,15 @@ void case_printTokenList()
     initialiseSymbolTable();
     initialiseTwinBuffer();
     tokenInfo _tokenInfo;
+    fp_tmp[0]=fopen(printTokenListFile,"w");
     char token[100];
-    FILE* fp_tmp=fopen(printTokenListFile,"w");
     while(_tokenInfo = getNextToken(buffer))
     { 
         enumToStr(_tokenInfo->tokenName,token);
         printf("Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
-        fprintf(fp_tmp,"Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
+        fprintf(fp_tmp[0],"Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
     }
-    fclose(fp_tmp);
+    fclose(fp_tmp[0]);
     freeTwinBuffer();
     freeSymbolTable();
 }
@@ -73,7 +73,7 @@ void case_calculateTime()
 
 int main(int argc, char* argv[])
 {
-    strcpy(testcaseFile,"Test Cases/t5.txt");
+    strcpy(testcaseFile,"Test Cases/t6.txt");
     // strcpy(testcaseFile,argv[1]);
     // strcpy(outputFile,argv[2]);
     while(1)

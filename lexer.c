@@ -28,6 +28,10 @@ tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber);
 char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer);
 void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme);
 void* lookupSymbolTable(char* lexeme);
+void* variableSize(int linenumber, FILE* ptrs[], int size, int max);
+void* functionIdSize(int linenumber, FILE* ptrs[], int size, int max);
+void* symbolUnknown(int linenumber, char tmp_lexeme, FILE* ptrs[], int size);
+void* patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size);
 //------------------//
 
 
@@ -129,6 +133,34 @@ Trie freeTrieNodeRecursive(Trie root)
 }
 
 // function definitions
+
+void* variableSize(int linenumber, FILE* ptrs[], int size, int max){
+    printf("Line no. %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    return NULL;
+}
+
+void* functionIdSize(int linenumber, FILE* ptrs[], int size, int max){
+    printf("Line no. %d\t Error: Function Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    return NULL;
+}
+
+void* symbolUnknown(int linenumber, char tmp_lexeme, FILE* ptrs[], int size){
+    printf("Line %d Error: Unknown symbol <%c>\n", linenumber, tmp_lexeme);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d Error: Unknown symbol <%c>\n", linenumber, tmp_lexeme);
+    return NULL;
+}
+
+void* patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size){
+    printf("Line %d Error: Unknown pattern <%s>\n", linenumber, tmp_lexeme);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d Error: Unknown symbol <%s>\n", linenumber, tmp_lexeme);
+    return NULL;
+}
 
 void initialiseTwinBuffer() // initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
 {
@@ -298,16 +330,11 @@ char* resetBufferPtrsAndReturnLexeme(char* Dest, twinBuffer _buffer)
     return retractAndReturnLexeme(Dest,_buffer);
 }
 
-int failure(){
-    // currently acting as a place holder until we create error.h and error.c files
-    
-    return 0;
-}
-
 tokenInfo getNextToken(twinBuffer B)
 {
     char c;
     char tmp_lexeme[MAX_LEXEME_LENGTH]; 
+    int diff_tmp;
     tokenInfo tmp;
     while(1){
         switch(state){
@@ -344,7 +371,12 @@ tokenInfo getNextToken(twinBuffer B)
             
 
             // else if 
-            else state = failure();
+            else {
+                state=0;
+                resetBufferPtrs(buffer);
+                symbolUnknown(currentLineNumber, c, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 1:
@@ -372,7 +404,12 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='-') state=5;
-            else state = failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 5:
@@ -462,14 +499,24 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=19;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 19:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='&') state=20;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 20:
@@ -482,14 +529,24 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=22;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 22:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='@') state=23;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 23:
@@ -502,7 +559,12 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=25;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 25:
@@ -515,7 +577,12 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='=') state=27;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 27:
@@ -536,14 +603,24 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='0' && c<='9') state=30;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 30:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='0' && c<='9') state=31;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 31:
@@ -558,21 +635,36 @@ tokenInfo getNextToken(twinBuffer B)
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c=='+'||c=='-') state=33;
             else if(c>='0' && c<='9') state=34;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 33:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='0' && c<='9') state=34;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 34:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='0' && c<='9') {incrementBufferForward(buffer);state=35;}
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
             
             case 35:
@@ -631,7 +723,12 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if((c>='A'&&c<='Z')||(c>='a'&&c<='z')) state=45;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 45:
@@ -650,12 +747,15 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 47:
-            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
+            diff_tmp=(buffer->forward>=buffer->lexemeBegin)?buffer->forward - buffer->lexemeBegin:2*BUFFER_SIZE-buffer->lexemeBegin+buffer->forward;
+            if((diff_tmp)>MAX_FUNCTION_IDENTIFIER_LENGTH){buffer->lexemeBegin = buffer->forward;functionIdSize(currentLineNumber, fp_tmp, filePointerInt, MAX_FUNCTION_IDENTIFIER_LENGTH);break;}
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
-            else
+            else{
                 return createTokenInfo(TK_FUNID, tmp_lexeme, currentLineNumber);
+            }
 
             case 48:
             resetBufferPtrs(buffer);
@@ -679,7 +779,12 @@ tokenInfo getNextToken(twinBuffer B)
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='a'&&c<='z') state=52;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 52:
@@ -702,19 +807,27 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 55:
-            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
+            diff_tmp=(buffer->forward>=buffer->lexemeBegin)?buffer->forward - buffer->lexemeBegin:2*BUFFER_SIZE-buffer->lexemeBegin+buffer->forward;
+            if((diff_tmp)>MAX_VARIABLE_IDENTIFIER_LENGTH){buffer->lexemeBegin = buffer->forward;variableSize(currentLineNumber, fp_tmp, filePointerInt, MAX_VARIABLE_IDENTIFIER_LENGTH);break;}
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
-            else
+            else{
                 return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
+            }
 
             case 56:
             incrementBufferForward(buffer);
             c=characterReadFromBuffer(buffer->forward,buffer);
             if(c>='a'&&c<='z') state=54;
             else if(c>='2' && c<='7') state =57;
-            else state=failure();
+            else {
+                state=0;
+                retractAndReturnLexeme(tmp_lexeme,buffer);
+                patternUnknown(currentLineNumber, tmp_lexeme, fp_tmp, filePointerInt);
+                break;
+            }
             break;
 
             case 57:
@@ -733,12 +846,15 @@ tokenInfo getNextToken(twinBuffer B)
             break;
 
             case 59:
-            retractAndReturnLexeme(tmp_lexeme,buffer);
             state=0;
+            diff_tmp=(buffer->forward>=buffer->lexemeBegin)?buffer->forward - buffer->lexemeBegin:2*BUFFER_SIZE-buffer->lexemeBegin+buffer->forward;
+            if((diff_tmp)>MAX_VARIABLE_IDENTIFIER_LENGTH){buffer->lexemeBegin = buffer->forward;variableSize(currentLineNumber, fp_tmp, filePointerInt, MAX_VARIABLE_IDENTIFIER_LENGTH);break;}
+            retractAndReturnLexeme(tmp_lexeme,buffer);
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
-            else
+            else{
                 return createTokenInfo(TK_ID, tmp_lexeme, currentLineNumber);
+            }
 
         }
     }
