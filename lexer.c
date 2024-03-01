@@ -755,7 +755,9 @@ tokenInfo getNextToken(twinBuffer B, FILE* fp_tmp[])
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else{
-                return createTokenInfo(TK_FUNID, tmp_lexeme, currentLineNumber);
+                tmp = createTokenInfo(TK_FUNID, tmp_lexeme, currentLineNumber);
+                insertIntoSymbolTable(tmp, tmp_lexeme);
+                return tmp;
             }
 
             case 48:
@@ -815,7 +817,9 @@ tokenInfo getNextToken(twinBuffer B, FILE* fp_tmp[])
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else{
-                return createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
+                tmp = createTokenInfo(TK_FIELDID, tmp_lexeme, currentLineNumber);
+                insertIntoSymbolTable(tmp, tmp_lexeme);
+                return tmp;
             }
 
             case 56:
@@ -854,7 +858,9 @@ tokenInfo getNextToken(twinBuffer B, FILE* fp_tmp[])
             if(tmp = lookupSymbolTable(tmp_lexeme))
                 return createTokenInfo(tmp->tokenName,tmp_lexeme,currentLineNumber);
             else{
-                return createTokenInfo(TK_ID, tmp_lexeme, currentLineNumber);
+                tmp = createTokenInfo(TK_ID, tmp_lexeme, currentLineNumber);
+                insertIntoSymbolTable(tmp, tmp_lexeme);
+                return tmp;
             }
 
         }
