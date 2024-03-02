@@ -25,16 +25,22 @@ void case_printTokenList()
     initialiseSymbolTable();
     initialiseTwinBuffer();
     tokenInfo _tokenInfo;
-    FILE* fp_tmp[2];
-    fp_tmp[0]=fopen(printTokenListFile,"w");
+    fptrsLen = 1;
+    fptrs = calloc(fptrsLen,sizeof(FILE*));
+
+    fptrs[0]=fopen(printTokenListFile,"w");
+
     char token[100];
-    while(_tokenInfo = getNextToken(buffer, fp_tmp))
+    while(_tokenInfo = getNextToken(buffer))
     { 
         enumToStr(_tokenInfo->tokenName,token);
         printf("Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
-        fprintf(fp_tmp[0],"Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
+        fprintf(fptrs[0],"Line no. %d\t Lexeme %s\t Token %s\n", _tokenInfo->lineNumber, _tokenInfo->lexeme, token);
     }
-    fclose(fp_tmp[0]);
+
+    for(int i=0;i<fptrsLen;i++)fclose(fptrs[i]);
+    free(fptrs);
+
     freeTwinBuffer();
     freeSymbolTable();
 }

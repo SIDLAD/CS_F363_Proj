@@ -4,7 +4,7 @@
 #include "lexerDef.h"
 
 extern FILE *getStream(FILE *fp);      //re-populates the next of twin buffers with the next BUFFERSIZE amount of bytes
-extern tokenInfo getNextToken(twinBuffer B, FILE* fp_tmp[]);
+extern tokenInfo getNextToken(twinBuffer B);
 extern void removeComments(char *testcaseFile, char *cleanFile);
 
 extern void initialiseTwinBuffer();     //initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()

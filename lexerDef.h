@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define BUFFER_SIZE 256
 #define VOCABULARY_COUNT ((int)TOTAL_VOCAB_SIZE)
@@ -13,6 +14,8 @@
 #define MAX_FUNCTION_IDENTIFIER_LENGTH 30
 #define MAX_FILENAME_LENGTH 50
 #define MAX_LEXEME_LENGTH MAX_FUNCTION_IDENTIFIER_LENGTH        //as MAX_FUNCTION_IDENTIFIER_LENGTH is greater than MAX_VARIABLE_IDENTIFIER_LENGTH
+#define ALPHABET_COUNT 85
+
 
 typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;
@@ -28,9 +31,7 @@ typedef enum vocabulary Vocabulary;
 // char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
 // char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
 
-#include <stdlib.h>
 
-#define ALPHABET_COUNT 85
 
 typedef struct trie *Trie;
 typedef struct trieEdge *TrieEdge;
@@ -57,6 +58,9 @@ extern char testcaseFile[MAX_FILENAME_LENGTH];// = "testcase.txt";
 extern char parseTreeOutFile[MAX_FILENAME_LENGTH];// = "createParseOutFile.txt";
 extern char commentFreeFile[MAX_FILENAME_LENGTH];// = "commentFreeFile.txt";
 extern char printTokenListFile[MAX_FILENAME_LENGTH];// = "printTokenListFile.txt";
+
+extern FILE** fptrs;
+extern int fptrsLen;
 
 struct twinBuffer
 {
