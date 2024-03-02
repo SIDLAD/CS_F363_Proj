@@ -22,8 +22,8 @@ void case_cleanComments()
 
 void case_printTokenList()
 {
-    initialiseSymbolTable();
-    initialiseTwinBuffer();
+    initializeSymbolTable();
+    initializeTwinBuffer();
     tokenInfo _tokenInfo;
     fptrsLen = 1;
     fptrs = calloc(fptrsLen,sizeof(FILE*));
@@ -48,12 +48,12 @@ void case_printTokenList()
 void case_generateParseTree()
 {
     //lexer and parser will be invoked
-    createParseTable(_firstAndFollow, _table);
-    // parseInputSourceCode(testcaseFile, _table);
-    // //lexer and parser have been invoked
+    _table = createParseTable(_firstAndFollow, _table);
+    parseInputSourceCode(testcaseFile, _table);
+    //lexer and parser have been invoked
     
-    // printParseTree(_parseTree, outputFile);
-    // freeParseTree(_parseTree);
+    printParseTree(_parseTree, parseTreeOutFile);
+    freeParseTree(_parseTree);  //freeing the parse tree is a must, otherwise there will be memory leaks
 }
 
 void case_calculateTime()
@@ -81,7 +81,7 @@ void case_calculateTime()
 int main(int argc, char* argv[])
 {
     strcpy(testcaseFile,argv[1]);
-    // strcpy(outputFile,argv[2]);
+    // strcpy(parseTreeOutFile,argv[2]);
     while(1)
     {
         printMenu();

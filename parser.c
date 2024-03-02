@@ -1,19 +1,20 @@
 #include "parserDef.h"
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
-parseTree _parseTree = NULL;                //to be initialised via function call
-grammar _grammar = NULL;                    //to be initialised via function call
-table _table = NULL;                        //to be initialised via function call
-FirstAndFollow _firstAndFollow = NULL;      //to be initialised via function call
-TerminalBucketSet _terminalBucketSet = NULL;//to be initialised via function call
+parseTree _parseTree = NULL;                //to be initialized via function call
+grammar _grammar = NULL;                    //to be initialized via function call
+table _table = NULL;                        //to be initialized via function call
+FirstAndFollow _firstAndFollow = NULL;      //to be initialized via function call
+TerminalBucketSet _terminalBucketSet = NULL;//to be initialized via function call
+char* predictiveParsingTableCache = "predictiveParsingTableCache";
 
 // function prototypes//
 void populateFirstAndFollowText(FirstAndFollow F);
 FirstAndFollow computeFirstAndFollowSets(grammar G);
 TerminalBucketSet createSet();
 FirstAndFollow initializeFirstAndFollow(FirstAndFollow _firstAndFollow, grammar G);
-void freeParseTree(parseTree PT);
 Vocabulary encodeStr(const char *str);
 void enumToStr(Vocabulary v, char *dest);
 grammar initializeGrammar(grammar g);
@@ -21,7 +22,11 @@ LinkedList *increaseProductionRHSSetSize(LinkedList *rhsSet, int *currentSize); 
 grammar populateGrammar(grammar g, char *grammarFileName);
 int getNTID(Vocabulary NT);
 void insertGrammarSymbol(LinkedList node, Vocabulary v);
+table initializeTable(table T);
 table createParseTable(FirstAndFollow F, table T);
+void parseInputSourceCode(char *testcaseFile, table T);
+void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+void freeParseTree(parseTree PT);
 void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F);
 void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
@@ -266,7 +271,7 @@ int getNTIDFromNode(LinkedList node)
 
 TerminalBucketSet createSet()
 {
-    TerminalBucketSet set = (TerminalBucketSet)calloc(1, sizeof(struct terminalBucketSet)); // calloc used instead of malloc so that all bits are initialised to zero
+    TerminalBucketSet set = (TerminalBucketSet)calloc(1, sizeof(struct terminalBucketSet)); // calloc used instead of malloc so that all bits are initialized to zero
     return set;
 }
 
@@ -288,14 +293,9 @@ FirstAndFollow initializeFirstAndFollow(FirstAndFollow F, grammar G)
     return F;
 }
 
-void freeParseTree(parseTree PT)
-{
-    // TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
-}
-
 grammar initializeGrammar(grammar g)
 {
-    if (g != NULL)
+    if (g != NULL)  // in case g is not NULL, then that means that it is already initialized
         return g;
 
     g = (grammar)malloc(sizeof(struct grammar));
@@ -382,9 +382,45 @@ int getNTID(Vocabulary NT) // returns a negative value if not a non-terminal
     return (int)NT - TERMINALS_COUNT - 1;
 }
 
-table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or _firstAndFollow.
+table initializeTable(table T)
 {
-    if (F == NULL)
+    if (T != NULL)  // in case T is not NULL, then that means that it is already initialized
+        return T;
+
+    T = (table)malloc(sizeof(struct table));
+
+    for(int i=0;i<N_TERMINALS_COUNT;i++)
+    {
+        for(int j=0;j<TERMINALS_COUNT;j++)
+        {
+            T->cells[i][j] = NULL;
+        }
+    }
+
+    return T;
+}
+
+table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or _firstAndFollow. T has to be passed as _table.
+{
+    if (T == NULL)
+    {
+        _table = initializeTable(_table);
+        T = _table;
+    }
+    else
+    {
+        printf("Parse Table has already been created.");
+        return T;
+    }
+
+    if(access(predictiveParsingTableCache,F_OK) == 0)//this means that the cache file EXISTS
+    {
+        //TODO: @Vedang - populate the parsing table T from the cache'd file found (predictiveParsingTableCache is the string that contains the name of the file)
+
+        return T;
+    }
+
+    if (F == NULL)  //else _firstAndFollow (and _grammar) is already computed
     {
         _grammar = initializeGrammar(_grammar);
         _grammar = populateGrammar(_grammar, NULL);
@@ -392,14 +428,35 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         F = _firstAndFollow;
     }
 
-    initialiseSymbolTable();
-    initialiseTwinBuffer();
-    // TODO
+    //TODO: @Siddharth - populate the parsing table from FirstAndFollow ds
+    
+
+    //TODO: @Vedang - cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
+    
+    return T;
+}
+
+void parseInputSourceCode(char *testcaseFile, table T)
+{
+    initializeSymbolTable();
+    initializeTwinBuffer();
+    
+    //TODO: Main part of parser
 
     freeTwinBuffer();
     freeSymbolTable();
-    return T;
 }
+
+void printParseTree(parseTree PT, char *outfile)       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+{
+    //TODO: inorder traversal and printing
+}
+
+void freeParseTree(parseTree PT)
+{
+    // TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
+}
+
 
 const static struct
 {

@@ -17,11 +17,13 @@ typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
 typedef struct linkedList* LinkedList;
 
-extern parseTree _parseTree;                //to be initialised via function call
-extern grammar _grammar;                    //to be initialised via function call
-extern table _table;                        //to be initialised via function call
-extern FirstAndFollow _firstAndFollow;      //to be initialised via function call
-extern TerminalBucketSet _terminalBucketSet;//to be initialised via function call
+extern parseTree _parseTree;                //to be initialized via function call
+extern grammar _grammar;                    //to be initialized via function call
+extern table _table;                        //to be initialized via function call
+extern FirstAndFollow _firstAndFollow;      //to be initialized via function call
+extern TerminalBucketSet _terminalBucketSet;//to be initialized via function call
+
+extern char* predictiveParsingTableCache;
 
 
 struct linkedList
@@ -31,7 +33,7 @@ struct linkedList
 };
 
 struct table{
-    //fill in the details of table
+    LinkedList cells[N_TERMINALS_COUNT][TERMINALS_COUNT];
 };
 
 struct parseTree{

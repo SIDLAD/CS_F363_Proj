@@ -6,7 +6,7 @@
 
 int state = 0; // state number for the DFA
 int currentLineNumber = 1; // current line number being read
-twinBuffer buffer = NULL;   //buffer to be initialised via initialiseBuffer(buffer) function call
+twinBuffer buffer = NULL;   //buffer to be initialized via initializeBuffer(buffer) function call
 Trie symbolTable = NULL;
 
 FILE** fptrs;
@@ -18,9 +18,9 @@ char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
 char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
 
 // function prototypes//
-void initialiseTwinBuffer(); // initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
+void initializeTwinBuffer(); // initialize the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
 void freeTwinBuffer();       // free the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
-void initialiseSymbolTable();
+void initializeSymbolTable();
 void freeSymbolTable();
 FILE *getStream(FILE *fp);
 void incrementBufferForward(twinBuffer _buffer);
@@ -156,7 +156,7 @@ void* patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size){
     return NULL;
 }
 
-void initialiseTwinBuffer() // initialise the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
+void initializeTwinBuffer() // initialize the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
 {
     buffer = (twinBuffer)malloc(sizeof(struct twinBuffer));
     buffer->forward = buffer->lexemeBegin = 0;
@@ -181,7 +181,7 @@ tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber)
     tkinf->lineNumber = lineNumber;
 }
 
-void initialiseSymbolTable()
+void initializeSymbolTable()
 {
     symbolTable = createTrieNode();
     const static struct
