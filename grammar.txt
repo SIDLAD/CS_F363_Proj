@@ -23,12 +23,10 @@
 <otherStmts> ===> <stmt> <otherStmts> | EPS
 <stmt> ===> <assignmentStmt> | <iterativeStmt> | <conditionalStmt> | <ioStmt> | <funCallStmt>
 <assignmentStmt> ===> <singleOrRecId> TK_ASSIGNOP <arithmeticExpression> TK_SEM
-<singleOrRecId> ===> TK_ID | <constructedVariable>
-<constructedVariable> ===> TK_ID <oneExpansion> <moreExpansions>
-<oneExpansion> ===> TK_DOT TK_FIELDID
-<moreExpansions> ===> <oneExpansion> <moreExpansions> | EPS
 <singleOrRecId> ===> TK_ID <option_single_constructed>
 <option_single_constructed> ===> EPS | <oneExpansion> <moreExpansions>
+<oneExpansion> ===> TK_DOT TK_FIELDID
+<moreExpansions> ===> <oneExpansion> <moreExpansions> | EPS
 <recId> ===> TK_DOT TK_FIELDID <recId> | EPS
 <funCallStmt> ===> <outputParameters> TK_CALL TK_FUNID TK_WITH TK_PARAMETERS <inputParameters> TK_SEM
 <outputParameters> ===> TK_SQL <idList> TK_SQR TK_ASSIGNOP | EPS
