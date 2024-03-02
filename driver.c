@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "parser.c"
+#include "parser.h"
 
 void printMenu()
 {

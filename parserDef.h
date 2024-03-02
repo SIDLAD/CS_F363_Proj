@@ -1,7 +1,7 @@
 #ifndef PARSERDEF_H
 #define PARSERDEF_H
 
-#include "lexer.c"
+#include "lexer.h"
 #include <stdbool.h>
 #include <stdlib.h>
 

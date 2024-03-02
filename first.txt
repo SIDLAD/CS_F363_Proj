@@ -1,114 +1,108 @@
-<assignmentStmt> :  TK_ID, 
-
-<recId> :  TK_DOT,  EPS, 
+<dataType> :  TK_INT,  TK_RUID,  TK_REAL,  TK_RECORD,  TK_UNION, 
 
 <fieldDefinition> :  TK_TYPE, 
 
-<highPrecedenceOperators> : 
-
-<primitiveDatatype> :  TK_INT,  TK_REAL, 
-
-<A> :  TK_RECORD,  TK_UNION, 
-
-<typeDefinitions> :  TK_RECORD,  TK_DEFINETYPE,  EPS,  TK_UNION, 
-
-<ioStmt> :  TK_WRITE,  TK_READ, 
-
-<input_par> :  TK_INPUT, 
-
-<fieldDefinitions> : 
-
-<moreFields> :  TK_TYPE,  EPS, 
-
-<idList> :  TK_ID, 
-
-<factor> :  TK_NUM,  TK_ID,  TK_RNUM,  TK_OP, 
-
-<optionalReturn> :  TK_SQL,  EPS, 
-
-<otherStmts> :  TK_ID,  TK_IF,  TK_CALL,  TK_SQL,  TK_WRITE,  EPS,  TK_WHILE,  TK_READ, 
-
-<mainFunction> :  TK_MAIN, 
-
-<global_or_not> :  TK_COLON,  EPS, 
-
-<constructedDatatype> :  TK_RECORD,  TK_RUID,  TK_UNION, 
-
-<actualOrRedefined> :  TK_RECORD,  TK_DEFINETYPE,  TK_UNION, 
-
-<oneExpansion> :  TK_DOT, 
-
-<relationalOp> :  TK_GT,  TK_EQ,  TK_LE,  TK_GE,  TK_NE,  TK_LT, 
-
-<constructedVariable> :  TK_ID, 
-
-<remaining_list> :  TK_COMMA,  EPS, 
-
-<moreExpansions> :  TK_DOT,  EPS, 
-
-<termPrime> :  EPS, 
-
-<declarations> :  TK_TYPE,  EPS, 
-
-<expPrime> :  TK_PLUS,  TK_MINUS,  EPS, 
-
-<fieldType> : 
+<function> :  TK_FUNID, 
 
 <more_ids> :  TK_COMMA,  EPS, 
 
-<parameter_list> :  TK_RECORD,  TK_RUID,  TK_INT,  TK_REAL,  TK_UNION, 
-
-<iterativeStmt> :  TK_WHILE, 
-
-<arithmeticExpression> :  TK_NUM,  TK_ID,  TK_RNUM,  TK_OP, 
-
-<otherFunctions> :  TK_FUNID,  EPS, 
-
 <output_par> :  TK_OUTPUT,  EPS, 
 
-<outputParameters> :  TK_SQL,  EPS, 
+<typeDefinitions> :  TK_DEFINETYPE,  TK_RECORD,  EPS,  TK_UNION, 
 
-<lowPrecedenceOperators> :  TK_PLUS,  TK_MINUS, 
+<stmts> :  TK_TYPE,  TK_WHILE,  TK_RETURN,  TK_IF,  TK_SQL,  TK_WRITE,  TK_DEFINETYPE,  TK_READ,  TK_RECORD,  TK_CALL,  TK_ID,  TK_UNION, 
 
-<dataType> :  TK_RECORD,  TK_RUID,  TK_INT,  TK_REAL,  TK_UNION, 
-
-<declaration> :  TK_TYPE, 
-
-<stmt> :  TK_ID,  TK_IF,  TK_CALL,  TK_SQL,  TK_WRITE,  TK_WHILE,  TK_READ, 
-
-<program> :  TK_FUNID,  TK_MAIN, 
-
-<conditionalStmt> :  TK_IF, 
-
-<function> :  TK_FUNID, 
-
-<singleOrRecId> :  TK_ID, 
-
-<logicalOp> :  TK_AND,  TK_OR, 
-
-<elsePart> :  TK_ELSE,  TK_ENDIF, 
-
-<option_single_constructed> :  TK_DOT,  EPS, 
+<constructedDatatype> :  TK_RUID,  TK_RECORD,  TK_UNION, 
 
 <definetypestmt> :  TK_DEFINETYPE, 
 
-<returnStmt> :  TK_RETURN, 
+<elsePart> :  TK_ELSE,  TK_ENDIF, 
 
-<inputParameters> :  TK_SQL, 
+<relationalOp> :  TK_EQ,  TK_GT,  TK_GE,  TK_LT,  TK_LE,  TK_NE, 
+
+<booleanExpression> :  TK_OP,  TK_NUM,  TK_NOT,  TK_ID,  TK_RNUM, 
+
+<returnStmt> :  TK_RETURN, 
 
 <var> :  TK_NUM,  TK_ID,  TK_RNUM, 
 
-<term> :  TK_NUM,  TK_ID,  TK_RNUM,  TK_OP, 
+<moreExpansions> :  TK_DOT,  EPS, 
 
-<highPrecedenceOperator> :  TK_DIV,  TK_MUL, 
+<singleOrRecId> :  TK_ID, 
 
-<booleanExpression> :  TK_NUM,  TK_ID,  TK_RNUM,  TK_OP,  TK_NOT, 
+<fieldDefinitions> :  TK_TYPE, 
 
-<funCallStmt> :  TK_CALL,  TK_SQL, 
+<actualOrRedefined> :  TK_DEFINETYPE,  TK_RECORD,  TK_UNION, 
 
-<fieldtype> :  TK_RECORD,  TK_RUID,  TK_INT,  TK_REAL,  TK_UNION, 
+<parameter_list> :  TK_INT,  TK_RUID,  TK_REAL,  TK_RECORD,  TK_UNION, 
+
+<oneExpansion> :  TK_DOT, 
+
+<funCallStmt> :  TK_SQL,  TK_CALL, 
+
+<fieldType> :  TK_INT,  TK_RUID,  TK_REAL,  TK_RECORD,  TK_UNION, 
+
+<otherFunctions> :  EPS,  TK_FUNID, 
+
+<otherStmts> :  TK_WHILE,  TK_IF,  TK_SQL,  TK_WRITE,  TK_READ,  TK_CALL,  EPS,  TK_ID, 
+
+<lowPrecedenceOperators> :  TK_MINUS,  TK_PLUS, 
+
+<inputParameters> :  TK_SQL, 
+
+<highPrecedenceOperators> :  TK_MUL,  TK_DIV, 
+
+<declaration> :  TK_TYPE, 
+
+<moreFields> :  TK_TYPE,  EPS, 
 
 <typeDefinition> :  TK_RECORD,  TK_UNION, 
 
-<stmts> :  TK_RECORD,  TK_ID,  TK_IF,  TK_CALL,  TK_SQL,  TK_TYPE,  TK_DEFINETYPE,  TK_WRITE,  TK_RETURN,  TK_WHILE,  TK_UNION,  TK_READ, 
+<ioStmt> :  TK_WRITE,  TK_READ, 
+
+<stmt> :  TK_WHILE,  TK_IF,  TK_SQL,  TK_WRITE,  TK_READ,  TK_CALL,  TK_ID, 
+
+<termPrime> :  TK_MUL,  TK_DIV,  EPS, 
+
+<input_par> :  TK_INPUT, 
+
+<A> :  TK_RECORD,  TK_UNION, 
+
+<assignmentStmt> :  TK_ID, 
+
+<option_single_constructed> :  TK_DOT,  EPS, 
+
+<optionalReturn> :  TK_SQL,  EPS, 
+
+<idList> :  TK_ID, 
+
+<global_or_not> :  TK_COLON,  EPS, 
+
+<recId> :  TK_DOT,  EPS, 
+
+<mainFunction> :  TK_MAIN, 
+
+<remaining_list> :  TK_COMMA,  EPS, 
+
+<iterativeStmt> :  TK_WHILE, 
+
+<term> :  TK_OP,  TK_NUM,  TK_ID,  TK_RNUM, 
+
+<logicalOp> :  TK_OR,  TK_AND, 
+
+<declarations> :  TK_TYPE,  EPS, 
+
+<arithmeticExpression> :  TK_OP,  TK_NUM,  TK_ID,  TK_RNUM, 
+
+<expPrime> :  TK_MINUS,  TK_PLUS,  EPS, 
+
+<primitiveDatatype> :  TK_INT,  TK_REAL, 
+
+<outputParameters> :  TK_SQL,  EPS, 
+
+<factor> :  TK_OP,  TK_NUM,  TK_ID,  TK_RNUM, 
+
+<program> :  TK_MAIN,  TK_FUNID, 
+
+<conditionalStmt> :  TK_IF, 
 
