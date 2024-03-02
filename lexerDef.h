@@ -158,7 +158,7 @@ enum vocabulary{
     otherStmts,
     lowPrecedenceOperators,
     inputParameters,
-    highPrecedenceOperator,
+    highPrecedenceOperators,
     declaration,
     moreFields,
     typeDefinition,
