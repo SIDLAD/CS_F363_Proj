@@ -34,7 +34,7 @@ Node* createNode(Node* parent){
 }
 
 void insertDataIntoTreeNode(void *_data,Node* node){
-    node->data=_data;
+    node->data=_data;   
 }
 
 void createAndPopulateChildren(Node* node, int nos, void* data[nos]){
