@@ -74,8 +74,7 @@ void case_calculateTime()
 
 int main(int argc, char* argv[])
 {
-    strcpy(testcaseFile,"Test Cases/t6.txt");
-    // strcpy(testcaseFile,argv[1]);
+    strcpy(testcaseFile,argv[1]);
     // strcpy(outputFile,argv[2]);
     while(1)
     {

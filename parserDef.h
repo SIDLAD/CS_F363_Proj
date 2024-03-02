@@ -3,6 +3,7 @@
 
 #include "lexer.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define MAX_LINE_SIZE_GRAMMAR 128
 #define grammarFile "grammar.txt"
@@ -14,12 +15,20 @@ typedef struct table* table;
 typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
+typedef struct linkedList* LinkedList;
 
 extern parseTree _parseTree;                //to be initialised via function call
 extern grammar _grammar;                    //to be initialised via function call
 extern table _table;                        //to be initialised via function call
 extern FirstAndFollow _firstAndFollow;      //to be initialised via function call
 extern TerminalBucketSet _terminalBucketSet;//to be initialised via function call
+
+
+struct linkedList
+{
+    LinkedList next;
+    void* data;
+};
 
 struct table{
     //fill in the details of table

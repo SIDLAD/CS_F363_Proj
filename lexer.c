@@ -35,15 +35,6 @@ void* symbolUnknown(int linenumber, char tmp_lexeme, FILE* ptrs[], int size);
 void* patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size);
 //------------------//
 
-
-LinkedList createLinkedListNode()
-{
-    LinkedList list = (LinkedList)malloc(sizeof(struct linkedList));
-    list->next = NULL;
-    list->data = NULL;
-    return list;
-}
-
 Trie createTrieNode()
 {
     Trie node = (Trie)malloc(sizeof(struct trie));
@@ -136,14 +127,14 @@ Trie freeTrieNodeRecursive(Trie root)
 // function definitions
 
 void* variableSize(int linenumber, FILE* ptrs[], int size, int max){
-    printf("Line no. %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    printf("Line %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
     for(int i=0; i<size;i++)
     fprintf(ptrs[i],"Line %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
     return NULL;
 }
 
 void* functionIdSize(int linenumber, FILE* ptrs[], int size, int max){
-    printf("Line no. %d\t Error: Function Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
+    printf("Line %d\t Error: Function Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
     for(int i=0; i<size;i++)
     fprintf(ptrs[i],"Line %d\t Error: Variable Identifier is longer than the prescribed length of %d characters.\n", linenumber, max);
     return NULL;

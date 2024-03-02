@@ -32,6 +32,15 @@ TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, Linke
 //------------------//
 
 // function definitions
+
+LinkedList createLinkedListNode()
+{
+    LinkedList list = (LinkedList)malloc(sizeof(struct linkedList));
+    list->next = NULL;
+    list->data = NULL;
+    return list;
+}
+
 void populateFirstAndFollowText(FirstAndFollow F)
 {
     char curNT[VOCAB_STRLEN_CAP];

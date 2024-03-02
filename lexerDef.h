@@ -27,20 +27,6 @@ typedef enum vocabulary Vocabulary;
 // char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
 // char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
 // char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
-#include <stdlib.h>
-
-#define ALPHABET_COUNT 85
-
-typedef struct trie *Trie;
-typedef struct trieEdge *TrieEdge;
-
-typedef struct linkedList* LinkedList;
-
-struct linkedList
-{
-    LinkedList next;
-    void* data;
-};
 
 #include <stdlib.h>
 
