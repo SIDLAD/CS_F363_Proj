@@ -1,7 +1,7 @@
 #ifndef PARSERDEF_H
 #define PARSERDEF_H
 
-#include "lexer.h"
+#include "lexer.c"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -33,6 +33,7 @@ struct linkedList
 };
 
 struct table{
+    int isErrorCell[N_TERMINALS_COUNT][TERMINALS_COUNT];     //if error not sync, 1. if error & syn, 2. if no error, 0. 
     LinkedList cells[N_TERMINALS_COUNT][TERMINALS_COUNT];
 };
 

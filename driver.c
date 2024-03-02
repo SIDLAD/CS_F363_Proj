@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "parser.h"
+#include "parser.c"
 
 void printMenu()
 {
@@ -80,6 +80,8 @@ void case_calculateTime()
 
 int main(int argc, char* argv[])
 {
+    // strcpy(testcaseFile,"Test Cases/t2.txt");
+    
     strcpy(testcaseFile,argv[1]);
     // strcpy(parseTreeOutFile,argv[2]);
     while(1)

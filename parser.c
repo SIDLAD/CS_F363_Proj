@@ -394,6 +394,7 @@ table initializeTable(table T)
         for(int j=0;j<TERMINALS_COUNT;j++)
         {
             T->cells[i][j] = NULL;
+            T->isErrorCell[i][j] = 1;       //keeping them by default as error not sync cells.
         }
     }
 
@@ -428,8 +429,47 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         F = _firstAndFollow;
     }
 
-    //TODO: @Siddharth - populate the parsing table from FirstAndFollow ds
-    
+    //populating the parsing table from _FirstAndFollow 
+    for(int i=0; i<N_TERMINALS_COUNT; i++)
+    {
+        for(int j=0; j<_firstAndFollow->ruleCount[i]; j++)
+        {
+            for(int k=0;k<TERMINALS_COUNT;k++)
+            {
+                if(_firstAndFollow->first[i][j]->val[k])
+                {
+                    if(! _table->isErrorCell[i][k])         //if multiple rules correspond to the same cell
+                    {
+                        printf("Grammar is not LL(1). Terminating program.\n");
+                        exit(0);
+                    }
+
+                    _table->isErrorCell[i][k] = 0;
+                    _table->cells[i][k] = _grammar->NT[i][j];
+                }
+            }
+        }
+    }
+
+    TerminalBucketSet tmp;
+
+    for(int i=0; i<N_TERMINALS_COUNT; i++)
+    {
+        for(int j=0; j<TERMINALS_COUNT; j++)
+        {
+            if(_firstAndFollow->follow[i]->val[j])
+            {
+                if((tmp = firstOfNT(i,_firstAndFollow))->val[(int)EPS] && ! _table->isErrorCell[i][j])  //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty
+                {
+                    printf("Grammar is not LL(1).Terminating program.\n");
+                    exit(0);
+                }
+                free(tmp);
+
+                _table->isErrorCell[i][j] = 2;
+            }
+        }
+    }
 
     //TODO: @Vedang - cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
     
