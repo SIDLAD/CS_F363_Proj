@@ -430,15 +430,35 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     }
 
     //populating the parsing table from _FirstAndFollow 
+
+    int EPSDerivingRuleNumber[N_TERMINALS_COUNT];
+    memset(EPSDerivingRuleNumber,-1,sizeof(EPSDerivingRuleNumber));     //setting all values of the array to -1
+
     for(int i=0; i<N_TERMINALS_COUNT; i++)
     {
         for(int j=0; j<_firstAndFollow->ruleCount[i]; j++)
         {
             for(int k=0;k<TERMINALS_COUNT;k++)
             {
-                if(_firstAndFollow->first[i][j]->val[k])
+                if(k == (int)EPS)
                 {
-                    if(! _table->isErrorCell[i][k])         //if multiple rules correspond to the same cell
+                    if(! _firstAndFollow->first[i][j]->val[k])  // if this rule cannot derive EPS, then skip
+                        continue;
+
+                    if(EPSDerivingRuleNumber[i] == -1)
+                    {
+                        EPSDerivingRuleNumber[i] = j;   //EPS Deriving Rule found for the NT!
+                    }
+                    else
+                    {
+                        //more than one rule is deriving EPS for the same non-terminal, so grammar is not LL(1)
+                        printf("Grammar is not LL(1). Terminating program.\n");
+                        exit(0);
+                    }
+                }
+                else if(_firstAndFollow->first[i][j]->val[k])
+                {
+                    if(! _table->isErrorCell[i][k])         //if multiple rules correspond to the same cell, then grammar is not LL(1)
                     {
                         printf("Grammar is not LL(1). Terminating program.\n");
                         exit(0);
@@ -451,22 +471,31 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         }
     }
 
-    TerminalBucketSet tmp;
-
     for(int i=0; i<N_TERMINALS_COUNT; i++)
     {
         for(int j=0; j<TERMINALS_COUNT; j++)
         {
             if(_firstAndFollow->follow[i]->val[j])
             {
-                if((tmp = firstOfNT(i,_firstAndFollow))->val[(int)EPS] && ! _table->isErrorCell[i][j])  //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty
+                if(EPSDerivingRuleNumber[i] != -1)  
                 {
-                    printf("Grammar is not LL(1).Terminating program.\n");
-                    exit(0);
-                }
-                free(tmp);
 
-                _table->isErrorCell[i][j] = 2;
+                    if(! _table->isErrorCell[i][j]) //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty, then grammar is not LL(1)
+                    {
+                        printf("Grammar is not LL(1).Terminating program.\n");
+                        exit(0);
+                    }
+
+                    //if NT can derive EPS, and FIRST(NT)^FOLLOW(NT) is empty up till this terminal, then this cell is attached the corresponding EPS Deriving grammar Rule:
+                    _table->isErrorCell[i][j] = 0;
+                    _table->cells[i][j] = _grammar->NT[i][EPSDerivingRuleNumber[i]];                    
+                }
+
+                else
+                {
+                    //if the NT cannot derive EPS, then this cell is marked as err & sync => 2
+                    _table->isErrorCell[i][j] = 2;
+                }
             }
         }
     }
