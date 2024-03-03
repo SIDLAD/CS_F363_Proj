@@ -14,11 +14,20 @@ struct node{
     
 };
 
-Node createNode(Node parent){
+Node createChild(Node parent){
     Node node = (Node)malloc(sizeof(struct node));
     node->parent=parent;
     node->child=NULL;
     node->brother=NULL;
+    node->data=NULL;
+    return node;
+}
+
+Node createBrother(Node brother){
+    Node node = (Node)malloc(sizeof(struct node));
+    node->parent=brother->parent;
+    node->child=NULL;
+    node->brother=brother;
     node->data=NULL;
     return node;
 }
@@ -28,13 +37,13 @@ void insertDataIntoTreeNode(void *_data, Node node){
 }
 
 void addAndCreateBrotherNode(Node current,void* data){
-    Node node=createNode(current);
+    Node node=createBrother(current);
     node->data=data;
     current->brother=node;
 }
 
 void addChild(Node current, void* data){
-    Node node=createNode(current);
+    Node node=createChild(current);
     node->data=data;
     current->child=node;
 }
