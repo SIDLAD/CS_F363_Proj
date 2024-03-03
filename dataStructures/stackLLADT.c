@@ -36,11 +36,14 @@ bool isEmpty(Stack stack)
 void push(Stack stack, void* data)
 {
     StackNode newNode = (StackNode)malloc(sizeof(struct stackNode));
-    if (newNode != NULL) {
+    if (newNode != NULL)
+    {
         newNode->data = data;
         newNode->next = stack->top;
         stack->top = newNode;
-    } else {
+    } 
+    else
+    {
         printf("Error: Memory allocation failed.\n");
     }
 }
