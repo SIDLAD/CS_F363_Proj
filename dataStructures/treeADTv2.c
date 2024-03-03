@@ -1,5 +1,5 @@
-// #ifndef TREEADT_MACRO
-// #define TREEADT_MACRO
+#ifndef TREEADT_MACRO
+#define TREEADT_MACRO
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -61,11 +61,11 @@ void free_node_data(Node node) {
 
 void main(){
     Node node=createNode(NULL);
-    
+
 }
 
 
 
 
 
-// #endif
+#endif
