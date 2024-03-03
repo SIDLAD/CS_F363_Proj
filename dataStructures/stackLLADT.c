@@ -22,7 +22,8 @@ struct stack
 Stack createStack()
 {
     Stack stack = (Stack)malloc(sizeof(struct stack));
-    if (stack != NULL) {
+    if (stack != NULL)
+    {
         stack->top = NULL;
     }
     return stack;
