@@ -7,10 +7,15 @@ parseTree _parseTree = NULL;                //to be initialized via function cal
 grammar _grammar = NULL;                    //to be initialized via function call
 table _table = NULL;                        //to be initialized via function call
 FirstAndFollow _firstAndFollow = NULL;      //to be initialized via function call
-TerminalBucketSet _terminalBucketSet = NULL;//to be initialized via function call
 char* predictiveParsingTableCache = "predictiveParsingTableCache";
 
 // function prototypes//
+void insertGrammarSymbolIntoLLNode(LinkedList node, Vocabulary v);
+void insertTokenInfoIntoTreeNode(TreeNode node, tokenInfo tkinf);
+tokenInfo fetchTokenInfoFromTreeNode(TreeNode node);
+void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v);
+Vocabulary popGrammarSymbolOntostack(Stack _stack);       //will return TOTAL_VOCAB_SIZE if _stack is empty
+
 void populateFirstAndFollowText(FirstAndFollow F);
 FirstAndFollow computeFirstAndFollowSets(grammar G);
 TerminalBucketSet createSet();
@@ -21,9 +26,9 @@ grammar initializeGrammar(grammar g);
 LinkedList *increaseProductionRHSSetSize(LinkedList *rhsSet, int *currentSize); // &ruleCount[i] will be passed as currentSize
 grammar populateGrammar(grammar g, char *grammarFileName);
 int getNTID(Vocabulary NT);
-void insertGrammarSymbol(LinkedList node, Vocabulary v);
 table initializeTable(table T);
 table createParseTable(FirstAndFollow F, table T);
+parseTree initializeParseTree(parseTree PT);
 void parseInputSourceCode(char *testcaseFile, table T);
 void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
 void freeParseTree(parseTree PT);
@@ -45,6 +50,142 @@ LinkedList createLinkedListNode()
     list->data = NULL;
     return list;
 }
+
+TreeNode createTreeNode(TreeNode parent,void* data)
+{
+    TreeNode treeNode = (TreeNode)malloc(sizeof(struct treeNode));
+    treeNode->parent=parent;
+    treeNode->firstChild=NULL;
+    treeNode->nextBrother=NULL;
+    treeNode->data=data;
+    return treeNode;
+}
+
+void createBrotherTreeNode(TreeNode current,void* data)
+{
+    current->nextBrother = createTreeNode(current->parent,data);
+}
+
+void createChildTreeNode(TreeNode current, void* data)
+{
+    if(current->firstChild == NULL)                     //our use case will be limited to this if-clause
+    {
+        TreeNode treeNode=createTreeNode(current,data);
+        current->firstChild=treeNode;
+        return;
+    }
+
+    current = current->firstChild;
+    while(current->nextBrother != NULL)current = current->nextBrother;
+    current->nextBrother = createTreeNode(current->parent,data);
+}
+
+void freeTreeNodeRecursive(TreeNode treeNode)
+{
+    if (treeNode == NULL) {
+        return;
+    }
+
+    free(treeNode->data);
+    freeTreeNodeRecursive(treeNode->firstChild);
+
+    // Move to the next nextBrother treeNode and free its data
+    TreeNode current = treeNode->nextBrother;
+    while (current != NULL) {
+        TreeNode next = current->nextBrother;
+        freeTreeNodeRecursive(current);
+        current = next;
+    }
+
+    // Free the current treeNode itself
+    free(treeNode);
+}
+
+Stack createStack()
+{
+    Stack stack = (Stack)malloc(sizeof(struct stack));
+    if (stack != NULL)
+    {
+        stack->top = NULL;
+    }
+    return stack;
+}
+
+bool isEmpty(Stack stack)
+{
+    return stack->top==NULL;
+}
+
+void push(Stack stack, void* data)
+{
+    StackNode newNode = (StackNode)malloc(sizeof(struct stackNode));
+    if (newNode != NULL)
+    {
+        newNode->data = data;
+        newNode->next = stack->top;
+        stack->top = newNode;
+    } 
+    else
+    {
+        printf("Error: Memory allocation failed.\n");
+    }
+}
+
+void* pop(Stack stack)
+{
+    if (stack->top == NULL)
+    {
+        // printf("Error: Stack is empty.\n");
+        return NULL;
+    }
+
+    StackNode topNode = stack->top;
+    void* data = topNode->data;
+    stack->top = topNode->next;
+    free(topNode);
+    return data;
+}
+
+void freeStack(Stack stack)
+{
+    while(!isEmpty(stack))pop(stack);
+    free(stack);
+}
+//ADT functions defined above//
+
+void insertGrammarSymbolIntoLLNode(LinkedList node, Vocabulary v)
+{
+    Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
+    *tmp = v;
+    node->data = tmp;
+}
+
+void insertTokenInfoIntoTreeNode(TreeNode node, tokenInfo tkinf)
+{
+    node->data = (void *)tkinf;
+}
+
+tokenInfo fetchTokenInfoFromTreeNode(TreeNode node)
+{
+    if(node == NULL)return NULL;
+
+    return (tokenInfo)node->data;
+}
+
+void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v)
+{
+    Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
+    *tmp = v;
+    push(_stack,tmp);
+}
+
+Vocabulary popGrammarSymbolOntostack(Stack _stack)       //will return TOTAL_VOCAB_SIZE if _stack is empty
+{
+    if(isEmpty(_stack))return TOTAL_VOCAB_SIZE;
+    return *(Vocabulary*)_stack->top;
+}
+
+//ADT Overlay functions defined above//
 
 void populateFirstAndFollowText(FirstAndFollow F)
 {
@@ -343,7 +484,7 @@ grammar populateGrammar(grammar g, char *grammarFileName) // g cannot be NULL. I
 
         g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID], &(g->ruleCount[NT_ID]));
         LinkedList currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
-        insertGrammarSymbol(currentNode, symbol);
+        insertGrammarSymbolIntoLLNode(currentNode, symbol);
 
         while (symbolString = strtok(NULL, " \n")) // RHS of rules onwards
         {
@@ -355,7 +496,7 @@ grammar populateGrammar(grammar g, char *grammarFileName) // g cannot be NULL. I
 
                 g->NT[NT_ID] = increaseProductionRHSSetSize(g->NT[NT_ID], &(g->ruleCount[NT_ID]));
                 currentNode = g->NT[NT_ID][g->ruleCount[NT_ID] - 1];
-                insertGrammarSymbol(currentNode, symbol);
+                insertGrammarSymbolIntoLLNode(currentNode, symbol);
             }
             else
             {
@@ -363,18 +504,11 @@ grammar populateGrammar(grammar g, char *grammarFileName) // g cannot be NULL. I
                 // continue on the same head
                 currentNode->next = createLinkedListNode();
                 currentNode = currentNode->next;
-                insertGrammarSymbol(currentNode, symbol);
+                insertGrammarSymbolIntoLLNode(currentNode, symbol);
             }
         }
     }
     return g;
-}
-
-void insertGrammarSymbol(LinkedList node, Vocabulary v)
-{
-    Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
-    *tmp = v;
-    node->data = tmp;
 }
 
 int getNTID(Vocabulary NT) // returns a negative value if not a non-terminal
@@ -505,12 +639,36 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     return T;
 }
 
+bool isNTToken(tokenInfo tk)
+{
+    return getNTID(tk->tokenName) >= 0;
+}
+
+parseTree initializeParseTree(parseTree PT)
+{
+    if (PT != NULL)  // in case PT is not NULL, then that means that it is already initialized
+        return PT;
+
+    PT = (parseTree)malloc(sizeof(struct parseTree));
+
+    PT->root = createTreeNode(NULL,NULL);
+    return PT;
+}
+
 void parseInputSourceCode(char *testcaseFile, table T)
 {
     initializeSymbolTable();
     initializeTwinBuffer();
-    
-    //TODO: Main part of parser
+    _parseTree = initializeParseTree(_parseTree);       //freeParseTree will be called in driver.c after printParseTree
+    Stack parseStack = createStack();
+    pushGrammarSymbolOntoStack(parseStack,STARTSYMBOL);
+
+    //TODO:
+    tokenInfo tk = getNextToken(buffer);
+    while(tk != NULL)
+    {
+        
+    }
 
     freeTwinBuffer();
     freeSymbolTable();

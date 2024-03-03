@@ -17,15 +17,26 @@ typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
 typedef struct linkedList* LinkedList;
 typedef struct treeNode* TreeNode;
+typedef struct stackNode* StackNode;
+typedef struct stack* Stack;
 
 extern parseTree _parseTree;                //to be initialized via function call
 extern grammar _grammar;                    //to be initialized via function call
 extern table _table;                        //to be initialized via function call
 extern FirstAndFollow _firstAndFollow;      //to be initialized via function call
-extern TerminalBucketSet _terminalBucketSet;//to be initialized via function call
 
 extern char* predictiveParsingTableCache;
 
+struct stackNode
+{
+    void* data;
+    StackNode next;
+};
+
+struct stack
+{
+    StackNode top;
+};
 
 struct linkedList
 {
