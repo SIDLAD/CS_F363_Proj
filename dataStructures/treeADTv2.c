@@ -31,12 +31,12 @@ TreeNode createTreeNode(TreeNode parent,void* data)
     return treeNode;
 }
 
-void createBrotherNode(TreeNode current,void* data)
+void createBrotherTreeNode(TreeNode current,void* data)
 {
     current->nextBrother = createTreeNode(current->parent,data);
 }
 
-void createChildNode(TreeNode current, void* data)
+void createChildTreeNode(TreeNode current, void* data)
 {
     if(current->firstChild == NULL)                     //our use case will be limited to this if-clause
     {
