@@ -36,4 +36,4 @@ clearCache:
 run:
 	make clean
 	make
-	gdb --args ./stage1exe "Test Cases/t1.txt"
+	gdb --args ./stage1exe "Test Cases/t1.txt" "createParseOutFile.txt"

@@ -672,7 +672,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
 
     if(access(predictiveParsingTableCache,F_OK) == 0)//this means that the cache file EXISTS
     {
-        //TODO: @Vedang - populate the parsing table T from the cache'd file found (predictiveParsingTableCache is the string that contains the name of the file)
+        //populate the parsing table T from the cache'd file found (predictiveParsingTableCache is the string that contains the name of the file)
         T = retrieve_table(predictiveParsingTableCache);
         return T;
     }
@@ -756,7 +756,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         }
     }
 
-    //TODO: @Vedang - cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
+    //cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
     cache_table(T, predictiveParsingTableCache);
     return T;
 }
@@ -848,6 +848,8 @@ void parseInputSourceCode(char *testcaseFile, table T)
             {
                 case 0:     //no error
 
+                    fetchTokenInfoFromTreeNode(curNode)->lineNumber = tk->lineNumber; // the line number for a Non-terminal is the line at which the first token belonging to its expansion is.
+
                     expandTreeNode(&curNode,T->cells[getNTIDFromTreeNode(curNode)][tk->tokenName]);
                     if(getTerminalIDFromTreeNode(curNode) == (int)EPS)      //if the rule expands to EPS
                     {
@@ -881,12 +883,74 @@ void parseInputSourceCode(char *testcaseFile, table T)
     freeTwinBuffer();
 }
 
-void printParseTree(parseTree PT, char *outfile)       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+void printTreeNodeInOrder(TreeNode node, FILE* fp, int* nodeNumber)              //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
+{
+    if(node->firstChild != NULL)printTreeNodeInOrder(node->firstChild,fp,nodeNumber);
+
+    //------//
+    char* str_tmp = malloc(VOCAB_STRLEN_CAP*sizeof(char));
+    tokenInfo tk_tmp = fetchTokenInfoFromTreeNode(node);
+
+    fprintf(fp,"Lexeme: %s\tCurrent Node: %d\t",tk_tmp->lexeme,(*nodeNumber));
+
+    if(tk_tmp->lineNumber!=-1)
+        fprintf(fp,"Line no: %d\t",tk_tmp->lineNumber);    //the line number for a non-terminal is that line at which its expansion starts
+    else
+        fprintf(fp,"Line no: (error)\t");
+
+    if(getNTID(tk_tmp->tokenName) < 0)
+    {
+        enumToStr(tk_tmp->tokenName,str_tmp);
+        fprintf(fp,"Token Name: %s\t",str_tmp);
+    }
+    else fprintf(fp,"Token Name: ----\t");
+
+    if(tk_tmp->tokenName == TK_NUM || tk_tmp->tokenName == TK_RNUM){
+        if(tk_tmp->lineNumber == -1)fprintf(fp,"Value If Number: (error)\t");
+        else fprintf(fp,"Value If Number: %s\t",tk_tmp->lexeme);
+    }
+    else fprintf(fp,"Value If Number: ----\t");
+
+    if(node->parent == NULL)fprintf(fp,"Parent Node Symbol: ROOT\t");
+    else{
+        enumToStr(tk_tmp->tokenName,str_tmp);
+        fprintf(fp,"Parent Node Symbol: %s",str_tmp);
+    }
+
+    if(node->firstChild == NULL)fprintf(fp,"Is Leaf Node: yes\t");
+    else fprintf(fp,"Is Leaf Node: no\t");
+
+    if(getNTID(tk_tmp->tokenName) >= 0)
+    {
+        enumToStr(tk_tmp->tokenName,str_tmp);
+        fprintf(fp,"Node Symbol: %s\t",str_tmp);
+    }
+    else fprintf(fp,"Node Symbol: ----\t");
+
+    fprintf(fp,"\n");
+    free(str_tmp);
+    (*nodeNumber)++;
+    //------//
+
+    if(node->firstChild == NULL)return;
+
+    TreeNode curNode = node->firstChild->nextBrother;
+    while(curNode != NULL)
+    {
+        printTreeNodeInOrder(curNode,fp,nodeNumber);
+        curNode = curNode->nextBrother;
+    }
+}
+
+void printParseTree(parseTree PT, char *outfile)
 {
     //TODO: inorder traversal and printing
-    TreeNode curNode = PT->root;
-    int nodeNumber = 0;
+    FILE* fp = fopen(outfile,"w");
+    int nodeNumber = 1;
+    
+    printTreeNodeInOrder(PT->root,fp,&nodeNumber);
 
+    fclose(fp);
 }
 
 void freeParseTree()

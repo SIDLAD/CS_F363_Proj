@@ -25,12 +25,13 @@ void case_printTokenList()
     initializeSymbolTable();
     initializeTwinBuffer();
     tokenInfo _tokenInfo;
-    fptrsLen = 1;
+    fptrsLen = 2;
     fptrs = calloc(fptrsLen,sizeof(FILE*));
 
     fptrs[0]=fopen(printTokenListFile,"w");
+    fptrs[1]=fopen(listOfErrorsFile,"w");
 
-    char token[100];
+    char token[MAX_LEXEME_LENGTH];
     while(_tokenInfo = getNextToken(buffer))
     { 
         enumToStr(_tokenInfo->tokenName,token);
@@ -49,6 +50,9 @@ void case_printTokenList()
 
 void case_generateParseTree()
 {
+    fptrsLen = 1;
+    fptrs = calloc(fptrsLen,sizeof(FILE*));
+    fptrs[0] = fopen(listOfErrorsFile,"w");
     //lexer and parser will be invoked
     _table = createParseTable(_firstAndFollow, _table);
     parseInputSourceCode(testcaseFile, _table);
@@ -58,6 +62,10 @@ void case_generateParseTree()
 
     freeParseTree();  //freeing the parse tree is a must, otherwise there will be memory leaks
     freeSymbolTable();          //if the backend had to be built, then the symbol table would persist beyond this point
+
+    for(int i=0;i<fptrsLen;i++)fclose(fptrs[i]);
+    free(fptrs);
+    fptrsLen = 0;
 }
 
 void case_calculateTime()
@@ -88,7 +96,7 @@ int main(int argc, char* argv[])
     // strcpy(testcaseFile,"Test Cases/t2.txt");
     
     strcpy(testcaseFile,argv[1]);
-    // strcpy(parseTreeOutFile,argv[2]);
+    strcpy(parseTreeOutFile,argv[2]);
     while(1)
     {
         printMenu();

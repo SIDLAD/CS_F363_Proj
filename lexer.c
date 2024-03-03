@@ -16,6 +16,7 @@ char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
 char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
 char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
 char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";
+char listOfErrorsFile[MAX_FILENAME_LENGTH] = "listOfErrorsFile.txt";
 
 // function prototypes//
 void initializeTwinBuffer(); // initialize the buffer before starting the next iteration, in case_printTokenList() of driver.c and createParseTree()
@@ -189,7 +190,7 @@ tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber)
     tokenInfo tkinf = (tokenInfo)malloc(sizeof(struct tokenInfo));
     tkinf->tokenName = v;
     if(lexeme == NULL)
-        strcpy(tkinf->lexeme,"(none)");
+        strcpy(tkinf->lexeme,"----");
     else
         strcpy(tkinf->lexeme,lexeme);
     tkinf->lineNumber = lineNumber;

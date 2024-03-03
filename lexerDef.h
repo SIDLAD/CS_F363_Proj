@@ -59,6 +59,7 @@ extern char testcaseFile[MAX_FILENAME_LENGTH];// = "testcase.txt";
 extern char parseTreeOutFile[MAX_FILENAME_LENGTH];// = "createParseOutFile.txt";
 extern char commentFreeFile[MAX_FILENAME_LENGTH];// = "commentFreeFile.txt";
 extern char printTokenListFile[MAX_FILENAME_LENGTH];// = "printTokenListFile.txt";
+extern char listOfErrorsFile[MAX_FILENAME_LENGTH];// = "listOfErrorsFile.txt";
 
 extern FILE** fptrs;
 extern int fptrsLen;
