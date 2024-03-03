@@ -16,6 +16,7 @@ typedef struct parseTree* parseTree;
 typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
 typedef struct linkedList* LinkedList;
+typedef struct treeNode* TreeNode;
 
 extern parseTree _parseTree;                //to be initialized via function call
 extern grammar _grammar;                    //to be initialized via function call
@@ -32,13 +33,21 @@ struct linkedList
     void* data;
 };
 
+struct treeNode{
+    TreeNode parent;
+    TreeNode nextBrother;
+    TreeNode firstChild;
+    void* data;
+    
+};
+
 struct table{
     int isErrorCell[N_TERMINALS_COUNT][TERMINALS_COUNT];     //if error not sync, 1. if error & syn, 2. if no error, 0. 
     LinkedList cells[N_TERMINALS_COUNT][TERMINALS_COUNT];
 };
 
 struct parseTree{
-    //fill in the details of parseTree
+    TreeNode root;
 };
 
 struct firstAndFollow{

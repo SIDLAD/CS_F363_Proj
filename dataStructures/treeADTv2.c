@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <stdbool.h>    
 
-typedef struct treeNode *TreeNode;
+typedef struct treeNode* TreeNode;
 
 struct treeNode{
     TreeNode parent;
@@ -57,13 +57,13 @@ void freeTreeNodeRecursive(TreeNode treeNode)
     }
 
     free(treeNode->data);
-    freeTreeRecursive(treeNode->firstChild);
+    freeTreeNodeRecursive(treeNode->firstChild);
 
     // Move to the next nextBrother treeNode and free its data
     TreeNode current = treeNode->nextBrother;
     while (current != NULL) {
         TreeNode next = current->nextBrother;
-        freeTreeRecursive(current);
+        freeTreeNodeRecursive(current);
         current = next;
     }
 
