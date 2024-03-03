@@ -2,29 +2,30 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
 typedef struct Node {
     void* data;
     struct Node* next;
-} Node;
+} *Node;
 
-typedef struct {
-    Node* top;
-} Stack;
+typedef struct Stack{
+    Node top;
+} *Stack;
 
-Stack* createStack() {
-    Stack* stack = (Stack*)malloc(sizeof(Stack));
+Stack createStack() {
+    Stack stack = (Stack)malloc(sizeof(struct Stack));
     if (stack != NULL) {
         stack->top = NULL;
     }
     return stack;
 }
 
-bool isEmpty(Stack* stack){
+bool isEmpty(Stack stack){
     return stack->top==NULL;
 }
 
-void push(Stack* stack, void* data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
+void push(Stack stack, void* data) {
+    Node newNode = (Node)malloc(sizeof(struct Node));
     if (newNode != NULL) {
         newNode->data = data;
         newNode->next = stack->top;
@@ -34,23 +35,23 @@ void push(Stack* stack, void* data) {
     }
 }
 
-void* pop(Stack* stack) {
+void* pop(Stack stack) {
     if (stack->top == NULL) {
         printf("Error: Stack is empty.\n");
         return NULL;
     }
 
-    Node* topNode = stack->top;
+    Node topNode = stack->top;
     void* data = topNode->data;
     stack->top = topNode->next;
     free(topNode);
     return data;
 }
 
-void freeStack(Stack* stack) {
-    Node* current = stack->top;
+void freeStack(Stack stack) {
+    Node current = stack->top;
     while (current != NULL) {
-        Node* temp = current;
+        Node temp = current;
         current = current->next;
         free(temp);
     }
@@ -60,7 +61,7 @@ void freeStack(Stack* stack) {
 
 //testing
 int main() {
-    Stack* stack = createStack();
+    Stack stack = createStack();
 
     // Pushing elements onto the stack
     int a = 10, b = 20, c = 30;
