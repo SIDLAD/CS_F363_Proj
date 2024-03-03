@@ -13,8 +13,9 @@ char* predictiveParsingTableCache = "predictiveParsingTableCache";
 void insertGrammarSymbolIntoLLNode(LinkedList node, Vocabulary v);
 void insertTokenInfoIntoTreeNode(TreeNode node, tokenInfo tkinf);
 tokenInfo fetchTokenInfoFromTreeNode(TreeNode node);
-void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v);
-Vocabulary popGrammarSymbolOntostack(Stack _stack);       //will return TOTAL_VOCAB_SIZE if _stack is empty
+TreeNode getNextTreeNode(TreeNode current);     //returns NULL means that the "abstract stack" is now empty, ie this is the root node
+// void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v);
+// Vocabulary popGrammarSymbolOntostack(Stack _stack);       //will return TOTAL_VOCAB_SIZE if _stack is empty
 
 void populateFirstAndFollowText(FirstAndFollow F);
 FirstAndFollow computeFirstAndFollowSets(grammar G);
@@ -28,16 +29,18 @@ grammar populateGrammar(grammar g, char *grammarFileName);
 int getNTID(Vocabulary NT);
 table initializeTable(table T);
 table createParseTable(FirstAndFollow F, table T);
-parseTree initializeParseTree(parseTree PT);
+void initializeParseTree();
 void parseInputSourceCode(char *testcaseFile, table T);
 void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
-void freeParseTree(parseTree PT);
+void freeParseTree();
 void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 TerminalBucketSet firstOfNT(int NT_ID, FirstAndFollow F);
 void appendSetUnion(TerminalBucketSet Dest, TerminalBucketSet Src, bool *flag);
 bool isNTNode(LinkedList node);
-int getTerminalIDFromNode(LinkedList node);
-int getNTIDFromNode(LinkedList node);
+int getTerminalIDFromLLNode(LinkedList node);
+int getNTIDFromLLNode(LinkedList node);
+int getTerminalIDFromTreeNode(TreeNode node);
+int getNTIDFromTreeNode(TreeNode node);
 TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, LinkedList RHSNode, bool *flag, FirstAndFollow F);
 //------------------//
 
@@ -86,71 +89,71 @@ void freeTreeNodeRecursive(TreeNode treeNode)
         return;
     }
 
-    free(treeNode->data);
-    freeTreeNodeRecursive(treeNode->firstChild);
-
-    // Move to the next nextBrother treeNode and free its data
-    TreeNode current = treeNode->nextBrother;
-    while (current != NULL) {
+    // Free all its children:
+    TreeNode current = treeNode->firstChild;
+    while(current != NULL)
+    {
         TreeNode next = current->nextBrother;
         freeTreeNodeRecursive(current);
         current = next;
     }
 
     // Free the current treeNode itself
+    free(treeNode->data);
     free(treeNode);
 }
 
-Stack createStack()
-{
-    Stack stack = (Stack)malloc(sizeof(struct stack));
-    if (stack != NULL)
-    {
-        stack->top = NULL;
-    }
-    return stack;
-}
+// Stack createStack()
+// {
+//     Stack stack = (Stack)malloc(sizeof(struct stack));
+//     if (stack != NULL)
+//     {
+//         stack->top = NULL;
+//     }
+//     return stack;
+// }
 
-bool isEmpty(Stack stack)
-{
-    return stack->top==NULL;
-}
+// bool isEmpty(Stack stack)
+// {
+//     return stack->top==NULL;
+// }
 
-void push(Stack stack, void* data)
-{
-    StackNode newNode = (StackNode)malloc(sizeof(struct stackNode));
-    if (newNode != NULL)
-    {
-        newNode->data = data;
-        newNode->next = stack->top;
-        stack->top = newNode;
-    } 
-    else
-    {
-        printf("Error: Memory allocation failed.\n");
-    }
-}
+// void push(Stack stack, void* data)
+// {
+//     StackNode newNode = (StackNode)malloc(sizeof(struct stackNode));
+//     if (newNode != NULL)
+//     {
+//         newNode->data = data;
+//         newNode->next = stack->top;
+//         stack->top = newNode;
+//     } 
+//     else
+//     {
+//         printf("Error: Memory allocation failed.\n");
+//     }
+// }
 
-void* pop(Stack stack)
-{
-    if (stack->top == NULL)
-    {
-        // printf("Error: Stack is empty.\n");
-        return NULL;
-    }
+// void* pop(Stack stack)
+// {
+//     if (stack->top == NULL)
+//     {
+//         // printf("Error: Stack is empty.\n");
+//         return NULL;
+//     }
 
-    StackNode topNode = stack->top;
-    void* data = topNode->data;
-    stack->top = topNode->next;
-    free(topNode);
-    return data;
-}
+//     StackNode topNode = stack->top;
+//     void* data = topNode->data;
+//     stack->top = topNode->next;
+//     free(topNode);
+//     return data;
+// }
 
-void freeStack(Stack stack)
-{
-    while(!isEmpty(stack))pop(stack);
-    free(stack);
-}
+// void freeStack(Stack stack)
+// {
+//     while(!isEmpty(stack))pop(stack);
+//     free(stack);
+// }
+
 //ADT functions defined above//
 
 void insertGrammarSymbolIntoLLNode(LinkedList node, Vocabulary v)
@@ -172,20 +175,27 @@ tokenInfo fetchTokenInfoFromTreeNode(TreeNode node)
     return (tokenInfo)node->data;
 }
 
-void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v)
+TreeNode getNextTreeNode(TreeNode current)     //returns NULL means that the "abstract stack" is now empty, ie this is the root node
 {
-    Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
-    *tmp = v;
-    push(_stack,tmp);
+    while(current->nextBrother == NULL && current->parent != NULL)current = current->parent;
+    return current->nextBrother;
 }
 
-Vocabulary popGrammarSymbolOntostack(Stack _stack)       //will return TOTAL_VOCAB_SIZE if _stack is empty
-{
-    if(isEmpty(_stack))return TOTAL_VOCAB_SIZE;
-    return *(Vocabulary*)_stack->top;
-}
+// void pushGrammarSymbolOntoStack(Stack _stack, Vocabulary v)
+// {
+//     Vocabulary *tmp = (Vocabulary *)malloc(sizeof(Vocabulary));
+//     *tmp = v;
+//     push(_stack,tmp);
+// }
 
-//ADT Overlay functions defined above//
+// Vocabulary popGrammarSymbolOntostack(Stack _stack)       //will return TOTAL_VOCAB_SIZE if _stack is empty
+// {
+//     if(isEmpty(_stack))return TOTAL_VOCAB_SIZE;
+//     return *(Vocabulary*)_stack->top;
+// }
+
+            //ADT Overlay functions defined above//
+//--------------------------------------------------------------//
 
 void populateFirstAndFollowText(FirstAndFollow F)
 {
@@ -285,8 +295,8 @@ TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, Linke
     {
         if (RHSNode->next == NULL)
         {
-            appendSetUnion(F->follow[getNTIDFromNode(RHSNode)], _followOfNT, flag);
-            tmp = firstOfNT(getNTIDFromNode(RHSNode),F);
+            appendSetUnion(F->follow[getNTIDFromLLNode(RHSNode)], _followOfNT, flag);
+            tmp = firstOfNT(getNTIDFromLLNode(RHSNode),F);
             if(tmp->val[(int)EPS])
             {
                 tmp->val[(int)EPS] = false;
@@ -295,9 +305,9 @@ TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, Linke
             return tmp;
         }
         tmp = calculateFollowFromNTRule(_followOfNT, RHSNode->next, flag, F);
-        appendSetUnion(F->follow[getNTIDFromNode(RHSNode)],tmp,flag);
+        appendSetUnion(F->follow[getNTIDFromLLNode(RHSNode)],tmp,flag);
         
-        TerminalBucketSet tmp2 = firstOfNT(getNTIDFromNode(RHSNode),F);
+        TerminalBucketSet tmp2 = firstOfNT(getNTIDFromLLNode(RHSNode),F);
         if(tmp2->val[(int)EPS])
         {
             tmp2->val[(int)EPS] = false;
@@ -313,13 +323,13 @@ TerminalBucketSet calculateFollowFromNTRule(TerminalBucketSet _followOfNT, Linke
         tmp = calculateFollowFromNTRule(_followOfNT,RHSNode->next,flag,F);
     }
 
-    if(getTerminalIDFromNode(RHSNode) == (int)EPS)
+    if(getTerminalIDFromLLNode(RHSNode) == (int)EPS)
     {
         return tmp; // == NULL
     }
 
     tmp = createSet();
-    tmp->val[getTerminalIDFromNode(RHSNode)] = true;
+    tmp->val[getTerminalIDFromLLNode(RHSNode)] = true;
     return tmp;
 }
 
@@ -327,15 +337,15 @@ void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bo
 {
     if (!isNTNode(RHSNode)) // if it is a terminal node. Note that if it the rule can derive EPS, then first set of rule should contain EPS
     {
-        if (!_firstOfRule->val[getTerminalIDFromNode(RHSNode)])
+        if (!_firstOfRule->val[getTerminalIDFromLLNode(RHSNode)])
         {
-            _firstOfRule->val[getTerminalIDFromNode(RHSNode)] = true;
+            _firstOfRule->val[getTerminalIDFromLLNode(RHSNode)] = true;
             *flag = true;
         }
         return;
     }
 
-    TerminalBucketSet tmp = firstOfNT(getNTIDFromNode(RHSNode), F);
+    TerminalBucketSet tmp = firstOfNT(getNTIDFromLLNode(RHSNode), F);
 
     if (!tmp->val[(int)EPS])
     {
@@ -400,14 +410,24 @@ bool isNTNode(LinkedList node) // returns true if the linkedlist node's data ite
     return getNTID(*((Vocabulary *)(node->data))) >= 0;
 }
 
-int getTerminalIDFromNode(LinkedList node)
+int getTerminalIDFromLLNode(LinkedList node)
 {
     return (int)(*((Vocabulary *)(node->data)));
 }
 
-int getNTIDFromNode(LinkedList node)
+int getNTIDFromLLNode(LinkedList node)
 {
     return getNTID(*((Vocabulary *)(node->data)));
+}
+
+int getTerminalIDFromTreeNode(TreeNode node)
+{
+    return (int)((tokenInfo )(node->data))->tokenName;
+}
+
+int getNTIDFromTreeNode(TreeNode node)
+{
+    return getNTID(((tokenInfo )(node->data))->tokenName);
 }
 
 TerminalBucketSet createSet()
@@ -646,7 +666,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     }
     else
     {
-        printf("Parse Table has already been created.");
+        printf("Parse Table has already been created.\n");
         return T;
     }
 
@@ -727,9 +747,9 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
                     _table->cells[i][j] = _grammar->NT[i][EPSDerivingRuleNumber[i]];                    
                 }
 
-                else
+                else if(_table->isErrorCell[i][j])
                 {
-                    //if the NT cannot derive EPS, then this cell is marked as err & sync => 2
+                    //if the NT cannot derive EPS and terminal is not in FIRST(NT), then this cell is marked as err & sync => 2                    
                     _table->isErrorCell[i][j] = 2;
                 }
             }
@@ -746,44 +766,135 @@ bool isNTToken(tokenInfo tk)
     return getNTID(tk->tokenName) >= 0;
 }
 
-parseTree initializeParseTree(parseTree PT)
+void initializeParseTree()
 {
-    if (PT != NULL)  // in case PT is not NULL, then that means that it is already initialized
-        return PT;
+    _parseTree = (parseTree)malloc(sizeof(struct parseTree));
+    _parseTree->root = createTreeNode(NULL,NULL);
+}
 
-    PT = (parseTree)malloc(sizeof(struct parseTree));
+int errorHandle(){
+    printf("Line %d : Parser Error. TODO\n",currentLineNumber);
+    return 0;
+}
 
-    PT->root = createTreeNode(NULL,NULL);
-    return PT;
+void match(TreeNode* curNode, tokenInfo tk, table T)
+{    
+    if(fetchTokenInfoFromTreeNode(*curNode)->tokenName == tk->tokenName)
+    {
+        insertTokenInfoIntoTreeNode(*curNode,createTokenInfo(tk->tokenName,tk->lexeme,tk->lineNumber));
+        *curNode = getNextTreeNode(*curNode);
+    }
+    else if(T->isErrorCell[getNTIDFromTreeNode((*curNode)->parent)][tk->tokenName] == 2)  //it is a sync token of the parent
+    {
+        errorHandle();
+        *curNode = (*curNode)->parent;
+    }
+    else
+    {
+        errorHandle();
+    }
+}
+
+void expandTreeNode(TreeNode* curNode, LinkedList rule)
+{
+    createChildTreeNode(*curNode,createTokenInfo(*((Vocabulary *)(rule->data)),NULL,-1));
+    *curNode = (*curNode)->firstChild;
+    rule = rule->next;
+
+    while(rule != NULL)
+    {
+        createBrotherTreeNode(*curNode,createTokenInfo(*((Vocabulary *)(rule->data)),NULL,-1));
+        *curNode = (*curNode)->nextBrother;
+        rule = rule->next;
+    }
+    *curNode = (*curNode)->parent->firstChild;
 }
 
 void parseInputSourceCode(char *testcaseFile, table T)
 {
-    initializeSymbolTable();
     initializeTwinBuffer();
-    _parseTree = initializeParseTree(_parseTree);       //freeParseTree will be called in driver.c after printParseTree
-    Stack parseStack = createStack();
-    pushGrammarSymbolOntoStack(parseStack,STARTSYMBOL);
+    initializeSymbolTable();
+    initializeParseTree();       //freeParseTree will be called in driver.c after printParseTree
 
-    //TODO:
+    insertTokenInfoIntoTreeNode(_parseTree->root,createTokenInfo(STARTSYMBOL,NULL,-1));
+
+    TreeNode curNode = _parseTree->root;
+
     tokenInfo tk = getNextToken(buffer);
-    while(tk != NULL)
+    while(tk != NULL)   //if tk is NULL, that means that the end of file has been reached
     {
-        
+        if(tk->tokenName == TK_COMMENT)
+        {
+            free(tk);
+            tk = getNextToken(buffer);
+            continue;
+        }
+
+        if(curNode == NULL)     //parse tree has expanded completely, but input file is not completely read
+        {
+            errorHandle();
+            break;
+        }
+
+        if(getNTIDFromTreeNode(curNode) < 0)
+        {
+            match(&curNode,tk,T);
+            free(tk);
+            tk = getNextToken(buffer);
+        }
+        else        //tk is an NTToken. Decision is to be made by referring to the predictive parsing table, fetching the required rule, and then expanding the tree accordingly
+        {
+            switch(T->isErrorCell[getNTIDFromTreeNode(curNode)][tk->tokenName])
+            {
+                case 0:     //no error
+
+                    expandTreeNode(&curNode,T->cells[getNTIDFromTreeNode(curNode)][tk->tokenName]);
+                    if(getTerminalIDFromTreeNode(curNode) == (int)EPS)      //if the rule expands to EPS
+                    {
+                        curNode = getNextTreeNode(curNode);
+                    }
+                    break;
+
+                case 1:     //error without sync
+
+                    errorHandle();
+                    free(tk);
+                    tk = getNextToken(buffer);
+                    break;
+
+                case 2:     //error & sync
+
+                    errorHandle();
+                    curNode = getNextTreeNode(curNode);
+                    free(tk);
+                    tk = getNextToken(buffer);
+                    break;
+            }
+        }
+    }
+
+    if(curNode != NULL)     //input string is completely read, but the parse tree is not completely expanded
+    {
+        errorHandle();
     }
 
     freeTwinBuffer();
-    freeSymbolTable();
 }
 
 void printParseTree(parseTree PT, char *outfile)       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
 {
     //TODO: inorder traversal and printing
+    TreeNode curNode = PT->root;
+    int nodeNumber = 0;
+
 }
 
-void freeParseTree(parseTree PT)
+void freeParseTree()
 {
-    // TODO: Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
+    // Note that this is required to measure the lexing and parsing time in case of multiple executions within while loop of driver code
+    freeTreeNodeRecursive(_parseTree->root);
+    free(_parseTree);
+    _parseTree = NULL;
 }
 
 

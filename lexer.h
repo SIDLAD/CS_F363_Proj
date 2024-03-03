@@ -12,5 +12,6 @@ extern void freeTwinBuffer();       //free the buffer before starting the next i
 extern void initializeSymbolTable();                   
 extern void freeSymbolTable();                         //similar to initializeBuffer and freeBuffer use-cases
 extern tokenInfo gettoken();
+extern tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber);
 
 #endif

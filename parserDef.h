@@ -17,8 +17,8 @@ typedef struct firstAndFollow* FirstAndFollow;
 typedef struct terminalBucketSet* TerminalBucketSet;
 typedef struct linkedList* LinkedList;
 typedef struct treeNode* TreeNode;
-typedef struct stackNode* StackNode;
-typedef struct stack* Stack;
+// typedef struct stackNode* StackNode;
+// typedef struct stack* Stack;
 
 extern parseTree _parseTree;                //to be initialized via function call
 extern grammar _grammar;                    //to be initialized via function call
@@ -27,16 +27,16 @@ extern FirstAndFollow _firstAndFollow;      //to be initialized via function cal
 
 extern char* predictiveParsingTableCache;
 
-struct stackNode
-{
-    void* data;
-    StackNode next;
-};
+// struct stackNode
+// {
+//     void* data;
+//     StackNode next;
+// };
 
-struct stack
-{
-    StackNode top;
-};
+// struct stack
+// {
+//     StackNode top;
+// };
 
 struct linkedList
 {
@@ -49,7 +49,6 @@ struct treeNode{
     TreeNode nextBrother;
     TreeNode firstChild;
     void* data;
-    
 };
 
 struct table{

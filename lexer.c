@@ -10,7 +10,7 @@ twinBuffer buffer = NULL;   //buffer to be initialized via initializeBuffer(buff
 Trie symbolTable = NULL;
 
 FILE** fptrs;
-int fptrsLen;
+int fptrsLen = 0;
 
 char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
 char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
@@ -172,6 +172,7 @@ void initializeTwinBuffer() // initialize the buffer before starting the next it
     buffer->forward = buffer->lexemeBegin = 0;
     buffer->fp = getStream(NULL);
     buffer->fileEndsAtBufferIndex = __INT_MAX__;
+    currentLineNumber = 1;
     return;
 }
 
@@ -187,7 +188,10 @@ tokenInfo createTokenInfo(Vocabulary v, char *lexeme, int lineNumber)
 {
     tokenInfo tkinf = (tokenInfo)malloc(sizeof(struct tokenInfo));
     tkinf->tokenName = v;
-    strcpy(tkinf->lexeme,lexeme);
+    if(lexeme == NULL)
+        strcpy(tkinf->lexeme,"(none)");
+    else
+        strcpy(tkinf->lexeme,lexeme);
     tkinf->lineNumber = lineNumber;
 }
 
@@ -242,7 +246,7 @@ void freeSymbolTable()
 
 void insertIntoSymbolTable(tokenInfo tkinf,char* lexeme)
 {
-    insertIntoTrie((void*)tkinf,lexeme,symbolTable);
+    insertIntoTrie((void*)createTokenInfo(tkinf->tokenName,tkinf->lexeme,tkinf->lineNumber),lexeme,symbolTable);
 }
 
 void* lookupSymbolTable(char* lexeme)

@@ -8,6 +8,6 @@ extern table createParseTable(FirstAndFollow F, table T);      //if firstAndFoll
 extern void parseInputSourceCode(char *testcaseFile, table T);
 extern void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
 
-extern void freeParseTree(parseTree PT);
+extern void freeParseTree();
 extern void enumToStr(Vocabulary v, char *dest);
 #endif
