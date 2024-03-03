@@ -8,10 +8,10 @@
 
 #define MAX_SIZE 100
 
-typedef struct {
-    void* data[MAX_SIZE];
-    int top;
-} Stack;
+    typedef struct {
+        void* data[MAX_SIZE];
+        int top;
+    } Stack;
 
 Stack* createStack() {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
@@ -51,34 +51,44 @@ void* peek(Stack* stack) {
     return stack->data[stack->top];
 }
 
-void freeStack(Stack* stack) {
+void free_stack(Stack *stack) {
+    if (stack == NULL) {
+        return;
+    }
+    // printf("%c",*(char*)stack->top);
+    for (int i = 0; i <= stack->top; i++) {
+        printf("%d",i);
+        // printf("%c",stack->data[i]);
+        free(stack->data[i]);
+    }
+
     free(stack);
 }
 
 
 //tester code
-// int main() {
-//     Stack* stack = createStack();
+int main() {
+    Stack* stack = createStack();
 
-//     int a = 10;
-//     double b = 3.14;
-//     char c = 'A';
+    char a = 'C';
+    char b = 'B';
+    char c = 'A';
 
-//     push(stack, &a);
-//     push(stack, &b);
-//     push(stack, &c);
+    push(stack, &a);
+    push(stack, &b);
+    push(stack, &c);
 
-//     printf("Top element: %c\n", *(char*)peek(stack));
+    // printf("Top element: %c\n", *(char*)peek(stack));
 
-//     while (!isEmpty(stack)) {
-//         void* value = pop(stack);
-//         printf("Popped element: %c\n", *(char*)value);
-//     }
+    // while (!isEmpty(stack)) {
+    //     void* value = pop(stack);
+    //     printf("Popped element: %c\n", *(char*)value);
+    // }
 
-//     freeStack(stack);
+    free_stack(stack);
 
-//     return 0;
-// }
+    return 0;
+}
 
 
 #endif

@@ -2,7 +2,7 @@
 #define TREEADT_MACRO
 
 #include <stdlib.h>
-#include <stdbool.h>
+#include <stdbool.h>    
 
 typedef struct node *Node;
 
