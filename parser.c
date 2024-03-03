@@ -535,6 +535,108 @@ table initializeTable(table T)
     return T;
 }
 
+
+int cache_table(table T, char* predictiveParsingTableCache)
+{
+    //open the file in write mode, assuming it is a binary file
+    FILE* file = fopen(predictiveParsingTableCache, "wb");
+    if(file == NULL)
+    {
+        printf("Error: File could not be opened for writing.\n");
+        return -1;
+    }
+    //write the table to the file
+    //first write N_TERMINALS_COUNT and TERMINALS_COUNT to the file
+    int temp = N_TERMINALS_COUNT;
+    fwrite(&temp, sizeof(int), 1, file);
+    temp = TERMINALS_COUNT;
+    fwrite(&temp, sizeof(int), 1, file);
+    //now write the table to the file
+    for(int i = 0; i < N_TERMINALS_COUNT; i++)
+    {
+        for(int j = 0; j < TERMINALS_COUNT; j++)
+        {
+            fwrite(&T->isErrorCell[i][j], sizeof(int), 1, file);
+            // traverse the linked list and write the number of nodes in the linked list to the file
+            LinkedList node = T->cells[i][j];
+            int count = 0;
+            while(node != NULL)
+            {
+                count++;
+                node = node->next;
+            }
+            fwrite(&count, sizeof(int), 1, file);
+            // now traverse the linked list again and write the data to the file
+            node = T->cells[i][j];
+            while(node != NULL)
+            {
+                fwrite(node->data, sizeof(Vocabulary), 1, file);
+                node = node->next;
+            }
+        }
+    }
+}
+
+table retrieve_table(char* predictiveParsingTableCache)
+{
+    //open the file in read mode, assuming it is a binary file
+    FILE* file = fopen(predictiveParsingTableCache, "rb");
+    if(file == NULL)
+    {
+        printf("Error: File could not be opened for reading.\n");
+        return NULL;
+    }
+    //read N_TERMINALS_COUNT and TERMINALS_COUNT from the file
+    int temp = 0;
+    fread(&temp, sizeof(int), 1, file);
+    if(temp != N_TERMINALS_COUNT)
+    {
+        printf("Error: N_TERMINALS_COUNT does not match.\n");
+        return NULL;
+    }
+    fread(&temp, sizeof(int), 1, file);
+    if(temp != TERMINALS_COUNT)
+    {
+        printf("Error: TERMINALS_COUNT does not match.\n");
+        return NULL;
+    }
+    //create a new table
+    table T = initializeTable(NULL);
+    //read the table from the file
+    for(int i = 0; i < N_TERMINALS_COUNT; i++)
+    {
+        for(int j = 0; j < TERMINALS_COUNT; j++)
+        {
+            fread(&T->isErrorCell[i][j], sizeof(int), 1, file);
+            // read the number of nodes in the linked list from the file
+            int count;
+            fread(&count, sizeof(int), 1, file);
+            // now read the data from the file and create the linked list
+            for(int k = 0; k < count; k++)
+            {
+                Vocabulary data;
+                fread(&data, sizeof(Vocabulary), 1, file);
+                if(k == 0)
+                {
+                    T->cells[i][j] = createLinkedListNode();
+                    insertGrammarSymbolIntoLLNode(T->cells[i][j], data);
+                }
+                else
+                {
+                    LinkedList node = T->cells[i][j];
+                    while(node->next != NULL)
+                    {
+                        node = node->next;
+                    }
+                    node->next = createLinkedListNode();
+                    insertGrammarSymbolIntoLLNode(node->next, data);
+                }
+            }
+        }
+    }
+    return T;
+}
+
 table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or _firstAndFollow. T has to be passed as _table.
 {
     if (T == NULL)
@@ -551,7 +653,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     if(access(predictiveParsingTableCache,F_OK) == 0)//this means that the cache file EXISTS
     {
         //TODO: @Vedang - populate the parsing table T from the cache'd file found (predictiveParsingTableCache is the string that contains the name of the file)
-
+        T = retrieve_table(predictiveParsingTableCache);
         return T;
     }
 
@@ -635,7 +737,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     }
 
     //TODO: @Vedang - cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
-    
+    cache_table(T, predictiveParsingTableCache);
     return T;
 }
 

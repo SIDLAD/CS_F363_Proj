@@ -32,3 +32,8 @@ clearCache:
 	rm -f *.o
 	rm -f stage1exe
 	rm -f printTokenListFile.txt
+
+run:
+	make clean
+	make
+	gdb --args ./stage1exe "Test Cases/t1.txt"
