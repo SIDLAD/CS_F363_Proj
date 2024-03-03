@@ -27,26 +27,36 @@ void insertDataIntoTreeNode(void *_data, Node node){
     node->data=_data;
 }
 
-void addBrotherNode(Node current, Node brother){
-    current->brother=brother;
+void addAndCreateBrotherNode(Node current,void* data){
+    Node node=createNode(current);
+    node->data=data;
+    current->brother=node;
 }
 
-void addChild(Node current, Node child){
-    current->child=child;
+void addChild(Node current, void* data){
+    Node node=createNode(current);
+    node->data=data;
+    current->child=node;
 }
 
-void freeAllTreeNodes(Node root){
-    if(root==NULL){
+void free_node_data(Node node) {
+    if (node == NULL) {
         return;
     }
-    if(root->brother!=NULL){
-        freeAllTreeNodes(root->brother);
+
+    free(node->data);
+    free_node_data(node->child);
+
+    // Move to the next brother node and free its data
+    Node current = node->brother;
+    while (current != NULL) {
+        Node next = current->brother;
+        free_node_data(current);
+        current = next;
     }
-    if(root->child!=NULL){
-        freeAllTreeNodes(root->child);
-    }
-    free(root->data);
-    free(root);
+
+    // Free the current node itself
+    free(node);
 }
 
 void main(){
