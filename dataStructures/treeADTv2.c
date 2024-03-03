@@ -1,80 +1,80 @@
+/*
+    Our tree datastructure is a modified version of the basic tree datastructure.
+    Here, the parent points only to its first child, and other children are accessed in a manner similar to a linked list from
+    the first child via nextBrother.
+    The described inorder euler traversal will not be an issue either, as it is convenient to go to the first child if it exists,
+    then display its own contents, followed by going to its other children's contents iteratively.
+*/
 #ifndef TREEADT_MACRO
 #define TREEADT_MACRO
 
 #include <stdlib.h>
 #include <stdbool.h>    
 
-typedef struct node *Node;
+typedef struct treeNode *TreeNode;
 
-struct node{
-    Node parent;
-    Node brother;
-    Node child;
+struct treeNode{
+    TreeNode parent;
+    TreeNode nextBrother;
+    TreeNode firstChild;
     void* data;
     
 };
 
-Node createChild(Node parent){
-    Node node = (Node)malloc(sizeof(struct node));
-    node->parent=parent;
-    node->child=NULL;
-    node->brother=NULL;
-    node->data=NULL;
-    return node;
+TreeNode createTreeNode(TreeNode parent,void* data)
+{
+    TreeNode treeNode = (TreeNode)malloc(sizeof(struct treeNode));
+    treeNode->parent=parent;
+    treeNode->firstChild=NULL;
+    treeNode->nextBrother=NULL;
+    treeNode->data=data;
+    return treeNode;
 }
 
-Node createBrother(Node brother){
-    Node node = (Node)malloc(sizeof(struct node));
-    node->parent=brother->parent;
-    node->child=NULL;
-    node->brother=brother;
-    node->data=NULL;
-    return node;
+void createBrotherNode(TreeNode current,void* data)
+{
+    current->nextBrother = createTreeNode(current->parent,data);
 }
 
-void insertDataIntoTreeNode(void *_data, Node node){
-    node->data=_data;
-}
-
-void addAndCreateBrotherNode(Node current,void* data){
-    Node node=createBrother(current);
-    node->data=data;
-    current->brother=node;
-}
-
-void addChild(Node current, void* data){
-    Node node=createChild(current);
-    node->data=data;
-    current->child=node;
-}
-
-void free_node_data(Node node) {
-    if (node == NULL) {
+void createChildNode(TreeNode current, void* data)
+{
+    if(current->firstChild == NULL)                     //our use case will be limited to this if-clause
+    {
+        TreeNode treeNode=createTreeNode(current,data);
+        current->firstChild=treeNode;
         return;
     }
 
-    free(node->data);
-    free_node_data(node->child);
+    current = current->firstChild;
+    while(current->nextBrother != NULL)current = current->nextBrother;
+    current->nextBrother = createTreeNode(current->parent,data);
+}
 
-    // Move to the next brother node and free its data
-    Node current = node->brother;
+void freeTreeNodeRecursive(TreeNode treeNode)
+{
+    if (treeNode == NULL) {
+        return;
+    }
+
+    free(treeNode->data);
+    freeTreeRecursive(treeNode->firstChild);
+
+    // Move to the next nextBrother treeNode and free its data
+    TreeNode current = treeNode->nextBrother;
     while (current != NULL) {
-        Node next = current->brother;
-        free_node_data(current);
+        TreeNode next = current->nextBrother;
+        freeTreeRecursive(current);
         current = next;
     }
 
-    // Free the current node itself
-    free(node);
+    // Free the current treeNode itself
+    free(treeNode);
 }
 
-void main(){
-    Node node=createNode(NULL);
+// void main()
+// {
+//     TreeNode node=createTreeNode(NULL,NULL);
 
-}
-
-
-
-
+// }
 
 #endif
