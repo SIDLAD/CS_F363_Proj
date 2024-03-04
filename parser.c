@@ -772,6 +772,16 @@ void initializeParseTree()
     _parseTree->root = createTreeNode(NULL,NULL);
 }
 
+char* removeAngularBrackets(char* str)
+{
+    if(str[0] == '<')
+    {
+        str[strlen(str) - 1] = '\0';
+        return str + 1;
+    }
+    return str;
+}
+
 void* error_endOfParserReached(int linenumber,FILE* ptrs[],int size){
     printf("Line %d\t Error: End of Parser reached, but token-stream is not exhausted.\n",linenumber);
     for(int i=0; i<size;i++)
@@ -789,9 +799,9 @@ void* error_invalidToken(tokenInfo tk_inp, tokenInfo tk_exp, FILE* ptrs[],int si
     enumToStr(tk_inp->tokenName,tmp1),enumToStr(tk_exp->tokenName,tmp2);
     if(isNTToken(tk_exp))
     {
-        printf("Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);
+        printf("Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,removeAngularBrackets(tmp2));
         for(int i=0; i<size;i++)
-        fprintf(ptrs[i],"Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);  
+        fprintf(ptrs[i],"Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,removeAngularBrackets(tmp2));  
         return NULL;
     }
     printf("Line %d\t Error: The token %s for lexeme %s  does not match with the expected token %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);
@@ -808,16 +818,11 @@ bool match(TreeNode* curNode, tokenInfo tk, table T)
         insertTokenInfoIntoTreeNode(*curNode,createTokenInfo(tk->tokenName,tk->lexeme,tk->lineNumber));
         *curNode = getNextTreeNode(*curNode);
     }
-    else if(_firstAndFollow->follow[getNTIDFromTreeNode((*curNode)->parent)]->val[tk->tokenName])  //it is a follow-token of the parent NT
+    else        //if terminal is on top of the abstract stack, and tk->tokenName is not equal to that terminal, then go with err & syn by default
     {
         error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
-        *curNode = (*curNode)->parent;
         *curNode = getNextTreeNode(*curNode);
         return false;
-    }
-    else
-    {
-        error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
     }
     return true;
 }
@@ -863,13 +868,14 @@ void parseInputSourceCode(char *testcaseFile, table T)
             break;
         }
 
-        if(getNTIDFromTreeNode(curNode) < 0)
+        if(getNTIDFromTreeNode(curNode) < 0)        //i.e. tk is a Terminal-token.
         {
             if(match(&curNode,tk,T))
             {
                 free(tk);
                 tk = getNextToken(buffer);
             }
+            //else err & syn
         }
         else        //tk is an NTToken. Decision is to be made by referring to the predictive parsing table, fetching the required rule, and then expanding the tree accordingly
         {
@@ -898,8 +904,6 @@ void parseInputSourceCode(char *testcaseFile, table T)
 
                     error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
                     curNode = getNextTreeNode(curNode);
-                    free(tk);
-                    tk = getNextToken(buffer);
                     break;
             }
         }
@@ -943,8 +947,8 @@ void printTreeNodeInOrder(TreeNode node, FILE* fp, int* nodeNumber)             
 
     if(node->parent == NULL)fprintf(fp,"Parent Node Symbol: ROOT\t");
     else{
-        enumToStr(tk_tmp->tokenName,str_tmp);
-        fprintf(fp,"Parent Node Symbol: %s\t",str_tmp);
+        enumToStr(fetchTokenInfoFromTreeNode(node->parent)->tokenName,str_tmp);
+        fprintf(fp,"Parent Node Symbol: %s\t",removeAngularBrackets(str_tmp));
     }
 
     if(node->firstChild == NULL)fprintf(fp,"Is Leaf Node: yes\t");
@@ -953,7 +957,7 @@ void printTreeNodeInOrder(TreeNode node, FILE* fp, int* nodeNumber)             
     if(getNTID(tk_tmp->tokenName) >= 0)
     {
         enumToStr(tk_tmp->tokenName,str_tmp);
-        fprintf(fp,"Node Symbol: %s\t",str_tmp);
+        fprintf(fp,"Node Symbol: %s\t",removeAngularBrackets(str_tmp));
     }
     else fprintf(fp,"Node Symbol: ----\t");
 
