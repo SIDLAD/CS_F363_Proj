@@ -666,7 +666,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     }
     else
     {
-        printf("Parse Table has already been created.\n");
+        // printf("Parse Table has already been created.\n");
         return T;
     }
 
