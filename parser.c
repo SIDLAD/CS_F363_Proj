@@ -772,27 +772,54 @@ void initializeParseTree()
     _parseTree->root = createTreeNode(NULL,NULL);
 }
 
-int errorHandle(){
-    printf("Line %d : Parser Error. TODO\n",currentLineNumber);
-    return 0;
+void* error_endOfParserReached(int linenumber,FILE* ptrs[],int size){
+    printf("Line %d\t Error: End of Parser reached, but token-stream is not exhausted.\n",linenumber);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d\t Error: End of Parser reached, but token-stream is not exhausted.\n",linenumber);  
 }
 
-void match(TreeNode* curNode, tokenInfo tk, table T)
+void* error_endOfTokenStream(int linenumber,FILE* ptrs[],int size){
+    printf("Line %d\t Error: End of token-stream  reached, but parsing is not complete.\n",linenumber);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d\t Error: End of token-stream reached, but parsing is not complete.\n",linenumber); 
+}
+
+void* error_invalidToken(tokenInfo tk_inp, tokenInfo tk_exp, FILE* ptrs[],int size){
+    char tmp1[VOCAB_STRLEN_CAP],tmp2[VOCAB_STRLEN_CAP];
+    enumToStr(tk_inp->tokenName,tmp1),enumToStr(tk_exp->tokenName,tmp2);
+    if(isNTToken(tk_exp))
+    {
+        printf("Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);
+        for(int i=0; i<size;i++)
+        fprintf(ptrs[i],"Line %d\t Error: Invalid token %s encountered with value %s stack top %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);  
+        return NULL;
+    }
+    printf("Line %d\t Error: The token %s for lexeme %s  does not match with the expected token %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);
+    for(int i=0; i<size;i++)
+    fprintf(ptrs[i],"Line %d\t Error: The token %s for lexeme %s  does not match with the expected token %s\n",tk_inp->lineNumber,tmp1,tk_inp->lexeme,tmp2);  
+
+    return NULL;
+}
+
+bool match(TreeNode* curNode, tokenInfo tk, table T)
 {    
     if(fetchTokenInfoFromTreeNode(*curNode)->tokenName == tk->tokenName)
     {
         insertTokenInfoIntoTreeNode(*curNode,createTokenInfo(tk->tokenName,tk->lexeme,tk->lineNumber));
         *curNode = getNextTreeNode(*curNode);
     }
-    else if(T->isErrorCell[getNTIDFromTreeNode((*curNode)->parent)][tk->tokenName] == 2)  //it is a sync token of the parent
+    else if(_firstAndFollow->follow[getNTIDFromTreeNode((*curNode)->parent)]->val[tk->tokenName])  //it is a follow-token of the parent NT
     {
-        errorHandle();
+        error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
         *curNode = (*curNode)->parent;
+        *curNode = getNextTreeNode(*curNode);
+        return false;
     }
     else
     {
-        errorHandle();
+        error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
     }
+    return true;
 }
 
 void expandTreeNode(TreeNode* curNode, LinkedList rule)
@@ -832,15 +859,17 @@ void parseInputSourceCode(char *testcaseFile, table T)
 
         if(curNode == NULL)     //parse tree has expanded completely, but input file is not completely read
         {
-            errorHandle();
+            error_endOfParserReached(tk->lineNumber,fptrs,fptrsLen);
             break;
         }
 
         if(getNTIDFromTreeNode(curNode) < 0)
         {
-            match(&curNode,tk,T);
-            free(tk);
-            tk = getNextToken(buffer);
+            if(match(&curNode,tk,T))
+            {
+                free(tk);
+                tk = getNextToken(buffer);
+            }
         }
         else        //tk is an NTToken. Decision is to be made by referring to the predictive parsing table, fetching the required rule, and then expanding the tree accordingly
         {
@@ -853,20 +882,21 @@ void parseInputSourceCode(char *testcaseFile, table T)
                     expandTreeNode(&curNode,T->cells[getNTIDFromTreeNode(curNode)][tk->tokenName]);
                     if(getTerminalIDFromTreeNode(curNode) == (int)EPS)      //if the rule expands to EPS
                     {
+                        fetchTokenInfoFromTreeNode(curNode)->lineNumber = tk->lineNumber;
                         curNode = getNextTreeNode(curNode);
                     }
                     break;
 
                 case 1:     //error without sync
 
-                    errorHandle();
+                    error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
                     free(tk);
                     tk = getNextToken(buffer);
                     break;
 
                 case 2:     //error & sync
 
-                    errorHandle();
+                    error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
                     curNode = getNextTreeNode(curNode);
                     free(tk);
                     tk = getNextToken(buffer);
@@ -877,7 +907,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
 
     if(curNode != NULL)     //input string is completely read, but the parse tree is not completely expanded
     {
-        errorHandle();
+        error_endOfTokenStream(currentLineNumber,fptrs,fptrsLen);
     }
 
     freeTwinBuffer();
@@ -914,7 +944,7 @@ void printTreeNodeInOrder(TreeNode node, FILE* fp, int* nodeNumber)             
     if(node->parent == NULL)fprintf(fp,"Parent Node Symbol: ROOT\t");
     else{
         enumToStr(tk_tmp->tokenName,str_tmp);
-        fprintf(fp,"Parent Node Symbol: %s",str_tmp);
+        fprintf(fp,"Parent Node Symbol: %s\t",str_tmp);
     }
 
     if(node->firstChild == NULL)fprintf(fp,"Is Leaf Node: yes\t");

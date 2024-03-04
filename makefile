@@ -25,13 +25,11 @@ parser.o: parserDef.h parser.h parser.c
 clean:
 	rm -f *.o
 	rm -f stage1exe
-	rm -f printTokenListFile.txt
 
 clearCache:
 	rm -f *Cache
 	rm -f *.o
 	rm -f stage1exe
-	rm -f printTokenListFile.txt
 
 run:
 	make clean
