@@ -832,14 +832,30 @@ bool match(TreeNode* curNode, tokenInfo tk, table T, bool* noSyntaxErrors)
         insertTokenInfoIntoTreeNode(*curNode,createTokenInfo(tk->tokenName,tk->lexeme,tk->lineNumber));
         *curNode = getNextTreeNode(*curNode);
     }
-    else        //if terminal is on top of the abstract stack, and tk->tokenName is not equal to that terminal, then go with err & syn by default
+    else        //if terminal is on top of the abstract stack, and tk->tokenName is not equal to that terminal, then depending on whether the token belongs to the standard sync-set, choose err or sync accordingly
     {
         error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
-        *curNode = getNextTreeNode(*curNode);
-        *noSyntaxErrors = false;
-        return false;
+        switch(tk->tokenName)
+        {
+            case TK_END:
+            case TK_ENDIF:
+            case TK_ENDRECORD:
+            case TK_ENDUNION:
+            case TK_ENDWHILE:
+            case TK_CL:
+            case TK_SQR:
+            case TK_SEM:
+                //token belongs to sync-set
+                *curNode = getNextTreeNode(*curNode);
+                return false;   //error & sync
+                break;
+
+
+            default:
+                //token doesn't belong to sync-set
+                return true;    //error without sync
+        }
     }
-    return true;
 }
 
 void expandTreeNode(TreeNode* curNode, LinkedList rule)
