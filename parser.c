@@ -790,7 +790,7 @@ void* error_endOfParserReached(int linenumber,FILE* ptrs[],int size){
 }
 
 void* error_endOfTokenStream(int linenumber,FILE* ptrs[],int size){
-    printf("Line %d\t Error: End of token-stream  reached, but parsing is not complete.\n",linenumber);
+    printf("Line %d\t Error: End of token-stream reached, but parsing is not complete.\n",linenumber);
     for(int i=0; i<size;i++)
     fprintf(ptrs[i],"Line %d\t Error: End of token-stream reached, but parsing is not complete.\n",linenumber); 
 }
