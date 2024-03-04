@@ -35,7 +35,7 @@ _main
 		type #line : ln; 
 		type #point: pt; 
 		type #traingle:tr;
-	endunion;
+	endunion
         definetype record #three as #triangle  
 	record #three 
 		type #line: base;

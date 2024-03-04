@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 50
 #define VOCABULARY_COUNT ((int)TOTAL_VOCAB_SIZE)
 #define TERMINALS_COUNT ((int)TOTAL_TERMINALS_COUNT)
 #define N_TERMINALS_COUNT ((int)TOTAL_VOCAB_SIZE-TERMINALS_COUNT - 1)
@@ -15,8 +15,6 @@
 #define MAX_FUNCTION_IDENTIFIER_LENGTH 30
 #define MAX_FILENAME_LENGTH 50
 #define MAX_LEXEME_LENGTH MAX_FUNCTION_IDENTIFIER_LENGTH        //as MAX_FUNCTION_IDENTIFIER_LENGTH is greater than MAX_VARIABLE_IDENTIFIER_LENGTH
-#define ALPHABET_COUNT 85
-
 
 typedef struct tokenInfo* tokenInfo;
 typedef struct twinBuffer* twinBuffer;

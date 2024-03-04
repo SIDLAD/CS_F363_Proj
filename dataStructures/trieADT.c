@@ -9,8 +9,6 @@
 
 #include <stdlib.h>
 
-#define ALPHABET_COUNT 85
-
 typedef struct trie *Trie;
 typedef struct trieEdge *TrieEdge;
 

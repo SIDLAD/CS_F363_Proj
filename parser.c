@@ -30,7 +30,7 @@ int getNTID(Vocabulary NT);
 table initializeTable(table T);
 table createParseTable(FirstAndFollow F, table T);
 void initializeParseTree();
-void parseInputSourceCode(char *testcaseFile, table T);
+bool parseInputSourceCode(char *testcaseFile, table T);
 void printParseTree(parseTree PT, char *outfile);       //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
 void freeParseTree();
 void calculateFirstOfRule(TerminalBucketSet _firstOfRule, LinkedList RHSNode, bool *flag, FirstAndFollow F);
@@ -812,7 +812,7 @@ void* error_invalidToken(tokenInfo tk_inp, tokenInfo tk_exp, FILE* ptrs[],int si
     return NULL;
 }
 
-bool match(TreeNode* curNode, tokenInfo tk, table T)
+bool match(TreeNode* curNode, tokenInfo tk, table T, bool* noSyntaxErrors)
 {    
     if(fetchTokenInfoFromTreeNode(*curNode)->tokenName == tk->tokenName)
     {
@@ -823,6 +823,7 @@ bool match(TreeNode* curNode, tokenInfo tk, table T)
     {
         error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
         *curNode = getNextTreeNode(*curNode);
+        *noSyntaxErrors = false;
         return false;
     }
     return true;
@@ -843,7 +844,7 @@ void expandTreeNode(TreeNode* curNode, LinkedList rule)
     *curNode = (*curNode)->parent->firstChild;
 }
 
-void parseInputSourceCode(char *testcaseFile, table T)
+bool parseInputSourceCode(char *testcaseFile, table T)
 {
     initializeTwinBuffer();
     initializeSymbolTable();
@@ -852,6 +853,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
     insertTokenInfoIntoTreeNode(_parseTree->root,createTokenInfo(STARTSYMBOL,NULL,-1));
 
     TreeNode curNode = _parseTree->root;
+    bool noSyntaxErrors = true;
 
     tokenInfo tk = getNextToken(buffer);
     while(tk != NULL)   //if tk is NULL, that means that the end of file has been reached
@@ -871,7 +873,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
 
         if(getNTIDFromTreeNode(curNode) < 0)        //i.e. curNode is a Terminal-TreeNode.
         {
-            if(match(&curNode,tk,T))
+            if(match(&curNode,tk,T,&noSyntaxErrors))
             {
                 free(tk);
                 tk = getNextToken(buffer);
@@ -897,6 +899,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
                 case 1:     //error without sync
 
                     error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
+                    noSyntaxErrors = false;
                     free(tk);
                     tk = getNextToken(buffer);
                     break;
@@ -904,6 +907,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
                 case 2:     //error & sync
 
                     error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
+                    noSyntaxErrors = false;
                     curNode = getNextTreeNode(curNode);
                     break;
             }
@@ -916,6 +920,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
     }
 
     freeTwinBuffer();
+    return noSyntaxErrors;
 }
 
 void printTreeNodeInOrder(TreeNode node, FILE* fp, int* nodeNumber)              //lexeme CurrentNode lineno tokenName valueIfNumber parentNodeSymbol isLeafNode(yes/no) NodeSymbol
