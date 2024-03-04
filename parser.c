@@ -869,7 +869,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
             break;
         }
 
-        if(getNTIDFromTreeNode(curNode) < 0)        //i.e. tk is a Terminal-token.
+        if(getNTIDFromTreeNode(curNode) < 0)        //i.e. curNode is a Terminal-TreeNode.
         {
             if(match(&curNode,tk,T))
             {
@@ -878,7 +878,7 @@ void parseInputSourceCode(char *testcaseFile, table T)
             }
             //else err & syn
         }
-        else        //tk is an NTToken. Decision is to be made by referring to the predictive parsing table, fetching the required rule, and then expanding the tree accordingly
+        else        //curNode is an NT-TreeNode. Decision is to be made by referring to the predictive parsing table, fetching the required rule, and then expanding the tree accordingly
         {
             switch(T->isErrorCell[getNTIDFromTreeNode(curNode)][tk->tokenName])
             {
