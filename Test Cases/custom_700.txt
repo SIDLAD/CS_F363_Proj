@@ -1,0 +1,700 @@
+%Test Case 2: Syntactically correct test case
+%Following function computes the sum of user defined real numbers
+%The variable d3 maintains the sum of values
+_sumN  input parameter list [int d5cc34]  
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNAa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNAb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNBa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNBb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNCa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNCb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNDa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNDb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNEa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNEb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNFa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNFb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNGa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNGb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNHa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNHb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNIa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNIb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNJa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNJb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNKa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNKb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNLa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNLb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNMa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNMb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNNa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNNb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNOa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNOb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNPa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNPb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNQa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNQb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNRa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNRb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNSa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNSb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNTa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNTb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNUa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNUb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNVa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNVb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNWa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNWb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNXa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNXb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNYa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNYb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNZa  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_sumNZb  input parameter list [int d5cc34]
+output parameter list[real d3];
+	type int : b5b567;
+	b5b567 <--- 1;
+	d3 <--- 0.00;
+	while ( b5b567 <= d5cc34)
+		read( c3bd);
+		d3 <--- d3 + c3bd;
+		b5b567 <--- b5b567 + 1;
+	endwhile
+	return [d3];
+end
+
+_main
+	type int :b3;
+	type real :c4bd56;
+	b3 <--- 7;
+	[c4bd56]<--- call _sumN with parameters [b3];
+	write(c4bd56);
+	return;
+end

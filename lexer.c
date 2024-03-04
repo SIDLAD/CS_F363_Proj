@@ -282,7 +282,7 @@ FILE *getStream(FILE *fp)
 
 char characterReadFromBuffer(int ptr, twinBuffer _buffer)
 {
-    if(ptr == _buffer->forward && _buffer->forward >= _buffer->fileEndsAtBufferIndex)
+    if(ptr == _buffer->forward && _buffer->forward > _buffer->fileEndsAtBufferIndex)
         return '\0';
     if (ptr < 256)
     {
