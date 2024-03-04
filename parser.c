@@ -731,7 +731,20 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     {
         for(int j=0; j<TERMINALS_COUNT; j++)
         {
-            if(_firstAndFollow->follow[i]->val[j])
+            bool forceSync = false;
+            switch((Vocabulary)j)
+            {
+                case TK_END:
+                case TK_ENDIF:
+                case TK_ENDRECORD:
+                case TK_ENDUNION:
+                case TK_ENDWHILE:
+                case TK_CL:
+                case TK_SQR:
+                case TK_SEM:
+                    forceSync = true;
+            }
+            if(forceSync || _firstAndFollow->follow[i]->val[j])
             {
                 if(EPSDerivingRuleNumber[i] != -1)  
                 {
