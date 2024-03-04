@@ -776,7 +776,8 @@ char* removeAngularBrackets(char* str)
 {
     if(str[0] == '<')
     {
-        str[strlen(str) - 1] = '\0';
+        if(str[strlen(str) - 1] == '>')
+            str[strlen(str) - 1] = '\0';
         return str + 1;
     }
     return str;
