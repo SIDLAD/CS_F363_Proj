@@ -1,3 +1,10 @@
+//Group Number 31
+//Siddharth Shah F2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
+//Shai Pranesh S F2020B2A70731P
+//Krteyu Pillai F2021A7PS2522P
+//Aryan Seth F2021A7PS2221P
+
 #include "parserDef.h"
 #include <stdio.h>
 #include <string.h>
@@ -989,7 +996,7 @@ void printParseTree(parseTree PT, char *outfile)
     int nodeNumber = 1;
     
     printTreeNodeInOrder(PT->root,fp,&nodeNumber);
-
+    printf("parse tree generated");
     fclose(fp);
 }
 

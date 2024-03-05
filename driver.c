@@ -1,3 +1,10 @@
+//Group Number 31
+//Siddharth Shah F2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
+//Shai Pranesh S F2020B2A70731P
+//Krteyu Pillai F2021A7PS2522P
+//Aryan Seth F2021A7PS2221P
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +64,12 @@ void case_generateParseTree()
     _table = createParseTable(_firstAndFollow, _table);
     bool noSyntaxErrors = parseInputSourceCode(testcaseFile, _table);
     //lexer and parser have been invoked
+    if(!noSyntaxErrors){
+        printf("Syntax errors in program. Parse tree generated but not printed on");
+    }
+    else{
+        printf("Parse tree generated, checkout output file path");
+    }
     if(noSyntaxErrors)printParseTree(_parseTree, parseTreeOutFile);
 
     freeParseTree();  //freeing the parse tree is a must, otherwise there will be memory leaks
@@ -102,6 +115,10 @@ int main(int argc, char* argv[])
         
         char choice[10];
         scanf("%s", choice);
+        printf("FIRST and FOLLOW sets have been automated\n");
+        printf("Both Lexical and Syntax Analysis Modules implemented\n");
+        printf("Our compiler works with all provided testcases\n");
+        
 
         switch(choice[0])
         {
