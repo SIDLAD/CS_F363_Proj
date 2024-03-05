@@ -15,6 +15,7 @@ grammar _grammar = NULL;                    //to be initialized via function cal
 table _table = NULL;                        //to be initialized via function call
 FirstAndFollow _firstAndFollow = NULL;      //to be initialized via function call
 char* predictiveParsingTableCache = "predictiveParsingTableCache";
+tokenInfo tkPrevError = NULL;
 
 // function prototypes//
 void insertGrammarSymbolIntoLLNode(LinkedList node, Vocabulary v);
@@ -859,9 +860,11 @@ bool match(TreeNode* curNode, tokenInfo tk, table T, bool* noSyntaxErrors)
     }
     else        //if terminal is on top of the abstract stack, and tk->tokenName is not equal to that terminal, then go with err & syn by default
     {
-        error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
+        if(tkPrevError != tk)
+            error_invalidToken(tk,fetchTokenInfoFromTreeNode(*curNode),fptrs,fptrsLen);
         *curNode = getNextTreeNode(*curNode);
         *noSyntaxErrors = false;
+        tkPrevError = tk;
         return false;
     }
     return true;
@@ -899,6 +902,7 @@ bool parseInputSourceCode(char *testcaseFile, table T)
     {
         if(tk->tokenName == TK_COMMENT)
         {
+            tkPrevError = NULL;
             free(tk);
             tk = getNextToken(buffer);
             continue;
@@ -914,6 +918,7 @@ bool parseInputSourceCode(char *testcaseFile, table T)
         {
             if(match(&curNode,tk,T,&noSyntaxErrors))
             {
+                tkPrevError = NULL;
                 free(tk);
                 tk = getNextToken(buffer);
             }
@@ -936,17 +941,19 @@ bool parseInputSourceCode(char *testcaseFile, table T)
                     break;
 
                 case 1:     //error without sync
-
-                    error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
+                    if(tkPrevError != tk)
+                        error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
                     noSyntaxErrors = false;
+                    tkPrevError = NULL;
                     free(tk);
                     tk = getNextToken(buffer);
                     break;
 
                 case 2:     //error & sync
-
-                    error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
+                    if(tkPrevError != tk)
+                        error_invalidToken(tk,fetchTokenInfoFromTreeNode(curNode),fptrs,fptrsLen);
                     noSyntaxErrors = false;
+                    tkPrevError = tk;
                     curNode = getNextTreeNode(curNode);
                     break;
             }

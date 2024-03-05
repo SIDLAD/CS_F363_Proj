@@ -33,6 +33,7 @@ extern table _table;                        //to be initialized via function cal
 extern FirstAndFollow _firstAndFollow;      //to be initialized via function call
 
 extern char* predictiveParsingTableCache;
+extern tokenInfo tkPrevError;
 
 // struct stackNode
 // {

@@ -1,8 +1,0 @@
-Line 1	 Error: Unknown pattern <<-->
-Line 1	 Error: Invalid token TK_NUM encountered with value 2 stack top program
-Line 2	 Error: Invalid token TK_LT encountered with value < stack top program
-Line 2	 Error: Invalid token TK_MINUS encountered with value - stack top program
-Line 2	 Error: Invalid token TK_NUM encountered with value 2 stack top program
-Line 3	 Error: Invalid token TK_LT encountered with value < stack top program
-Line 3	 Error: Invalid token TK_NUM encountered with value 2 stack top program
-Line 3	 Error: End of token-stream reached, but parsing is not complete.
