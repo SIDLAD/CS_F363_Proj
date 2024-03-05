@@ -1,0 +1,15 @@
+% testcase: custom
+
+_main
+record #pokemon
+	type int: fire;
+	type int: water;
+	type int: grass;
+endrecord
+type pokemon #pokemon charizard;
+type pokemon #pokemon blastoise;
+type pokemon #pokemon venasaur;
+charizard.fire<---1;
+blastoise.water<---2.4; %should report error
+write(charizard.fire);
+end
