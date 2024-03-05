@@ -898,6 +898,8 @@ bool parseInputSourceCode(char *testcaseFile, table T)
     bool noSyntaxErrors = true;
 
     tokenInfo tk = getNextToken(buffer);
+    tkPrevError = NULL;
+
     while(tk != NULL)   //if tk is NULL, that means that the end of file has been reached
     {
         if(tk->tokenName == TK_COMMENT)
@@ -965,6 +967,7 @@ bool parseInputSourceCode(char *testcaseFile, table T)
         error_endOfTokenStream(currentLineNumber,fptrs,fptrsLen);
     }
 
+    tkPrevError = NULL;
     if(noSyntaxErrors) printf("Input source code is synctactically correct ...\n\n");
     freeTwinBuffer();
     return noSyntaxErrors;
