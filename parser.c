@@ -734,7 +734,9 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
             bool forceSync = false;
             switch((Vocabulary)j)
             {
-                //list of tokens that belong to
+                //list of tokens that start a function or any of the statements in the function body:
+
+                //FORCE_SYNC SET:// this set essentially captured anything following tokens such as semicolon and a few keywords such as endrecord, endunion, endif, endwhile, else, ), ] etc
                 case TK_FUNID:
                 case TK_MAIN:
                 case TK_RECORD:
