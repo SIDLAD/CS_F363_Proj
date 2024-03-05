@@ -746,13 +746,17 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
                 case TK_READ:
                 case TK_WRITE:
                 case TK_SQL:
+                //these are some forceSync tokens that we would need to add to the syncset so that the programmer's intentions
+                //are captured to minimise the number of errors ie changes, to a program with syntax errors.
                     forceSync = true;
             }
+
+            //if the token belongs to the above set, or to the follow of the current Non-terminal, then:
             if(forceSync || _firstAndFollow->follow[i]->val[j])
             {
                 if(EPSDerivingRuleNumber[i] != -1 && _firstAndFollow->follow[i]->val[j]) 
-                {
-
+                {//there is NO ERROR if the current Non-terminal on stack-top can derive EPS, and a token from its follow-set is read
+                    
                     if(! _table->isErrorCell[i][j]) //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty, then grammar is not LL(1)
                     {
                         printf("Grammar is not LL(1).Terminating program.\n");
