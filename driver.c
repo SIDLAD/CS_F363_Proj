@@ -103,11 +103,9 @@ void case_calculateTime()
 #define MAIN_FILE
 
 int main(int argc, char* argv[])
-{
-    // strcpy(testcaseFile,"Test Cases/t2.txt");
-    
-    strcpy(testcaseFile,argv[1]);
-    strcpy(parseTreeOutFile,argv[2]);
+{    
+    if(argc > 1) strcpy(testcaseFile,argv[1]);
+    if(argc > 2) strcpy(parseTreeOutFile,argv[2]);
 
     printf("\n###COMPILER CONSTRUCTION : CS-F363 PROJECT - GROUP 31###\n");
     printf("!!ALL THE REQUIREMENTS OF THE PROJECT HAVE BEEN MET!!\n");

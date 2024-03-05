@@ -19,7 +19,7 @@ Trie symbolTable = NULL;
 FILE** fptrs;
 int fptrsLen = 0;
 
-char testcaseFile[MAX_FILENAME_LENGTH] = "testcase.txt";
+char testcaseFile[MAX_FILENAME_LENGTH] = "testcase1.txt";
 char parseTreeOutFile[MAX_FILENAME_LENGTH] = "createParseOutFile.txt";
 char commentFreeFile[MAX_FILENAME_LENGTH] = "commentFreeFile.txt";
 char printTokenListFile[MAX_FILENAME_LENGTH] = "printTokenListFile.txt";

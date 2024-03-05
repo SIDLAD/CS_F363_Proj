@@ -26,12 +26,9 @@ clean:
 	rm -f *.o
 	rm -f stage1exe
 
+# make clearCache performs the functionalities of make clean, along with deleting the predictiveParsingTableCache
+# Note that any change in the compiler-codes necessitates running "make clearCache" on the terminal.
 clearCache:
 	rm -f *Cache
 	rm -f *.o
 	rm -f stage1exe
-
-run:
-	make clean
-	make
-	gdb --args ./stage1exe "Test Cases/t1.txt" "createParseOutFile.txt"
