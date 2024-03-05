@@ -734,19 +734,23 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
             bool forceSync = false;
             switch((Vocabulary)j)
             {
-                case TK_END:
-                case TK_ENDIF:
-                case TK_ENDRECORD:
-                case TK_ENDUNION:
-                case TK_ENDWHILE:
-                case TK_CL:
-                case TK_SQR:
-                case TK_SEM:
+                case TK_FUNID:
+                case TK_MAIN:
+                case TK_RECORD:
+                case TK_UNION:
+                case TK_DEFINETYPE:
+                case TK_TYPE:
+                case TK_ID:
+                case TK_WHILE:
+                case TK_IF:
+                case TK_READ:
+                case TK_WRITE:
+                case TK_SQL:
                     forceSync = true;
             }
             if(forceSync || _firstAndFollow->follow[i]->val[j])
             {
-                if(EPSDerivingRuleNumber[i] != -1)  
+                if(EPSDerivingRuleNumber[i] != -1 && _firstAndFollow->follow[i]->val[j]) 
                 {
 
                     if(! _table->isErrorCell[i][j]) //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty, then grammar is not LL(1)
