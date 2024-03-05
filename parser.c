@@ -257,6 +257,7 @@ void populateFirstAndFollowText(FirstAndFollow F)
         fprintf(fp, "\n\n");
     }
     fclose(fp);
+    printf("first and follow sets have been populated\n");
 }
 
 FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
@@ -292,6 +293,7 @@ FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
             }
         }
     }
+    printf("first and follow set computation complete\n");
     populateFirstAndFollowText(_firstAndFollow);
 }
 
@@ -762,7 +764,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
             }
         }
     }
-
+    printf("predictive parsing table created\n");
     //cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
     cache_table(T, predictiveParsingTableCache);
     return T;
@@ -996,7 +998,7 @@ void printParseTree(parseTree PT, char *outfile)
     int nodeNumber = 1;
     
     printTreeNodeInOrder(PT->root,fp,&nodeNumber);
-    printf("parse tree generated");
+    
     fclose(fp);
 }
 

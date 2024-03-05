@@ -181,6 +181,7 @@ void initializeTwinBuffer() // initialize the buffer before starting the next it
     buffer->fp = getStream(NULL);
     buffer->fileEndsAtBufferIndex = __INT_MAX__;
     currentLineNumber = 1;
+    printf("twin buffer initialized\n");
     return;
 }
 
