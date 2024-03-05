@@ -734,6 +734,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
             bool forceSync = false;
             switch((Vocabulary)j)
             {
+                //list of tokens that belong to
                 case TK_FUNID:
                 case TK_MAIN:
                 case TK_RECORD:
@@ -745,6 +746,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
                 case TK_IF:
                 case TK_READ:
                 case TK_WRITE:
+                case TK_CALL:
                 case TK_SQL:
                 //these are some forceSync tokens that we would need to add to the syncset so that the programmer's intentions
                 //are captured to minimise the number of errors ie changes, to a program with syntax errors.
