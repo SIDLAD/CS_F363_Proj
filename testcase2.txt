@@ -1,4 +1,4 @@
-%Custom Test Case 1. Meant only to test lexer
+%Custom Test Case 2. Meant only to test lexer
 <--2
 <-2
 <2

@@ -1,4 +1,4 @@
-%Custom Test Case 2: Syntactically correct test case
+%Custom Test Case 1: Syntactically correct test case
 %Following function computes the sum of user defined real numbers
 %The variable d3 maintains the sum of values
 _sumN  input parameter list [int d5cc34]  
