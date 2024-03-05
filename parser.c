@@ -745,6 +745,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
                 case TK_IF:
                 case TK_READ:
                 case TK_WRITE:
+                case TK_CALL:
                 case TK_SQL:
                     forceSync = true;
             }
