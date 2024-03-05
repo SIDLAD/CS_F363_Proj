@@ -163,7 +163,7 @@ void* error_symbolUnknown(int linenumber, char tmp_lexeme, FILE* ptrs[], int siz
 void* error_patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size){
     printf("Line %d\t Error: Unknown pattern <%s>\n", linenumber, tmp_lexeme);
     for(int i=0; i<size;i++)
-    fprintf(ptrs[i],"Line %d\t Error: Unknown symbol <%s>\n", linenumber, tmp_lexeme);
+    fprintf(ptrs[i],"Line %d\t Error: Unknown pattern <%s>\n", linenumber, tmp_lexeme);
     return NULL;
 }
 
