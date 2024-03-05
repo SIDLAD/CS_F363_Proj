@@ -1,9 +1,9 @@
 //Group Number 31
-//Siddharth Shah F2021A7PS2428P
-//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
-//Shai Pranesh S F2020B2A70731P
-//Krteyu Pillai F2021A7PS2522P
-//Aryan Seth F2021A7PS2221P
+//Siddharth Shah 2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni 2020B5A70897P
+//Shai Pranesh S 2020B2A70731P
+//Krteyu Pillai 2021A7PS2522P
+//Aryan Seth 2021A7PS2221P
 
 
 #include <stdio.h>
@@ -170,7 +170,7 @@ void* error_symbolUnknown(int linenumber, char tmp_lexeme, FILE* ptrs[], int siz
 void* error_patternUnknown(int linenumber, char* tmp_lexeme, FILE* ptrs[], int size){
     printf("Line %d\t Error: Unknown pattern <%s>\n", linenumber, tmp_lexeme);
     for(int i=0; i<size;i++)
-    fprintf(ptrs[i],"Line %d\t Error: Unknown symbol <%s>\n", linenumber, tmp_lexeme);
+    fprintf(ptrs[i],"Line %d\t Error: Unknown pattern <%s>\n", linenumber, tmp_lexeme);
     return NULL;
 }
 
@@ -181,7 +181,7 @@ void initializeTwinBuffer() // initialize the buffer before starting the next it
     buffer->fp = getStream(NULL);
     buffer->fileEndsAtBufferIndex = __INT_MAX__;
     currentLineNumber = 1;
-    printf("twin buffer initialized\n");
+    printf("Progress: Twin Buffer has been initialized\n");
     return;
 }
 
@@ -245,6 +245,7 @@ void initializeSymbolTable()
     {
         insertIntoTrie(createTokenInfo(initialEntries[i].v,initialEntries[i].str,-1),initialEntries[i].str,symbolTable);
     }
+    printf("Progress: Symbol Table has been initialized\n");
 }
 
 void freeSymbolTable()

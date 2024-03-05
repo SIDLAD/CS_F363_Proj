@@ -1,9 +1,9 @@
 //Group Number 31
-//Siddharth Shah F2021A7PS2428P
-//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
-//Shai Pranesh S F2020B2A70731P
-//Krteyu Pillai F2021A7PS2522P
-//Aryan Seth F2021A7PS2221P
+//Siddharth Shah 2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni 2020B5A70897P
+//Shai Pranesh S 2020B2A70731P
+//Krteyu Pillai 2021A7PS2522P
+//Aryan Seth 2021A7PS2221P
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,6 +31,8 @@ void case_printTokenList()
 {
     initializeSymbolTable();
     initializeTwinBuffer();
+    printf("\n");
+
     tokenInfo _tokenInfo;
     fptrsLen = 2;
     fptrs = calloc(fptrsLen,sizeof(FILE*));
@@ -64,13 +66,9 @@ void case_generateParseTree()
     _table = createParseTable(_firstAndFollow, _table);
     bool noSyntaxErrors = parseInputSourceCode(testcaseFile, _table);
     //lexer and parser have been invoked
-    if(!noSyntaxErrors){
-        printf("Syntax errors in program. Parse tree generated but not printed on");
-    }
-    else{
-        printf("Parse tree generated, checkout output file path");
-    }
+
     if(noSyntaxErrors)printParseTree(_parseTree, parseTreeOutFile);
+    else printf("\nSyntax error(s) in program. Parse tree has been generated, but printParseTree will not be invoked\n\n");
 
     freeParseTree();  //freeing the parse tree is a must, otherwise there will be memory leaks
     freeSymbolTable();          //if the backend had to be built, then the symbol table would persist beyond this point
@@ -88,13 +86,14 @@ void case_calculateTime()
 
     //lexer and parser will be invoked
     _table = createParseTable(_firstAndFollow, _table);
-    parseInputSourceCode(testcaseFile, _table);
+    bool noSyntaxErrors = parseInputSourceCode(testcaseFile, _table);
     // //lexer and parser have been invoked
 
     end_time = clock();
     total_CPU_time = (double) (end_time - start_time);
     total_CPU_time_in_seconds = total_CPU_time / CLOCKS_PER_SEC;
-    printf("Total time taken by the project code of lexer and parser to verify the syntactic correctness: %f seconds\n", total_CPU_time_in_seconds);
+    if(! noSyntaxErrors) printf("\nSyntax error(s) in program\n");
+    printf("\nTotal time taken by the project code of lexer and parser to verify the syntactic correctness: %f seconds\n", total_CPU_time_in_seconds);
     
     freeParseTree();
     freeSymbolTable();
@@ -109,16 +108,19 @@ int main(int argc, char* argv[])
     
     strcpy(testcaseFile,argv[1]);
     strcpy(parseTreeOutFile,argv[2]);
+
+    printf("\n###COMPILER CONSTRUCTION : CS-F363 PROJECT - GROUP 31###\n");
+    printf("!!ALL THE REQUIREMENTS OF THE PROJECT HAVE BEEN MET!!\n");
+    printf("- FIRST and FOLLOW sets have been automated\n");
+    printf("- Both Lexical and Syntax Analysis Modules implemented\n");
+    printf("- Our compiler works with all provided testcases\n\n");
     while(1)
     {
         printMenu();
         
         char choice[10];
         scanf("%s", choice);
-        printf("FIRST and FOLLOW sets have been automated\n");
-        printf("Both Lexical and Syntax Analysis Modules implemented\n");
-        printf("Our compiler works with all provided testcases\n");
-        
+        printf("\n");        
 
         switch(choice[0])
         {

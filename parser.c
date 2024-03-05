@@ -1,9 +1,9 @@
 //Group Number 31
-//Siddharth Shah F2021A7PS2428P
-//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
-//Shai Pranesh S F2020B2A70731P
-//Krteyu Pillai F2021A7PS2522P
-//Aryan Seth F2021A7PS2221P
+//Siddharth Shah 2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni 2020B5A70897P
+//Shai Pranesh S 2020B2A70731P
+//Krteyu Pillai 2021A7PS2522P
+//Aryan Seth 2021A7PS2221P
 
 #include "parserDef.h"
 #include <stdio.h>
@@ -257,7 +257,7 @@ void populateFirstAndFollowText(FirstAndFollow F)
         fprintf(fp, "\n\n");
     }
     fclose(fp);
-    printf("first and follow sets have been populated\n");
+    printf("Progress: First and Follow Sets have been outputted onto first.txt and follow.txt\n");
 }
 
 FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
@@ -293,7 +293,7 @@ FirstAndFollow computeFirstAndFollowSets(grammar G) // G cannot be NULL
             }
         }
     }
-    printf("first and follow set computation complete\n");
+    printf("Progress: First and Follow Sets' computation complete\n");
     populateFirstAndFollowText(_firstAndFollow);
 }
 
@@ -537,6 +537,8 @@ grammar populateGrammar(grammar g, char *grammarFileName) // g cannot be NULL. I
             }
         }
     }
+
+    printf("Progress: Datastructure \'Grammar\' has been populated from %s\n",grammarFileName);
     return g;
 }
 
@@ -567,6 +569,7 @@ table initializeTable(table T)
 
 int cache_table(table T, char* predictiveParsingTableCache)
 {
+    printf("Progress: Predictive Parsing Table initialised and populated, caching ...\n");
     //open the file in write mode, assuming it is a binary file
     FILE* file = fopen(predictiveParsingTableCache, "wb");
     if(file == NULL)
@@ -604,6 +607,8 @@ int cache_table(table T, char* predictiveParsingTableCache)
             }
         }
     }
+    fclose(file);
+    printf("Progress: Predictive Parsing Table has been cached in %s\n",predictiveParsingTableCache);
 }
 
 table retrieve_table(char* predictiveParsingTableCache)
@@ -615,6 +620,8 @@ table retrieve_table(char* predictiveParsingTableCache)
         printf("Error: File could not be opened for reading.\n");
         return NULL;
     }
+
+    printf("Progress: %s found, retrieving table from cache ...\n",predictiveParsingTableCache);
     //read N_TERMINALS_COUNT and TERMINALS_COUNT from the file
     int temp = 0;
     fread(&temp, sizeof(int), 1, file);
@@ -663,6 +670,9 @@ table retrieve_table(char* predictiveParsingTableCache)
             }
         }
     }
+    fclose(file);
+
+    printf("Progress: Predictive Parsing Table has been retrieved from cache\n");
     return T;
 }
 
@@ -675,7 +685,7 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     }
     else
     {
-        // printf("Parse Table has already been created.\n");
+        printf("Progress: Predictive Parsing Table has already been created, will be reused\n");
         return T;
     }
 
@@ -685,6 +695,8 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
         T = retrieve_table(predictiveParsingTableCache);
         return T;
     }
+
+    printf("Progress: Predictive Parsing Table not found in cache, creating from scratch using %s...\n",grammarFile);
 
     if (F == NULL)  //else _firstAndFollow (and _grammar) is already computed
     {
@@ -740,9 +752,27 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
     {
         for(int j=0; j<TERMINALS_COUNT; j++)
         {
-            if(_firstAndFollow->follow[i]->val[j])
+            bool forceSync = false;
+            switch((Vocabulary)j)
             {
-                if(EPSDerivingRuleNumber[i] != -1)  
+                case TK_FUNID:
+                case TK_MAIN:
+                case TK_RECORD:
+                case TK_UNION:
+                case TK_DEFINETYPE:
+                case TK_TYPE:
+                case TK_ID:
+                case TK_WHILE:
+                case TK_IF:
+                case TK_READ:
+                case TK_WRITE:
+                case TK_CALL:
+                case TK_SQL:
+                    forceSync = true;
+            }
+            if(forceSync || _firstAndFollow->follow[i]->val[j])
+            {
+                if(EPSDerivingRuleNumber[i] != -1 && _firstAndFollow->follow[i]->val[j]) 
                 {
 
                     if(! _table->isErrorCell[i][j]) //if the NT can derive EPS, but FIRST(NT)^FOLLOW(NT) is not empty, then grammar is not LL(1)
@@ -764,7 +794,6 @@ table createParseTable(FirstAndFollow F, table T) // F can be passed as NULL or 
             }
         }
     }
-    printf("predictive parsing table created\n");
     //cache the predictive parsing table T in the cache file (predictiveParsingTableCache is the string that contains the name of the file)
     cache_table(T, predictiveParsingTableCache);
     return T;
@@ -858,6 +887,7 @@ bool parseInputSourceCode(char *testcaseFile, table T)
     initializeTwinBuffer();
     initializeSymbolTable();
     initializeParseTree();       //freeParseTree will be called in driver.c after printParseTree
+    printf("\n");
 
     insertTokenInfoIntoTreeNode(_parseTree->root,createTokenInfo(STARTSYMBOL,NULL,-1));
 
@@ -928,6 +958,7 @@ bool parseInputSourceCode(char *testcaseFile, table T)
         error_endOfTokenStream(currentLineNumber,fptrs,fptrsLen);
     }
 
+    if(noSyntaxErrors) printf("Input source code is synctactically correct ...\n\n");
     freeTwinBuffer();
     return noSyntaxErrors;
 }
@@ -996,9 +1027,11 @@ void printParseTree(parseTree PT, char *outfile)
     //TODO: inorder traversal and printing
     FILE* fp = fopen(outfile,"w");
     int nodeNumber = 1;
-    
+    printf("Progress: Parse Tree is being outputted onto %s ...\n",parseTreeOutFile);
+
     printTreeNodeInOrder(PT->root,fp,&nodeNumber);
     
+    printf("Progress: In-order traversal of Parse Tree has been outputted onto %s\n\n",parseTreeOutFile);
     fclose(fp);
 }
 

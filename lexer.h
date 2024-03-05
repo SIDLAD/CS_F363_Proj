@@ -1,9 +1,9 @@
 //Group Number 31
-//Siddharth Shah F2021A7PS2428P
-//Vedang Bhupesh Shenvi Nadkarni F2020B5A70897P
-//Shai Pranesh S F2020B2A70731P
-//Krteyu Pillai F2021A7PS2522P
-//Aryan Seth F2021A7PS2221P
+//Siddharth Shah 2021A7PS2428P
+//Vedang Bhupesh Shenvi Nadkarni 2020B5A70897P
+//Shai Pranesh S 2020B2A70731P
+//Krteyu Pillai 2021A7PS2522P
+//Aryan Seth 2021A7PS2221P
 
 #ifndef LEXER_H
 #define LEXER_H
